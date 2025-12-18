@@ -308,6 +308,9 @@
   <data name="Admin.Users.GroupAuto" xml:space="preserve">
     <value>Skupina se nastavuje automaticky.</value>
   </data>
+  <data name="Admin.Users.GroupNotApplicable" xml:space="preserve">
+    <value>Pro roli Admin se skupina nenastavuje.</value>
+  </data>
 
   <data name="Admin.Toast.GroupNameRequired" xml:space="preserve">
     <value>Zadejte název skupiny.</value>

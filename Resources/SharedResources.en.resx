@@ -308,6 +308,9 @@
   <data name="Admin.Users.GroupAuto" xml:space="preserve">
     <value>Group is set automatically.</value>
   </data>
+  <data name="Admin.Users.GroupNotApplicable" xml:space="preserve">
+    <value>Admins are not assigned to a group.</value>
+  </data>
 
   <data name="Admin.Toast.GroupNameRequired" xml:space="preserve">
     <value>Please enter a group name.</value>

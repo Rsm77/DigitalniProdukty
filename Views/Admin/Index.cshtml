@@ -59,7 +59,13 @@
                                     </div>
                                 </td>
                                 <td class="py-1 pr-4">
-                                    @if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Distributor, StringComparison.Ordinal))
+                                    @if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Admin, StringComparison.Ordinal))
+                                    {
+                                        <div class="text-slate-900">—</div>
+                                        <div class="text-[11px] text-slate-500">@T["Admin.Users.GroupNotApplicable"]</div>
+                                        <input type="hidden" name="GroupId" form="@formId" value="" />
+                                    }
+                                    else if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Distributor, StringComparison.Ordinal))
                                     {
                                         <div class="text-slate-900">@(u.GroupName ?? "—")</div>
                                         <div class="text-[11px] text-slate-500">@T["Admin.Users.GroupAuto"]</div>
