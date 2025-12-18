@@ -104,6 +104,16 @@
     <value>The selected group does not exist.</value>
   </data>
 
+  <data name="Identity.Register.DisplayName.Label" xml:space="preserve">
+    <value>Name / company</value>
+  </data>
+  <data name="Identity.Register.DisplayName.Help" xml:space="preserve">
+    <value>Required for Distributor and Reseller roles (e.g., company name).</value>
+  </data>
+  <data name="Identity.Register.DisplayName.Required" xml:space="preserve">
+    <value>Enter a name.</value>
+  </data>
+
   <data name="Identity.ForgotPassword.Title" xml:space="preserve">
     <value>Reset password</value>
   </data>

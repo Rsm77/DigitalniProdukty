@@ -1,5 +1,6 @@
 ﻿using DigitalniProdukty.Models.Licensing;
 using DigitalniProdukty.Models.SerialNum;
+using DigitalniProdukty.Models.Users;
 using DigitalniProdukty.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,6 +18,8 @@ namespace DigitalniProdukty.Data
         public DbSet<KeyGroupModel> KeyGroups => Set<KeyGroupModel>();
         public DbSet<KeyGroupMemberModel> KeyGroupMembers => Set<KeyGroupMemberModel>();
         public DbSet<SerialNumberGroupAuditModel> SerialNumberGroupAudits => Set<SerialNumberGroupAuditModel>();
+
+        public DbSet<UserProfileModel> UserProfiles => Set<UserProfileModel>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -75,6 +78,18 @@ namespace DigitalniProdukty.Data
                     .HasForeignKey(x => x.SerialNumberId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+                    builder.Entity<UserProfileModel>(e =>
+                    {
+                    e.HasKey(x => x.UserId);
+                    e.Property(x => x.DisplayName).HasMaxLength(200).IsRequired();
+                    e.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    e.HasOne(x => x.User)
+                        .WithOne()
+                        .HasForeignKey<UserProfileModel>(x => x.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                    });
 
             builder.Entity<DeviceModel>(e =>
             {

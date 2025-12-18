@@ -39,9 +39,10 @@
                         <div class="app-field">
                             <label asp-for="AccountType"></label>
                             <select asp-for="AccountType"
-                                    hx-get="@Url.Action("RegisterTargetGroupField", "Auth")"
+                                    hx-get="@Url.Action("RegisterAccountTypeMeta", "Auth")"
                                     hx-trigger="load, change"
-                                    hx-target="#target-group-slot"
+                                    hx-include="[name='AccountType'],[name='TargetGroupId'],[name='DisplayName']"
+                                    hx-target="#register-accounttype-meta"
                                     hx-swap="outerHTML">
                                 <option value="@Authz.Roles.Distributor">@T["Identity.Register.AccountType.Distributor"]</option>
                                 <option value="@Authz.Roles.Reseller">@T["Identity.Register.AccountType.Reseller"]</option>
@@ -50,18 +51,25 @@
                             <span asp-validation-for="AccountType"></span>
                         </div>
 
-                        @await Html.PartialAsync("_RegisterTargetGroupSlot")
+                        @await Html.PartialAsync("_RegisterAccountTypeMeta", Model)
                     }
                     else if (User.IsInRole(Authz.Roles.Distributor))
                     {
                         <div class="app-field">
                             <label asp-for="AccountType"></label>
-                            <select asp-for="AccountType">
+                            <select asp-for="AccountType"
+                                    hx-get="@Url.Action("RegisterAccountTypeMeta", "Auth")"
+                                    hx-trigger="load, change"
+                                    hx-include="[name='AccountType'],[name='TargetGroupId'],[name='DisplayName']"
+                                    hx-target="#register-accounttype-meta"
+                                    hx-swap="outerHTML">
                                 <option value="@Authz.Roles.EndUser">@T["Identity.Register.AccountType.EndUser"]</option>
                                 <option value="@Authz.Roles.Reseller">@T["Identity.Register.AccountType.Reseller"]</option>
                             </select>
                             <span asp-validation-for="AccountType"></span>
                         </div>
+
+                        @await Html.PartialAsync("_RegisterAccountTypeMeta", Model)
                     }
                     else
                     {

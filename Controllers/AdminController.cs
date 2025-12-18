@@ -25,6 +25,7 @@ public sealed class AdminController(
     public sealed record UserRow(
         string Id,
         string Email,
+        string? DisplayName,
         string Role,
         Guid? GroupId,
         string? GroupName);
@@ -51,6 +52,9 @@ public sealed class AdminController(
         var memberships = await db.KeyGroupMembers
             .ToDictionaryAsync(x => x.UserId, x => x.GroupId, ct);
 
+        var profiles = await db.UserProfiles
+            .ToDictionaryAsync(x => x.UserId, x => x.DisplayName, ct);
+
         var users = await userManager.Users
             .OrderBy(x => x.Email)
             .ToListAsync(ct);
@@ -74,6 +78,7 @@ public sealed class AdminController(
             userRows.Add(new UserRow(
                 Id: user.Id,
                 Email: user.Email ?? user.UserName ?? user.Id,
+                DisplayName: profiles.TryGetValue(user.Id, out var dn) ? dn : null,
                 Role: primaryRole,
                 GroupId: groupId,
                 GroupName: groupName));
@@ -97,6 +102,7 @@ public sealed class AdminController(
         public string? UserId { get; set; }
         public string? Role { get; set; }
         public Guid? GroupId { get; set; }
+        public string? DisplayName { get; set; }
     }
 
     [HttpPost("users/update")]
@@ -105,6 +111,7 @@ public sealed class AdminController(
     {
         var userId = (input.UserId ?? string.Empty).Trim();
         var role = (input.Role ?? string.Empty).Trim();
+        var displayName = (input.DisplayName ?? string.Empty).Trim();
 
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -123,6 +130,16 @@ public sealed class AdminController(
         if (role != Authz.Roles.Admin && (input.GroupId is null || input.GroupId == Guid.Empty))
         {
             TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRequired"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if ((string.Equals(role, Authz.Roles.Admin, StringComparison.Ordinal)
+             || string.Equals(role, Authz.Roles.Distributor, StringComparison.Ordinal)
+             || string.Equals(role, Authz.Roles.Reseller, StringComparison.Ordinal))
+            && string.IsNullOrWhiteSpace(displayName))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.DisplayNameRequired"].Value;
             TempData[ToastKindTempDataKey] = "warning";
             return RedirectToAction(nameof(Index));
         }
@@ -190,6 +207,34 @@ public sealed class AdminController(
         }
 
         await db.SaveChangesAsync(ct);
+
+        // Display name (optional in DB, required by policy for some roles).
+        var profile = await db.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id, ct);
+        if (string.IsNullOrWhiteSpace(displayName))
+        {
+            if (profile is not null)
+            {
+                db.UserProfiles.Remove(profile);
+                await db.SaveChangesAsync(ct);
+            }
+        }
+        else
+        {
+            if (profile is null)
+            {
+                db.UserProfiles.Add(new DigitalniProdukty.Models.Users.UserProfileModel
+                {
+                    UserId = user.Id,
+                    DisplayName = displayName,
+                });
+            }
+            else
+            {
+                profile.DisplayName = displayName;
+            }
+
+            await db.SaveChangesAsync(ct);
+        }
 
         TempData[ToastMessageTempDataKey] = t["Admin.Toast.UserUpdated"].Value;
         TempData[ToastKindTempDataKey] = "success";

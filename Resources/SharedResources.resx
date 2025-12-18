@@ -287,6 +287,9 @@
   <data name="Admin.Users.Table.Email" xml:space="preserve">
     <value>E-mail</value>
   </data>
+  <data name="Admin.Users.Table.DisplayName" xml:space="preserve">
+    <value>Jméno / název</value>
+  </data>
   <data name="Admin.Users.Table.Role" xml:space="preserve">
     <value>Role</value>
   </data>
@@ -326,6 +329,9 @@
   </data>
   <data name="Admin.Toast.GroupRequired" xml:space="preserve">
     <value>Pro tuto roli je vyžadována skupina.</value>
+  </data>
+  <data name="Admin.Toast.DisplayNameRequired" xml:space="preserve">
+    <value>Pro tuto roli je vyžadováno jméno / název.</value>
   </data>
   <data name="Admin.Toast.UserUpdated" xml:space="preserve">
     <value>Uživatel byl aktualizován.</value>

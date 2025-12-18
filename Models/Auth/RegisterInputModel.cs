@@ -12,6 +12,9 @@ public sealed class RegisterInputModel
 
     public Guid? TargetGroupId { get; set; }
 
+    [StringLength(200, ErrorMessageResourceName = nameof(Annotations.Validation_StringLength), ErrorMessageResourceType = typeof(Annotations))]
+    public string? DisplayName { get; set; }
+
     [Required(ErrorMessageResourceName = nameof(Annotations.Validation_Required), ErrorMessageResourceType = typeof(Annotations))]
     [EmailAddress(ErrorMessageResourceName = nameof(Annotations.Validation_EmailAddress), ErrorMessageResourceType = typeof(Annotations))]
     [Display(Name = nameof(Annotations.Field_Email), ResourceType = typeof(Annotations))]

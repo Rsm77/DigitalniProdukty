@@ -104,6 +104,16 @@
     <value>Vybraná skupina neexistuje.</value>
   </data>
 
+  <data name="Identity.Register.DisplayName.Label" xml:space="preserve">
+    <value>Jméno / název</value>
+  </data>
+  <data name="Identity.Register.DisplayName.Help" xml:space="preserve">
+    <value>Povinné pro role Distributor a Prodejce (např. název firmy).</value>
+  </data>
+  <data name="Identity.Register.DisplayName.Required" xml:space="preserve">
+    <value>Zadejte jméno nebo název.</value>
+  </data>
+
   <data name="Identity.ForgotPassword.Title" xml:space="preserve">
     <value>Obnovení hesla</value>
   </data>

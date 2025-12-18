@@ -1,0 +1,49 @@
+@model DigitalniProdukty.Models.Auth.RegisterInputModel
+@using Microsoft.Extensions.Localization
+@using DigitalniProdukty.Models.Licensing
+@using DigitalniProdukty.Security
+@inject IStringLocalizer<IdentityUi> T
+
+@{
+    var accountType = (Model.AccountType ?? string.Empty).Trim();
+    var showDisplayName = string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal)
+                          || string.Equals(accountType, Authz.Roles.Reseller, StringComparison.Ordinal);
+    var showTargetGroup = !string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal);
+
+    var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
+}
+
+<div id="register-accounttype-meta">
+@if (showDisplayName)
+{
+    <div class="app-field">
+        <label>@T["Identity.Register.DisplayName.Label"]</label>
+        <input asp-for="DisplayName" autocomplete="organization" />
+        <span asp-validation-for="DisplayName"></span>
+        <div class="app-help">@T["Identity.Register.DisplayName.Help"]</div>
+    </div>
+}
+
+@if (showTargetGroup && groups is not null)
+{
+    <div class="app-field">
+        <label>@T["Identity.Register.TargetGroup.Label"]</label>
+        <select asp-for="TargetGroupId">
+            <option value="">—</option>
+            @foreach (var g in groups)
+            {
+                if (Model.TargetGroupId == g.Id)
+                {
+                    <option value="@g.Id" selected>@g.Name</option>
+                }
+                else
+                {
+                    <option value="@g.Id">@g.Name</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="TargetGroupId"></span>
+        <div class="app-help">@T["Identity.Register.TargetGroup.Help"]</div>
+    </div>
+}
+</div>

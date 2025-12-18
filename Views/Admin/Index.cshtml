@@ -23,6 +23,7 @@
                     <thead class="text-left text-slate-500">
                         <tr>
                             <th class="py-1 pr-4 w-80">@T["Admin.Users.Table.Email"]</th>
+                            <th class="py-1 pr-4 w-56">@T["Admin.Users.Table.DisplayName"]</th>
                             <th class="py-1 pr-4 w-36">@T["Admin.Users.Table.Role"]</th>
                             <th class="py-1 pr-4 w-80">@T["Admin.Users.Table.Group"]</th>
                             <th class="py-1 pr-0 w-32">@T["Admin.Users.Table.Actions"]</th>
@@ -36,6 +37,9 @@
                                 <td class="py-1 pr-4 text-slate-900 whitespace-nowrap">
                                     <div>@u.Email</div>
                                     <div class="font-mono text-slate-500 text-[11px]">@u.Id</div>
+                                </td>
+                                <td class="py-1 pr-4">
+                                    <input name="DisplayName" form="@formId" value="@u.DisplayName" />
                                 </td>
                                 <td class="py-1 pr-4">
                                     <div class="flex items-center gap-3">

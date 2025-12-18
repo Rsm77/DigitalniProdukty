@@ -11,6 +11,7 @@ using DigitalniProdukty.Services;
 using DigitalniProdukty.Security;
 using DigitalniProdukty.Data;
 using Microsoft.EntityFrameworkCore;
+using DigitalniProdukty.Models.Users;
 
 namespace DigitalniProdukty.Controllers;
 
@@ -199,24 +200,21 @@ public sealed class AuthController(
     }
 
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
-    [HttpGet("register-target-group")]
-    public async Task<IActionResult> RegisterTargetGroupField([FromQuery] string? accountType = null, CancellationToken ct = default)
+    [HttpGet("register-meta")]
+    public async Task<IActionResult> RegisterAccountTypeMeta(RegisterInputModel input, CancellationToken ct = default)
     {
-        if (!User.IsInRole(Authz.Roles.Admin))
+        if (!User.IsInRole(Authz.Roles.Admin) && !User.IsInRole(Authz.Roles.Distributor))
         {
             return Content(string.Empty);
         }
 
-        var selected = (accountType ?? string.Empty).Trim();
-        var show = !string.Equals(selected, Authz.Roles.Distributor, StringComparison.Ordinal);
-
-        if (!show)
+        var accountType = (input.AccountType ?? string.Empty).Trim();
+        if (User.IsInRole(Authz.Roles.Admin) && !string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal))
         {
-            return PartialView("_RegisterTargetGroupSlot");
+            await LoadGroupsForAdminAsync(ct);
         }
 
-        await LoadGroupsForAdminAsync(ct);
-        return PartialView("_RegisterTargetGroupSlot");
+        return PartialView("_RegisterAccountTypeMeta", input);
     }
 
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
@@ -263,6 +261,17 @@ public sealed class AuthController(
             }
         }
 
+        var requestedDisplayName = (input.DisplayName ?? string.Empty).Trim();
+        if ((string.Equals(accountType, Authz.Roles.Reseller, StringComparison.Ordinal)
+             && (User.IsInRole(Authz.Roles.Admin) || User.IsInRole(Authz.Roles.Distributor)))
+            || (string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal) && User.IsInRole(Authz.Roles.Admin)))
+        {
+            if (string.IsNullOrWhiteSpace(requestedDisplayName))
+            {
+                ModelState.AddModelError(nameof(RegisterInputModel.DisplayName), t["Identity.Register.DisplayName.Required"].Value);
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             await LoadGroupsForAdminAsync(ct);
@@ -294,11 +303,31 @@ public sealed class AuthController(
             {
                 await keyGroups.EnsureAdminGroupExistsAsync(ct);
 
+                if (!string.IsNullOrWhiteSpace(requestedDisplayName))
+                {
+                    var existingProfile = await db.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id, ct);
+                    if (existingProfile is null)
+                    {
+                        db.UserProfiles.Add(new UserProfileModel
+                        {
+                            UserId = user.Id,
+                            DisplayName = requestedDisplayName,
+                            CreatedAt = DateTime.UtcNow,
+                        });
+                    }
+                    else
+                    {
+                        existingProfile.DisplayName = requestedDisplayName;
+                    }
+
+                    await db.SaveChangesAsync(ct);
+                }
+
                 if (User.IsInRole(Authz.Roles.Admin))
                 {
                     if (string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal))
                     {
-                        await keyGroups.EnsureGroupForDistributorAsync(user, ct);
+                        await keyGroups.EnsureGroupForDistributorAsync(user, requestedDisplayName, ct);
                     }
                     else
                     {
