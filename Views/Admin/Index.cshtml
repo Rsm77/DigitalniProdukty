@@ -59,20 +59,29 @@
                                     </div>
                                 </td>
                                 <td class="py-1 pr-4">
-                                    <select name="GroupId" form="@formId">
-                                        <option value="">—</option>
-                                        @foreach (var g in Model.Groups)
-                                        {
-                                            if (u.GroupId == g.Id)
+                                    @if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Distributor, StringComparison.Ordinal))
+                                    {
+                                        <div class="text-slate-900">@(u.GroupName ?? "—")</div>
+                                        <div class="text-[11px] text-slate-500">@T["Admin.Users.GroupAuto"]</div>
+                                        <input type="hidden" name="GroupId" form="@formId" value="@u.GroupId" />
+                                    }
+                                    else
+                                    {
+                                        <select name="GroupId" form="@formId">
+                                            <option value="">—</option>
+                                            @foreach (var g in Model.Groups)
                                             {
-                                                <option value="@g.Id" selected>@g.Name</option>
+                                                if (u.GroupId == g.Id)
+                                                {
+                                                    <option value="@g.Id" selected>@g.Name</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@g.Id">@g.Name</option>
+                                                }
                                             }
-                                            else
-                                            {
-                                                <option value="@g.Id">@g.Name</option>
-                                            }
-                                        }
-                                    </select>
+                                        </select>
+                                    }
                                 </td>
                                 <td class="py-1 pr-0">
                                     <form id="@formId" method="post" asp-controller="Admin" asp-action="UpdateUser">

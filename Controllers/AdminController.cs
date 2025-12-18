@@ -1,6 +1,7 @@
 using DigitalniProdukty.Data;
 using DigitalniProdukty.Models.Licensing;
 using DigitalniProdukty.Security;
+using DigitalniProdukty.Services;
 using Htmx;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ namespace DigitalniProdukty.Controllers;
 public sealed class AdminController(
     ApplicationDbContext db,
     UserManager<IdentityUser> userManager,
+    KeyGroupProvisioningService keyGroups,
     IStringLocalizer<SharedResources> t) : Controller
 {
     private const string ToastMessageTempDataKey = "ToastMessage";
@@ -127,7 +129,10 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        if (role != Authz.Roles.Admin && (input.GroupId is null || input.GroupId == Guid.Empty))
+        // Reseller/EndUser must be explicitly scoped to a group. Distributor gets its own group automatically.
+        if (role != Authz.Roles.Admin
+            && role != Authz.Roles.Distributor
+            && (input.GroupId is null || input.GroupId == Guid.Empty))
         {
             TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRequired"].Value;
             TempData[ToastKindTempDataKey] = "warning";
@@ -152,8 +157,32 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Normalize "no group".
-        var desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
+        // Normalize desired group (Admin is never scoped by group).
+        Guid? desiredGroupId;
+        if (string.Equals(role, Authz.Roles.Admin, StringComparison.Ordinal))
+        {
+            desiredGroupId = null;
+        }
+        else
+        {
+            desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
+        }
+
+        // Security: never allow non-admin roles to be placed into the Admin tenant.
+        if (desiredGroupId == KeyGroups.AdminGroupId)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.AdminGroupForbidden"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Distributor: group is always auto-provisioned (do not allow manual selection).
+        if (string.Equals(role, Authz.Roles.Distributor, StringComparison.Ordinal))
+        {
+            await keyGroups.EnsureAdminGroupExistsAsync(ct);
+            var ensuredGroupId = await keyGroups.EnsureGroupForDistributorAsync(user, displayName, ct);
+            desiredGroupId = ensuredGroupId;
+        }
 
         if (desiredGroupId is not null)
         {

@@ -305,6 +305,9 @@
   <data name="Admin.Users.Help" xml:space="preserve">
     <value>Tip: for Distributor/Reseller/EndUser roles, it is recommended to have a group set (license scoping).</value>
   </data>
+  <data name="Admin.Users.GroupAuto" xml:space="preserve">
+    <value>Group is set automatically.</value>
+  </data>
 
   <data name="Admin.Toast.GroupNameRequired" xml:space="preserve">
     <value>Please enter a group name.</value>
@@ -332,6 +335,9 @@
   </data>
   <data name="Admin.Toast.DisplayNameRequired" xml:space="preserve">
     <value>A name is required for this role.</value>
+  </data>
+  <data name="Admin.Toast.AdminGroupForbidden" xml:space="preserve">
+    <value>This role cannot be assigned to the Admin group.</value>
   </data>
   <data name="Admin.Toast.UserUpdated" xml:space="preserve">
     <value>User updated.</value>
