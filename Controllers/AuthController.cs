@@ -185,14 +185,38 @@ public sealed class AuthController(
 
         var model = new RegisterInputModel
         {
-            AccountType = Authz.Roles.EndUser,
+            AccountType = User.IsInRole(Authz.Roles.Admin) ? Authz.Roles.Distributor : Authz.Roles.EndUser,
             TargetGroupId = KeyGroups.AdminGroupId,
         };
 
-        await LoadGroupsForAdminAsync(ct);
+        if (!User.IsInRole(Authz.Roles.Admin) || !string.Equals(model.AccountType, Authz.Roles.Distributor, StringComparison.Ordinal))
+        {
+            await LoadGroupsForAdminAsync(ct);
+        }
 
         if (Request.IsHtmx()) return PartialView("Register", model);
         return View("Register", model);
+    }
+
+    [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
+    [HttpGet("register-target-group")]
+    public async Task<IActionResult> RegisterTargetGroupField([FromQuery] string? accountType = null, CancellationToken ct = default)
+    {
+        if (!User.IsInRole(Authz.Roles.Admin))
+        {
+            return Content(string.Empty);
+        }
+
+        var selected = (accountType ?? string.Empty).Trim();
+        var show = !string.Equals(selected, Authz.Roles.Distributor, StringComparison.Ordinal);
+
+        if (!show)
+        {
+            return PartialView("_RegisterTargetGroupSlot");
+        }
+
+        await LoadGroupsForAdminAsync(ct);
+        return PartialView("_RegisterTargetGroupSlot");
     }
 
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
