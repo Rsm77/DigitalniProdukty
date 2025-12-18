@@ -89,6 +89,40 @@ Multi-tenant oddělení není řešené přes Identity role, ale přes **samosta
 - `SerialNumberGroupAudits`
   - audit přesunů: `FromGroupId`, `ToGroupId`, `ChangedByUserId`, `ChangedAt`
 
+#### Relace (propojení tabulek)
+
+Zjednodušený přehled hlavních vazeb (mimo Identity tabulky):
+
+- `KeyGroups (1) → (N) SerialNumbers`
+  - `SerialNumbers.GroupId` → `KeyGroups.Id`
+  - mazání: `Restrict` (nejde smazat skupinu, pokud obsahuje licenční klíče)
+- `KeyGroups (1) → (N) KeyGroupMembers`
+  - `KeyGroupMembers.GroupId` → `KeyGroups.Id`
+  - mazání: `Cascade` (smazání skupiny smaže její členství)
+- `SerialNumbers (1) → (N) LicenseDevices`
+  - `LicenseDevices.SerialNumberId` → `SerialNumbers.Id`
+  - mazání: `Cascade`
+- `Devices (1) → (N) LicenseDevices`
+  - `LicenseDevices.DeviceId` → `Devices.Id`
+  - mazání: `Cascade`
+- `SerialNumbers (1) → (N) Installations`
+  - `Installations.SerialNumberId` → `SerialNumbers.Id`
+  - mazání: `Restrict` (historie instalací chrání audit)
+- `Devices (1) → (N) Installations`
+  - `Installations.DeviceId` → `Devices.Id`
+  - mazání: `Restrict`
+- `SerialNumbers (1) → (N) SerialNumberGroupAudits`
+  - `SerialNumberGroupAudits.SerialNumberId` → `SerialNumbers.Id`
+  - mazání: `Cascade`
+
+Důležitá omezení (indexy), která zajišťují konzistenci:
+
+- `KeyGroupMembers.UserId` je unikátní ⇒ uživatel je členem max. jedné skupiny.
+- `(LicenseDevices.SerialNumberId, LicenseDevices.DeviceId)` je unikátní ⇒ bez duplicitního párování.
+- `SerialNumbers.Key` je unikátní ⇒ bez duplicitních licenčních klíčů.
+
+Pozn.: Existují i vazby na uživatele (Identity) – např. `SerialNumbers.OwnerUserId` a `KeyGroupMembers.UserId` odkazují na uživatele, ale tyto tabulky jsou součástí Identity.
+
 #### Provisioning (automatické zakládání skupin)
 
 Skupiny se v aktuální verzi **nevytváří ručně přes UI**. Vznikají automaticky v těchto situacích:
