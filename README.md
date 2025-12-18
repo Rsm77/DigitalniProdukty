@@ -64,12 +64,68 @@ UI používá HTMX pro částečné aktualizace bez nutnosti plného znovunačte
 
 ### Skupiny (multi-tenant oddělení)
 
-- Každý licenční klíč je přiřazen do konkrétní skupiny.
-- Ne-admin uživatelé jsou automaticky omezeni na svou skupinu (scoping).
-- Admin může vidět všechny skupiny a cíleně filtrovat.
-- Přesun klíče mezi skupinami je auditovaný.
+Skupiny (v kódu `KeyGroups`) jsou hlavní mechanismus multi-tenant oddělení. Jedna skupina reprezentuje „obchodního vlastníka“ licenčních klíčů (typicky distributor).
 
-Poznámka: skupiny se v aktuální verzi **nevytváří ručně přes UI** – jsou provisionované aplikací (admin group + skupina pro distributora).
+Zjednodušeně:
+
+- **Každý licenční klíč (`SerialNumber`) má `GroupId`** – patří do jedné skupiny.
+- **Každý ne-admin uživatel má členství v právě jedné skupině** – podle toho se mu „oříznou“ data (scoping).
+- **Admin není scopeovaný** (může přepínat/filtruje přes skupiny), a navíc jako jediný může klíče mezi skupinami přesouvat.
+
+#### Datový model (EF Core)
+
+Multi-tenant oddělení není řešené přes Identity role, ale přes **samostatné tabulky**:
+
+- `KeyGroups`
+  - `Id` (GUID), `Name`, `CreatedAt`
+  - `Name` je unikátní
+- `KeyGroupMembers`
+  - vazba uživatel → skupina (`UserId`, `GroupId`)
+  - **omezení „1 členství na uživatele“** je vynucené unikátním indexem na `UserId`
+- `SerialNumbers`
+  - `GroupId` je foreign key na `KeyGroups` (indexované)
+  - `GroupId` má default `AdminGroupId` (pokud by někdo vytvořil klíč bez explicitní skupiny)
+- `SerialNumberGroupAudits`
+  - audit přesunů: `FromGroupId`, `ToGroupId`, `ChangedByUserId`, `ChangedAt`
+
+#### Provisioning (automatické zakládání skupin)
+
+Skupiny se v aktuální verzi **nevytváří ručně přes UI**. Vznikají automaticky v těchto situacích:
+
+- **Admin pool**: existuje pevná „admin“ skupina (`AdminGroupId`, název „Admin pool“).
+- **Distributor**: při vytvoření účtu distributora se mu **založí vlastní skupina** a distributor se do ní automaticky přidá.
+- **Reseller / End-user vytvořený distributorem nebo resellerem**: nový účet se automaticky přiřadí do stejné skupiny jako tvůrce.
+- **Reseller / End-user vytvořený adminem**: admin vybírá cílovou skupinu (typicky skupina konkrétního distributora).
+
+Pozn.: Aplikace má navíc „bezpečnostní“ provisioning při startu – pokud najde uživatele v roli `Reseller` bez členství ve skupině, přiřadí ho do `Admin pool` (aby nedošlo k chybovým stavům typu „uživatel nemá skupinu“).
+
+#### Scoping (omezení dat) v aplikaci
+
+Princip scoping je jednoduchý: u většiny licenčních dotazů se použije `GroupId`:
+
+- Admin:
+  - může pracovat „napříč skupinami“
+  - v UI typicky posílá `groupId` v query stringu (nebo ponechá prázdné pro „vše“ podle obrazovky)
+- Ne-admin (Distributor/Reseller/End-user):
+  - aplikace si vezme skupinu z `KeyGroupMembers` pro přihlášeného uživatele
+  - jakýkoliv `groupId` v URL se ignoruje (uživatel nemůže „přepnout tenant“ ručně)
+  - pokud uživatel nemá členství ve skupině, licenční stránky vrací `Forbid()` a UI ukáže hlášku
+
+#### Přesun klíče mezi skupinami + audit
+
+Pouze Admin smí přesouvat licenční klíče mezi skupinami:
+
+- operace změní `SerialNumbers.GroupId`
+- zároveň se zapíše auditní záznam do `SerialNumberGroupAudits` (odkud/kam/kdo/kdy)
+
+To je důležité pro dohledatelnost („proč najednou klíč patří jinému distributorovi?“).
+
+#### Praktický příklad
+
+1) Admin vytvoří distributora → vznikne mu skupina.
+2) Distributor vygeneruje klíče → všechny mají `GroupId` distributora.
+3) Distributor vidí pouze své klíče (scoping).
+4) Admin může klíč přesunout do jiné skupiny (např. při změně vlastníka) → vznikne auditní stopa.
 
 ## Možná budoucí rozšíření
 
@@ -159,23 +215,6 @@ npm run watch:css
 - `appsettings.json` je commitovaný a neobsahuje citlivé údaje.
 - `appsettings.Development.json` je **ignorovaný v gitu** (viz `.gitignore`) a je určen pro lokální nastavení.
 
-### Bootstrap admin
-
-Aplikace umí v Development vytvořit admin účet podle konfigurace `BootstrapAdmin`.
-
-Příklad lokální konfigurace (do `appsettings.Development.json`):
-
-```json
-{
-  "BootstrapAdmin": {
-    "Enabled": true,
-    "Email": "admin@local.test",
-    "Password": "ChangeMe!12345",
-    "RequireChangeOnFirstLogin": true
-  }
-}
-```
-
 ### Bootstrap majitel (Majitel)
 
 Aplikace umí v Development vytvořit také účet **Majitel** (pokud žádný Majitel neexistuje). Majitel je governance role pro správu adminů.
@@ -194,6 +233,8 @@ Příklad lokální konfigurace (do `appsettings.Development.json`):
 ```
 
 Správa admin účtů je dostupná v UI pod `/owner` (v menu jako „Správa adminů“).
+
+Pozn.: Admin účty se vytváří a spravují výhradně přes Majitele (UI `/owner`).
 
 ## DB / migrace
 
