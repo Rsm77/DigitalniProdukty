@@ -23,10 +23,10 @@ Projekt je postaven tak, aby šel postupně rozšiřovat (produkty, objednávky,
 
 - Aplikace používá **ASP.NET Identity** pro přihlášení, role a autorizaci.
 - Data se ukládají přes **EF Core** do databáze (**SQL Server** / lokální **LocalDB**).
-- Licencování je navrženo jako multi-tenantní: klíče jsou přiřazené do **skupin (KeyGroups – skupiny vlastníků klíčů)**.
-  - Skupina reprezentuje obchodního vlastníka klíčů (např. „admin pool“ = administrátorský fond, distributor, apod.).
+- Licencování je navrženo jako multi-tenantní: **licenční klíče** jsou přiřazené do **skupin (KeyGroups – skupiny vlastníků licenčních klíčů)**.
+  - Skupina reprezentuje obchodního vlastníka licenčních klíčů (např. „admin pool“ = administrátorský fond, distributor, apod.).
   - Uživatel má členství v právě jedné skupině (membership = členství), které se používá pro omezení přístupu na data (scoping).
-- Admin může (v rámci licencování) přepínat přehled přes skupiny a umí klíče **přesouvat** mezi skupinami; přesun se zapisuje do auditní tabulky.
+- Admin může (v rámci licencování) přepínat přehled přes skupiny a umí licenční klíče **přesouvat** mezi skupinami; přesun se zapisuje do auditní tabulky.
 
 ## Slovníček pojmů
 
@@ -38,6 +38,7 @@ Projekt je postaven tak, aby šel postupně rozšiřovat (produkty, objednávky,
 - **Scoping (omezení dat)**: zajištění, že uživatel vidí jen „svá“ data (typicky dle skupiny).
 - **Tenant**: jedna „organizace/skupina“ v rámci jedné aplikace (oddělená data).
 - **Audit**: záznamy o důležitých akcích (kdo, kdy, co změnil).
+- **Licenční klíč (`SerialNumber`)**: jedna vygenerovaná licence (entita v DB), která je vždy přiřazená do jedné skupiny (`GroupId`).
 
 ## Hlavní funkce
 
@@ -46,8 +47,8 @@ Projekt je postaven tak, aby šel postupně rozšiřovat (produkty, objednávky,
 Typicky se pracuje s rolemi:
 
 - **Majitel**: *vždy jen jeden*. Jediný, kdo může vytvářet/upravovat/mazat účty **Admin** (včetně resetu hesla admina).
-- **Admin**: vidí vše (případně filtruje dle skupiny), může přesouvat klíče mezi skupinami.
-- **Distributor**: může generovat klíče a spravovat licencování pouze ve své skupině.
+- **Admin**: vidí vše (případně filtruje dle skupiny), může přesouvat licenční klíče mezi skupinami.
+- **Distributor**: může generovat licenční klíče a spravovat licencování pouze ve své skupině.
 - **Reseller (prodejce) / End-user (koncový uživatel)**: podle nastavených pravidel přístupu (policy).
 
 Přístup k licencování je chráněn přes pravidla přístupu (policy), aby se nedalo “dostat” na cizí data jen úpravou URL.
@@ -56,8 +57,8 @@ Přístup k licencování je chráněn přes pravidla přístupu (policy), aby s
 
 V levém menu jsou licencování rozdělené do samostatných částí:
 
-- **Přehled licencí**: poslední klíče, rychlý přehled stavu, detail licence.
-- **Generování licencí**: formulář pro vygenerování klíčů. Stránka po vygenerování zobrazuje pouze naposledy vytvořenou várku.
+- **Přehled licencí**: poslední licenční klíče, rychlý přehled stavu, detail licence.
+- **Generování licencí**: formulář pro vygenerování licenčních klíčů. Stránka po vygenerování zobrazuje pouze naposledy vytvořenou várku.
 - **Instalace**: přehled posledních instalačních událostí (historií).
 
 UI používá HTMX pro částečné aktualizace bez nutnosti plného znovunačtení stránky.
@@ -70,7 +71,7 @@ Zjednodušeně:
 
 - **Každý licenční klíč (`SerialNumber`) má `GroupId`** – patří do jedné skupiny.
 - **Každý ne-admin uživatel má členství v právě jedné skupině** – podle toho se mu „oříznou“ data (scoping).
-- **Admin není scopeovaný** (může přepínat/filtruje přes skupiny), a navíc jako jediný může klíče mezi skupinami přesouvat.
+- **Admin není scopeovaný** (může přepínat/filtruje přes skupiny), a navíc jako jediný může licenční klíče mezi skupinami přesouvat.
 
 #### Datový model (EF Core)
 
@@ -84,7 +85,7 @@ Multi-tenant oddělení není řešené přes Identity role, ale přes **samosta
   - **omezení „1 členství na uživatele“** je vynucené unikátním indexem na `UserId`
 - `SerialNumbers`
   - `GroupId` je foreign key na `KeyGroups` (indexované)
-  - `GroupId` má default `AdminGroupId` (pokud by někdo vytvořil klíč bez explicitní skupiny)
+  - `GroupId` má default `AdminGroupId` (pokud by někdo vytvořil licenční klíč bez explicitní skupiny)
 - `SerialNumberGroupAudits`
   - audit přesunů: `FromGroupId`, `ToGroupId`, `ChangedByUserId`, `ChangedAt`
 
@@ -111,33 +112,33 @@ Princip scoping je jednoduchý: u většiny licenčních dotazů se použije `Gr
   - jakýkoliv `groupId` v URL se ignoruje (uživatel nemůže „přepnout tenant“ ručně)
   - pokud uživatel nemá členství ve skupině, licenční stránky vrací `Forbid()` a UI ukáže hlášku
 
-#### Přesun klíče mezi skupinami + audit
+#### Přesun licenčního klíče mezi skupinami + audit
 
 Pouze Admin smí přesouvat licenční klíče mezi skupinami:
 
 - operace změní `SerialNumbers.GroupId`
 - zároveň se zapíše auditní záznam do `SerialNumberGroupAudits` (odkud/kam/kdo/kdy)
 
-To je důležité pro dohledatelnost („proč najednou klíč patří jinému distributorovi?“).
+To je důležité pro dohledatelnost („proč najednou licenční klíč patří jinému distributorovi?“).
 
 #### Praktický příklad
 
 1) Admin vytvoří distributora → vznikne mu skupina.
-2) Distributor vygeneruje klíče → všechny mají `GroupId` distributora.
-3) Distributor vidí pouze své klíče (scoping).
-4) Admin může klíč přesunout do jiné skupiny (např. při změně vlastníka) → vznikne auditní stopa.
+2) Distributor vygeneruje licenční klíče → všechny mají `GroupId` distributora.
+3) Distributor vidí pouze své licenční klíče (scoping).
+4) Admin může licenční klíč přesunout do jiné skupiny (např. při změně vlastníka) → vznikne auditní stopa.
 
 ## Možná budoucí rozšíření
 
 Nápady na smysluplná rozšíření, která na současnou architekturu přirozeně navazují:
 
-- **Produkty a plány**: navázat klíče na konkrétní produkt/edici, délku podpory, přepínače funkcí (feature flags).
+- **Produkty a plány**: navázat licenční klíče na konkrétní produkt/edici, délku podpory, přepínače funkcí (feature flags).
 - **Objednávky a fakturace**: import/export objednávek, napojení na fakturační systém, DPH, párování plateb.
 - **Samoobslužný portál pro koncové uživatele**: správa zařízení, odpojení zařízení, zobrazení aktivací, změny profilu.
 - **Integrace**: notifikační volání (webhooky) pro události (vygenerováno/přiřazeno/revokováno), programové rozhraní (API) pro e‑shop, jednotné přihlášení (SSO – např. Entra ID / OAuth2).
 - **Přehledy a statistiky**: přehledy pro admin/distributory (aktivace v čase, nejčastější zařízení, top produkty).
 - **Jemnější model oddělení partnerů**: podskupiny (prodejce pod distributorem), více členství na uživatele (pokud bude potřeba).
-- **Bezpečnost a provoz**: rotace klíčů, detailnější auditní záznamy, „zpevnění“ přihlašovacích/emailových toků (hardening), omezování pokusů (rate limiting) dle IP/uživatele, alerting.
+- **Bezpečnost a provoz**: rotace licenčních klíčů, detailnější auditní záznamy, „zpevnění“ přihlašovacích/emailových toků (hardening), omezování pokusů (rate limiting) dle IP/uživatele, alerting.
 - **Provoz a automatizace (DevOps)**: docker-compose (spuštění SQL + app v kontejnerech), CI (automatické build/test), automatické migrace na testovací/provozní prostředí (staging/prod).
 
 ## Architektura / komponenty
