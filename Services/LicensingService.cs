@@ -48,6 +48,7 @@ public sealed class LicensingService(ApplicationDbContext db)
         int groupLength,
         int maxDevices,
         Guid groupId,
+        string? ownerUserId = null,
         CancellationToken ct = default)
     {
         count = Math.Clamp(count, 1, 5000);
@@ -73,6 +74,7 @@ public sealed class LicensingService(ApplicationDbContext db)
                 CreatedAt = DateTime.UtcNow,
                 IsRevoked = false,
                 MaxDevices = maxDevices,
+                OwnerUserId = string.IsNullOrWhiteSpace(ownerUserId) ? null : ownerUserId,
             });
         }
 
@@ -105,6 +107,7 @@ public sealed class LicensingService(ApplicationDbContext db)
                         CreatedAt = DateTime.UtcNow,
                         IsRevoked = false,
                         MaxDevices = maxDevices,
+                        OwnerUserId = string.IsNullOrWhiteSpace(ownerUserId) ? null : ownerUserId,
                     };
 
                     db.SerialNumbers.Add(entity);

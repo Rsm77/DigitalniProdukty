@@ -61,6 +61,16 @@ public sealed class LicensingAdminController(
         ViewData["SelectedGroupId"] = selectedGroupId;
     }
 
+    private async Task<Guid?> GetGroupIdForUserIdAsync(string userId, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(userId)) return null;
+
+        return await db.KeyGroupMembers
+            .Where(x => x.UserId == userId)
+            .Select(x => (Guid?)x.GroupId)
+            .FirstOrDefaultAsync(ct);
+    }
+
     [HttpGet("")]
     public async Task<IActionResult> Index([FromQuery] Guid? groupId, CancellationToken ct)
     {
@@ -132,6 +142,8 @@ public sealed class LicensingAdminController(
         public int Groups { get; set; } = 4;
         public int GroupLength { get; set; } = 5;
         public int MaxDevices { get; set; } = 1;
+
+        public string? EndUserEmail { get; set; }
     }
 
     [Authorize(Policy = Authz.Policies.SerialNumbers_Generate)]
@@ -141,19 +153,91 @@ public sealed class LicensingAdminController(
     {
         var selectedGroupId = GroupContextService.NormalizeRequestedGroupId(groupId);
 
+        var endUserEmail = (input.EndUserEmail ?? string.Empty).Trim();
+        ViewData["EndUserEmail"] = endUserEmail;
+
+        string? ownerUserId = null;
+
         Guid targetGroupId;
-        if (GroupContextService.IsAdmin(User))
+        if (!string.IsNullOrWhiteSpace(endUserEmail))
         {
-            targetGroupId = selectedGroupId ?? KeyGroups.AdminGroupId;
+            var endUser = await userManager.FindByEmailAsync(endUserEmail);
+            if (endUser is null)
+            {
+                TempData[ToastMessageTempDataKey] = string.Format(t["LicensingAdmin.Toast.UserNotFound"].Value, endUserEmail);
+                TempData[ToastKindTempDataKey] = "error";
+
+                ViewData["Title"] = t["LicensingAdmin.Generate.Title"].Value;
+                await LoadGroupsForAdminAsync(selectedGroupId, ct);
+                var empty = Array.Empty<DigitalniProdukty.Models.SerialNum.SerialNumberModel>();
+                if (Request.IsHtmx()) return PartialView("Generate", empty);
+                return View("Generate", empty);
+            }
+
+            if (!await userManager.IsInRoleAsync(endUser, Authz.Roles.EndUser))
+            {
+                TempData[ToastMessageTempDataKey] = t["LicensingAdmin.Toast.EndUserRequired"].Value;
+                TempData[ToastKindTempDataKey] = "warning";
+
+                ViewData["Title"] = t["LicensingAdmin.Generate.Title"].Value;
+                await LoadGroupsForAdminAsync(selectedGroupId, ct);
+                var empty = Array.Empty<DigitalniProdukty.Models.SerialNum.SerialNumberModel>();
+                if (Request.IsHtmx()) return PartialView("Generate", empty);
+                return View("Generate", empty);
+            }
+
+            var endUserGroupId = await GetGroupIdForUserIdAsync(endUser.Id, ct);
+            if (endUserGroupId is null)
+            {
+                TempData[ToastMessageTempDataKey] = t["LicensingAdmin.Toast.EndUserNoGroup"].Value;
+                TempData[ToastKindTempDataKey] = "error";
+
+                ViewData["Title"] = t["LicensingAdmin.Generate.Title"].Value;
+                await LoadGroupsForAdminAsync(selectedGroupId, ct);
+                var empty = Array.Empty<DigitalniProdukty.Models.SerialNum.SerialNumberModel>();
+                if (Request.IsHtmx()) return PartialView("Generate", empty);
+                return View("Generate", empty);
+            }
+
+            // When generating directly for an end-user, the target group is derived from that user's membership.
+            targetGroupId = endUserGroupId.Value;
+            ownerUserId = endUser.Id;
+            selectedGroupId = targetGroupId;
+
+            // Non-admins may only assign within their own group.
+            if (!GroupContextService.IsAdmin(User))
+            {
+                var scoped = await RequireScopedGroupIdOrForbidAsync(null, ct);
+                if (scoped is null) return Forbid();
+
+                if (scoped.Value != targetGroupId)
+                {
+                    TempData[ToastMessageTempDataKey] = t["LicensingAdmin.Toast.EndUserOutsideScope"].Value;
+                    TempData[ToastKindTempDataKey] = "error";
+
+                    ViewData["Title"] = t["LicensingAdmin.Generate.Title"].Value;
+                    await LoadGroupsForAdminAsync(selectedGroupId, ct);
+                    var empty = Array.Empty<DigitalniProdukty.Models.SerialNum.SerialNumberModel>();
+                    if (Request.IsHtmx()) return PartialView("Generate", empty);
+                    return View("Generate", empty);
+                }
+            }
         }
         else
         {
-            var scoped = await RequireScopedGroupIdOrForbidAsync(null, ct);
-            if (scoped is null) return Forbid();
-            targetGroupId = scoped.Value;
+            if (GroupContextService.IsAdmin(User))
+            {
+                targetGroupId = selectedGroupId ?? KeyGroups.AdminGroupId;
+            }
+            else
+            {
+                var scoped = await RequireScopedGroupIdOrForbidAsync(null, ct);
+                if (scoped is null) return Forbid();
+                targetGroupId = scoped.Value;
+            }
         }
 
-        var created = await licensing.GenerateAsync(input.Count, input.Groups, input.GroupLength, input.MaxDevices, targetGroupId, ct);
+        var created = await licensing.GenerateAsync(input.Count, input.Groups, input.GroupLength, input.MaxDevices, targetGroupId, ownerUserId, ct);
 
         TempData[ToastMessageTempDataKey] = string.Format(t["LicensingAdmin.Toast.Generated"].Value, input.Count);
         TempData[ToastKindTempDataKey] = "success";

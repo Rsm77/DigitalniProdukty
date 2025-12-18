@@ -10,6 +10,7 @@
 
     var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
     var selectedGroupId = ViewData["SelectedGroupId"] as Guid?;
+    var endUserEmail = ViewData["EndUserEmail"] as string ?? string.Empty;
 }
 
 <div class="app-card" id="licensing-generate">
@@ -25,7 +26,7 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
                     <div class="app-field sm:col-span-2">
                         <label>Skupina</label>
-                        <select name="groupId">
+                        <select name="groupId" onchange="this.form.submit()">
                             @if (groups is not null)
                             {
                                 foreach (var g in groups)
@@ -41,10 +42,6 @@
                                 }
                             }
                         </select>
-                    </div>
-
-                    <div class="sm:col-span-2 flex items-end justify-end">
-                        <button type="submit" class="app-btn-secondary">Zobrazit</button>
                     </div>
                 </div>
             </form>
@@ -80,6 +77,12 @@
                 <div class="app-field">
                     <label>@T["LicensingAdmin.Index.Form.MaxDevices"]</label>
                     <input name="MaxDevices" type="number" min="1" max="100" value="1" />
+                </div>
+
+                <div class="app-field sm:col-span-2">
+                    <label>@T["LicensingAdmin.Generate.EndUserEmail.Label"]</label>
+                    <input name="EndUserEmail" type="email" placeholder="@T["LicensingAdmin.Generate.EndUserEmail.Placeholder"]" value="@endUserEmail" />
+                    <div class="app-help">@T["LicensingAdmin.Generate.EndUserEmail.Help"]</div>
                 </div>
             </div>
 

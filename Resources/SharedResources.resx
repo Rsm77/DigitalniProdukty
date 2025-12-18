@@ -85,6 +85,15 @@
   <data name="LicensingAdmin.Generate.GeneratedKeys" xml:space="preserve">
     <value>Naposledy vygenerované</value>
   </data>
+  <data name="LicensingAdmin.Generate.EndUserEmail.Label" xml:space="preserve">
+    <value>Koncový uživatel (e-mail)</value>
+  </data>
+  <data name="LicensingAdmin.Generate.EndUserEmail.Placeholder" xml:space="preserve">
+    <value>např. uzivatel@example.com</value>
+  </data>
+  <data name="LicensingAdmin.Generate.EndUserEmail.Help" xml:space="preserve">
+    <value>Nechte prázdné, pokud chcete vygenerovat licence pouze do skupiny. Pokud vyplníte e-mail, klíče se rovnou přiřadí tomuto koncovému uživateli.</value>
+  </data>
   <data name="LicensingAdmin.Details.Title" xml:space="preserve">
     <value>Detail klíče</value>
   </data>
@@ -206,6 +215,15 @@
     </data>
     <data name="LicensingAdmin.Toast.UserNotFound" xml:space="preserve">
       <value>Uživatel s e-mailem {0} nebyl nalezen.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.EndUserRequired" xml:space="preserve">
+      <value>Zadaný účet není koncový uživatel.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.EndUserNoGroup" xml:space="preserve">
+      <value>Koncový uživatel nemá přiřazenou skupinu. Kontaktujte prosím administrátora.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.EndUserOutsideScope" xml:space="preserve">
+      <value>Tento koncový uživatel není ve vaší skupině.</value>
     </data>
     <data name="LicensingAdmin.Toast.AlreadyAssigned" xml:space="preserve">
       <value>Klíč už má vlastníka {0}.</value>
