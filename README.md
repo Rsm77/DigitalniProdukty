@@ -250,6 +250,31 @@ npm run watch:css
 - `appsettings.json` je commitovaný a neobsahuje citlivé údaje.
 - `appsettings.Development.json` je **ignorovaný v gitu** (viz `.gitignore`) a je určen pro lokální nastavení.
 
+### Lokalizace (přepínání jazyků)
+
+Aplikace podporuje UI lokalizaci pro **češtinu (`cs`)** a **angličtinu (`en`)**.
+
+Jak to funguje:
+
+- V `Program.cs` je nastavené `RequestLocalizationOptions`:
+  - `DefaultRequestCulture = cs`
+  - `SupportedCultures` / `SupportedUICultures` obsahují `cs` a `en`
+  - jediný provider je `CookieRequestCultureProvider` ⇒ aplikace **nepřebírá jazyk z `Accept-Language`**, ale řídí se pouze cookie.
+
+- V UI (hlavička v layoutu) je přepínač, který volá endpoint:
+  - `GET /culture/set?culture=cs|en&returnUrl=...`
+
+- `CultureController` nastaví cookie `CookieRequestCultureProvider.DefaultCookieName` (typicky `.AspNetCore.Culture`) s expirací ~1 rok.
+  - cookie je označená jako `IsEssential = true` (funguje i bez volitelných cookies)
+
+- Layout nastavuje také `<html lang="...">` podle `CurrentUICulture`.
+
+Pokud budeš přidávat další jazyk:
+
+- doplň `.resx` soubory v `Resources/` (CZ/EN už existují),
+- přidej jazyk do seznamu supported cultures v `Program.cs` a do whitelistu v `CultureController`,
+- případně uprav přepínač v layoutu (teď je to jednoduché `cs` ↔ `en`).
+
 ### Bootstrap majitel (Majitel)
 
 Aplikace umí v Development vytvořit také účet **Majitel** (pokud žádný Majitel neexistuje). Majitel je governance role pro správu adminů.
