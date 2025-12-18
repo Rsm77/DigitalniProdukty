@@ -246,6 +246,93 @@
   <data name="Auth.Logout" xml:space="preserve">
     <value>Odhlásit</value>
   </data>
+  <data name="Nav.Admin.GroupsUsers" xml:space="preserve">
+    <value>Skupiny a uživatelé</value>
+  </data>
+
+  <data name="Admin.Index.Title" xml:space="preserve">
+    <value>Skupiny a uživatelé</value>
+  </data>
+  <data name="Admin.Groups.Title" xml:space="preserve">
+    <value>Skupiny</value>
+  </data>
+  <data name="Admin.Groups.Create.Name" xml:space="preserve">
+    <value>Název skupiny</value>
+  </data>
+  <data name="Admin.Groups.Create.Role" xml:space="preserve">
+    <value>Role skupiny</value>
+  </data>
+  <data name="Admin.Groups.Create.Button" xml:space="preserve">
+    <value>Vytvořit skupinu</value>
+  </data>
+  <data name="Admin.Groups.Table.Name" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="Admin.Groups.Table.Members" xml:space="preserve">
+    <value>Členové</value>
+  </data>
+  <data name="Admin.Groups.Table.Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Admin.Groups.Table.Actions" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Admin.Groups.Rename.Button" xml:space="preserve">
+    <value>Přejmenovat</value>
+  </data>
+
+  <data name="Admin.Users.Title" xml:space="preserve">
+    <value>Uživatelé</value>
+  </data>
+  <data name="Admin.Users.Table.Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Admin.Users.Table.Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Admin.Users.Table.Group" xml:space="preserve">
+    <value>Skupina</value>
+  </data>
+  <data name="Admin.Users.Table.Actions" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Admin.Users.Save" xml:space="preserve">
+    <value>Uložit</value>
+  </data>
+  <data name="Admin.Users.Help" xml:space="preserve">
+    <value>Tip: pro role Distributor/Reseller/EndUser je doporučené mít nastavenou skupinu (scoping licencí).</value>
+  </data>
+
+  <data name="Admin.Toast.GroupNameRequired" xml:space="preserve">
+    <value>Zadejte název skupiny.</value>
+  </data>
+  <data name="Admin.Toast.GroupNameExists" xml:space="preserve">
+    <value>Skupina s tímto názvem už existuje.</value>
+  </data>
+  <data name="Admin.Toast.GroupCreated" xml:space="preserve">
+    <value>Skupina byla vytvořena.</value>
+  </data>
+  <data name="Admin.Toast.GroupRenamed" xml:space="preserve">
+    <value>Skupina byla přejmenována.</value>
+  </data>
+  <data name="Admin.Toast.InvalidGroup" xml:space="preserve">
+    <value>Neplatná skupina.</value>
+  </data>
+  <data name="Admin.Toast.InvalidUser" xml:space="preserve">
+    <value>Neplatný uživatel.</value>
+  </data>
+  <data name="Admin.Toast.InvalidRole" xml:space="preserve">
+    <value>Neplatná role.</value>
+  </data>
+  <data name="Admin.Toast.GroupRequired" xml:space="preserve">
+    <value>Pro tuto roli je vyžadována skupina.</value>
+  </data>
+  <data name="Admin.Toast.UserUpdated" xml:space="preserve">
+    <value>Uživatel byl aktualizován.</value>
+  </data>
+  <data name="Admin.Toast.GroupRoleMismatch" xml:space="preserve">
+    <value>Vybraná skupina neodpovídá zvolené roli (Distributor/Reseller).</value>
+  </data>
   <data name="Auth.Register" xml:space="preserve">
     <value>Registrace</value>
   </data>

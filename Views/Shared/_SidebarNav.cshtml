@@ -104,4 +104,18 @@
             <span>@T["Nav.CreateEndUser"]</span>
         </a>
     </authorize>
+
+    <authorize roles="@Authz.Roles.Admin">
+        <a class='@navItemClass("Admin", "Index")'
+           asp-area="" asp-controller="Admin" asp-action="Index"
+           preload>
+            <svg class="h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="7" r="4" />
+                <path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2" />
+                <path d="M19 8v6" />
+                <path d="M22 11h-6" />
+            </svg>
+            <span>@T["Nav.Admin.GroupsUsers"]</span>
+        </a>
+    </authorize>
 </nav>

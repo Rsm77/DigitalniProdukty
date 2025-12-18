@@ -1,0 +1,312 @@
+using DigitalniProdukty.Data;
+using DigitalniProdukty.Models.Licensing;
+using DigitalniProdukty.Security;
+using Htmx;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+
+namespace DigitalniProdukty.Controllers;
+
+[Authorize(Roles = Authz.Roles.Admin)]
+[Route("admin")]
+public sealed class AdminController(
+    ApplicationDbContext db,
+    UserManager<IdentityUser> userManager,
+    IStringLocalizer<SharedResources> t) : Controller
+{
+    private const string ToastMessageTempDataKey = "ToastMessage";
+    private const string ToastKindTempDataKey = "ToastKind";
+
+    private static readonly string[] GroupRoles = [Authz.Roles.Distributor, Authz.Roles.Reseller];
+
+    public sealed record GroupRow(Guid Id, string Name, string Role, int Members);
+
+    public sealed record UserRow(
+        string Id,
+        string Email,
+        string Role,
+        Guid? GroupId,
+        string? GroupName);
+
+    public sealed class IndexVm
+    {
+        public required IReadOnlyList<GroupRow> Groups { get; init; }
+        public required IReadOnlyList<UserRow> Users { get; init; }
+        public required IReadOnlyList<string> Roles { get; init; }
+    }
+
+    [HttpGet("")]
+    public async Task<IActionResult> Index(CancellationToken ct)
+    {
+        var groups = await db.KeyGroups
+            .OrderBy(x => x.Name)
+            .Select(g => new GroupRow(
+                g.Id,
+                g.Name,
+                g.Role,
+                Members: db.KeyGroupMembers.Count(m => m.GroupId == g.Id)))
+            .ToListAsync(ct);
+
+        var groupNames = groups.ToDictionary(x => x.Id, x => x.Name);
+
+        var memberships = await db.KeyGroupMembers
+            .ToDictionaryAsync(x => x.UserId, x => x.GroupId, ct);
+
+        var users = await userManager.Users
+            .OrderBy(x => x.Email)
+            .ToListAsync(ct);
+
+        var userRows = new List<UserRow>(capacity: users.Count);
+        foreach (var user in users)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+            var primaryRole = roles.FirstOrDefault(r => Authz.Roles.All.Contains(r, StringComparer.Ordinal))
+                              ?? roles.FirstOrDefault()
+                              ?? string.Empty;
+
+            Guid? groupId = null;
+            string? groupName = null;
+            if (memberships.TryGetValue(user.Id, out var gid))
+            {
+                groupId = gid;
+                if (groupNames.TryGetValue(gid, out var gn)) groupName = gn;
+            }
+
+            userRows.Add(new UserRow(
+                Id: user.Id,
+                Email: user.Email ?? user.UserName ?? user.Id,
+                Role: primaryRole,
+                GroupId: groupId,
+                GroupName: groupName));
+        }
+
+        ViewData["Title"] = t["Admin.Index.Title"].Value;
+
+        var vm = new IndexVm
+        {
+            Groups = groups,
+            Users = userRows,
+            Roles = Authz.Roles.All,
+        };
+
+        if (Request.IsHtmx()) return PartialView("Index", vm);
+        return View("Index", vm);
+    }
+
+    public sealed class CreateGroupInput
+    {
+        public string? Name { get; set; }
+        public string? Role { get; set; }
+    }
+
+    [HttpPost("groups/create")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateGroup(CreateGroupInput input, CancellationToken ct)
+    {
+        var name = (input.Name ?? string.Empty).Trim();
+        var role = (input.Role ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameRequired"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (!GroupRoles.Contains(role, StringComparer.Ordinal))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var exists = await db.KeyGroups.AnyAsync(x => x.Name == name, ct);
+        if (exists)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameExists"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        db.KeyGroups.Add(new KeyGroupModel
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Role = role,
+        });
+
+        await db.SaveChangesAsync(ct);
+
+        TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupCreated"].Value;
+        TempData[ToastKindTempDataKey] = "success";
+        return RedirectToAction(nameof(Index));
+    }
+
+    public sealed class RenameGroupInput
+    {
+        public Guid Id { get; set; }
+        public string? Name { get; set; }
+        public string? Role { get; set; }
+    }
+
+    [HttpPost("groups/rename")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RenameGroup(RenameGroupInput input, CancellationToken ct)
+    {
+        var name = (input.Name ?? string.Empty).Trim();
+        var role = (input.Role ?? string.Empty).Trim();
+
+        if (input.Id == Guid.Empty || string.IsNullOrWhiteSpace(name))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (!GroupRoles.Contains(role, StringComparer.Ordinal))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var group = await db.KeyGroups.FirstOrDefaultAsync(x => x.Id == input.Id, ct);
+        if (group is null)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var exists = await db.KeyGroups.AnyAsync(x => x.Id != input.Id && x.Name == name, ct);
+        if (exists)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameExists"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        group.Name = name;
+        group.Role = role;
+        await db.SaveChangesAsync(ct);
+
+        TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRenamed"].Value;
+        TempData[ToastKindTempDataKey] = "success";
+        return RedirectToAction(nameof(Index));
+    }
+
+    public sealed class UpdateUserInput
+    {
+        public string? UserId { get; set; }
+        public string? Role { get; set; }
+        public Guid? GroupId { get; set; }
+    }
+
+    [HttpPost("users/update")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateUser(UpdateUserInput input, CancellationToken ct)
+    {
+        var userId = (input.UserId ?? string.Empty).Trim();
+        var role = (input.Role ?? string.Empty).Trim();
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidUser"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (!Authz.Roles.All.Contains(role, StringComparer.Ordinal))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (role != Authz.Roles.Admin && (input.GroupId is null || input.GroupId == Guid.Empty))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRequired"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidUser"].Value;
+            TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Normalize "no group".
+        var desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
+
+        if (desiredGroupId is not null)
+        {
+            var group = await db.KeyGroups.FirstOrDefaultAsync(x => x.Id == desiredGroupId.Value, ct);
+            if (group is null)
+            {
+                TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
+                TempData[ToastKindTempDataKey] = "error";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // For Distributor/Reseller accounts, the selected group must match the same role.
+            if ((role == Authz.Roles.Distributor || role == Authz.Roles.Reseller)
+                && !string.Equals(group.Role, role, StringComparison.Ordinal))
+            {
+                TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRoleMismatch"].Value;
+                TempData[ToastKindTempDataKey] = "warning";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // Roles: enforce exactly one of our known roles.
+        var currentRoles = await userManager.GetRolesAsync(user);
+        foreach (var knownRole in Authz.Roles.All)
+        {
+            if (!string.Equals(knownRole, role, StringComparison.Ordinal) && currentRoles.Contains(knownRole, StringComparer.Ordinal))
+            {
+                await userManager.RemoveFromRoleAsync(user, knownRole);
+            }
+        }
+
+        if (!currentRoles.Contains(role, StringComparer.Ordinal))
+        {
+            await userManager.AddToRoleAsync(user, role);
+        }
+
+        // Group membership: 1 row per user (by design).
+        var member = await db.KeyGroupMembers.FirstOrDefaultAsync(x => x.UserId == user.Id, ct);
+        if (desiredGroupId is null)
+        {
+            if (member is not null)
+            {
+                db.KeyGroupMembers.Remove(member);
+            }
+        }
+        else
+        {
+            if (member is null)
+            {
+                db.KeyGroupMembers.Add(new Models.Licensing.KeyGroupMemberModel
+                {
+                    GroupId = desiredGroupId.Value,
+                    UserId = user.Id,
+                });
+            }
+            else
+            {
+                member.GroupId = desiredGroupId.Value;
+            }
+        }
+
+        await db.SaveChangesAsync(ct);
+
+        TempData[ToastMessageTempDataKey] = t["Admin.Toast.UserUpdated"].Value;
+        TempData[ToastKindTempDataKey] = "success";
+        return RedirectToAction(nameof(Index));
+    }
+}
