@@ -52,7 +52,16 @@
     <value>Vítejte</value>
   </data>
   <data name="Home.Index.Description" xml:space="preserve">
-    <value>Vítejte ve vašem HTMX-first admin shellu.</value>
+    <value>Aplikace pro správu licencí digitálních produktů: přehled klíčů, generování, práce se skupinami (tenanty) a historie instalací.</value>
+  </data>
+  <data name="Home.Index.LoginHint" xml:space="preserve">
+    <value>Pro pokračování se přihlaste. Po přihlášení se zde zobrazí rychlé odkazy podle vašich oprávnění.</value>
+  </data>
+  <data name="Home.Index.Callout" xml:space="preserve">
+    <value>Vidíte pouze data, ke kterým máte oprávnění (scoping podle skupiny/tenanta). Admin může přepínat skupiny a přesouvat klíče mezi skupinami.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Title" xml:space="preserve">
+    <value>Rychlé odkazy</value>
   </data>
   <data name="Home.Index.Learn.Prefix" xml:space="preserve">
     <value>Zjistěte více o</value>
@@ -366,6 +375,21 @@
   </data>
   <data name="Account.TwoFactor.SetupHelp" xml:space="preserve">
     <value>Naskenujte QR kód nebo zadejte klíč do autentizační aplikace a potvrďte ověřovacím kódem.</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Title" xml:space="preserve">
+    <value>Stručný návod</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step1" xml:space="preserve">
+    <value>1) Nainstalujte si autentizační aplikaci (např. Microsoft Authenticator / Google Authenticator).</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step2" xml:space="preserve">
+    <value>2) V aplikaci přidejte účet: naskenujte QR kód (nebo zadejte sdílený klíč ručně).</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step3" xml:space="preserve">
+    <value>3) Zadejte 6místný kód z aplikace sem a potvrďte „Zapnout 2FA“.</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.RecoveryHint" xml:space="preserve">
+    <value>Tip: Po zapnutí si uložte recovery kódy na bezpečné místo (pomůžou, když ztratíte telefon).</value>
   </data>
   <data name="Account.TwoFactor.QrCodeLabel" xml:space="preserve">
     <value>QR kód</value>

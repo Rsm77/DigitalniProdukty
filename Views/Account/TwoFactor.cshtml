@@ -46,6 +46,16 @@
                     </div>
 
                     <div class="app-form-section-fields">
+                        <div class="app-callout app-callout-info">
+                            <div class="text-sm font-semibold text-slate-900">@T["Account.TwoFactor.Guide.Title"]</div>
+                            <div class="mt-1 text-sm text-slate-600 space-y-1">
+                                <div>@T["Account.TwoFactor.Guide.Step1"]</div>
+                                <div>@T["Account.TwoFactor.Guide.Step2"]</div>
+                                <div>@T["Account.TwoFactor.Guide.Step3"]</div>
+                                <div class="text-slate-500">@T["Account.TwoFactor.Guide.RecoveryHint"]</div>
+                            </div>
+                        </div>
+
                         @if (!string.IsNullOrEmpty(Model.QrCodeSvg))
                         {
                             <div class="app-field">

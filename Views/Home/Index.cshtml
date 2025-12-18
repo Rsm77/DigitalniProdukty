@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Extensions.Localization
+@using DigitalniProdukty.Security
 @inject IStringLocalizer<SharedResources> T
 
 @{
@@ -10,8 +11,53 @@
         <h1 class="text-2xl font-semibold text-slate-900">@ViewData["Title"]</h1>
         <p class="text-sm text-slate-500">@T["Home.Index.Welcome"]</p>
     </div>
+
     <p class="text-slate-700">@T["Home.Index.Description"]</p>
-    <div class="app-callout app-callout-info">
-        @T["Home.Index.Learn.Prefix"] <a class="underline" href="https://learn.microsoft.com/aspnet/core">@T["Home.Index.Learn.LinkText"]</a>.
-    </div>
+
+    @if (!(User?.Identity?.IsAuthenticated ?? false))
+    {
+        <div class="app-callout app-callout-info">
+            @T["Home.Index.LoginHint"]
+        </div>
+    }
+    else
+    {
+        <div class="app-callout app-callout-info">
+            @T["Home.Index.Callout"]
+        </div>
+
+        <div class="space-y-2">
+            <h2 class="text-sm font-semibold text-slate-900">@T["Home.Index.QuickLinks.Title"]</h2>
+
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <authorize>
+                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="Account" asp-action="Serials" preload>
+                        <span>@T["Account.Nav.Serials"]</span>
+                        <span class="text-slate-400">→</span>
+                    </a>
+                </authorize>
+
+                <authorize policy="@Authz.Policies.SerialNumbers_Sell">
+                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="Index" preload>
+                        <span>@T["Nav.Licensing.Manage"]</span>
+                        <span class="text-slate-400">→</span>
+                    </a>
+                </authorize>
+
+                <authorize policy="@Authz.Policies.SerialNumbers_Generate">
+                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="GeneratePage" preload>
+                        <span>@T["Nav.Licensing.Generate"]</span>
+                        <span class="text-slate-400">→</span>
+                    </a>
+                </authorize>
+
+                <authorize policy="@Authz.Policies.LicensingAdmin">
+                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="Installations" preload>
+                        <span>@T["LicensingAdmin.Index.Button.Installations"]</span>
+                        <span class="text-slate-400">→</span>
+                    </a>
+                </authorize>
+            </div>
+        </div>
+    }
 </div>

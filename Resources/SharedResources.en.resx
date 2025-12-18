@@ -52,7 +52,16 @@
     <value>Welcome</value>
   </data>
   <data name="Home.Index.Description" xml:space="preserve">
-    <value>Welcome to your HTMX-first admin shell.</value>
+    <value>An app for managing digital product licenses: key overview, generation, tenant-based access scoping, and installation history.</value>
+  </data>
+  <data name="Home.Index.LoginHint" xml:space="preserve">
+    <value>Please sign in to continue. After signing in, quick links will appear based on your permissions.</value>
+  </data>
+  <data name="Home.Index.Callout" xml:space="preserve">
+    <value>You only see data you are allowed to access (tenant/group scoping). Admins can switch groups and transfer keys between groups.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Title" xml:space="preserve">
+    <value>Quick links</value>
   </data>
   <data name="Home.Index.Learn.Prefix" xml:space="preserve">
     <value>Learn about</value>
@@ -366,6 +375,21 @@
   </data>
   <data name="Account.TwoFactor.SetupHelp" xml:space="preserve">
     <value>Scan the QR code or enter the shared key into your authenticator app, then confirm with a verification code.</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Title" xml:space="preserve">
+    <value>Quick guide</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step1" xml:space="preserve">
+    <value>1) Install an authenticator app (e.g., Microsoft Authenticator / Google Authenticator).</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step2" xml:space="preserve">
+    <value>2) Add an account in the app: scan the QR code (or enter the shared key manually).</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.Step3" xml:space="preserve">
+    <value>3) Enter the 6-digit code from the app here and click “Enable 2FA”.</value>
+  </data>
+  <data name="Account.TwoFactor.Guide.RecoveryHint" xml:space="preserve">
+    <value>Tip: After enabling 2FA, store your recovery codes in a safe place (useful if you lose your phone).</value>
   </data>
   <data name="Account.TwoFactor.QrCodeLabel" xml:space="preserve">
     <value>QR code</value>
