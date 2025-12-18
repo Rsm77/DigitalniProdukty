@@ -50,7 +50,7 @@
                         var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
                         if (groups is not null)
                         {
-                            <div class="app-field">
+                            <div class="app-field" id="target-group-field">
                                 <label>@T["Identity.Register.TargetGroup.Label"]</label>
                                 <select asp-for="TargetGroupId">
                                     <option value="">—</option>
@@ -62,6 +62,43 @@
                                 <span asp-validation-for="TargetGroupId"></span>
                                 <div class="app-help">@T["Identity.Register.TargetGroup.Help"]</div>
                             </div>
+
+                            <script>
+                                (function () {
+                                    function applyTargetGroupVisibility(root) {
+                                        var container = root.querySelector('#target-group-field');
+                                        if (!container) return;
+
+                                        var accountType = root.querySelector('select[name="AccountType"]');
+                                        if (!accountType) return;
+
+                                        var targetGroup = container.querySelector('select[name="TargetGroupId"]');
+                                        var isDistributor = accountType.value === '@Authz.Roles.Distributor';
+
+                                        container.style.display = isDistributor ? 'none' : '';
+                                        if (targetGroup) {
+                                            targetGroup.disabled = isDistributor;
+                                            if (isDistributor) {
+                                                targetGroup.value = '';
+                                            }
+                                        }
+                                    }
+
+                                    function init(root) {
+                                        applyTargetGroupVisibility(root);
+
+                                        var accountType = root.querySelector('select[name="AccountType"]');
+                                        if (accountType) {
+                                            accountType.addEventListener('change', function () {
+                                                applyTargetGroupVisibility(root);
+                                            });
+                                        }
+                                    }
+
+                                    document.addEventListener('DOMContentLoaded', function () { init(document); });
+                                    document.body.addEventListener('htmx:load', function (evt) { init(evt.target); });
+                                })();
+                            </script>
                         }
                     }
                     else if (User.IsInRole(Authz.Roles.Distributor))
