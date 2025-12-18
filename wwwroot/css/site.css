@@ -110,12 +110,14 @@
   }
 
   .app-btn-primary,
-  .app-btn-secondary {
+  .app-btn-secondary,
+  .app-btn-danger {
     @apply relative;
   }
 
   .app-btn-primary .htmx-indicator,
-  .app-btn-secondary .htmx-indicator {
+  .app-btn-secondary .htmx-indicator,
+  .app-btn-danger .htmx-indicator {
     @apply absolute right-3 top-1/2 -translate-y-1/2;
   }
 
@@ -222,7 +224,8 @@
 
   /* Buttons: shared base + variants */
   .app-btn-primary,
-  .app-btn-secondary {
+  .app-btn-secondary,
+  .app-btn-danger {
     @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold;
     @apply transition-colors duration-150;
     @apply focus:outline-hidden focus:ring-2 focus:ring-gray-400 focus:ring-offset-1;
@@ -238,14 +241,21 @@
     @apply active:bg-gray-900;
   }
 
+  .app-btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-500;
+    @apply active:bg-red-700;
+  }
+
   /* Buttons inside tables: compact density (systemic) */
   .app-table .app-btn-primary,
-  .app-table .app-btn-secondary {
+  .app-table .app-btn-secondary,
+  .app-table .app-btn-danger {
     @apply px-3 py-1 text-xs;
   }
 
   .app-table .app-btn-primary .htmx-indicator,
-  .app-table .app-btn-secondary .htmx-indicator {
+  .app-table .app-btn-secondary .htmx-indicator,
+  .app-table .app-btn-danger .htmx-indicator {
     @apply right-2;
   }
 

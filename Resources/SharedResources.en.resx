@@ -239,6 +239,19 @@
     <value>Password changed.</value>
   </data>
 
+  <data name="Owner.DeleteConfirm.Title" xml:space="preserve">
+    <value>Confirm deletion</value>
+  </data>
+  <data name="Owner.DeleteConfirm.Body" xml:space="preserve">
+    <value>Do you really want to delete the Admin account “{0}”? This action cannot be undone.</value>
+  </data>
+  <data name="Owner.DeleteConfirm.Actions.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Owner.DeleteConfirm.Actions.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+
   <data name="Admin.Users.ProtectedAccount" xml:space="preserve">
     <value>This account is managed elsewhere.</value>
   </data>

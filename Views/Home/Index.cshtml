@@ -31,10 +31,13 @@
 
             <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <authorize>
-                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="Account" asp-action="Serials" preload>
-                        <span>@T["Account.Nav.Serials"]</span>
-                        <span class="text-slate-400">→</span>
-                    </a>
+                    @if (!User.IsInRole(Authz.Roles.Owner))
+                    {
+                        <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="Account" asp-action="Serials" preload>
+                            <span>@T["Account.Nav.Serials"]</span>
+                            <span class="text-slate-400">→</span>
+                        </a>
+                    }
                 </authorize>
 
                 <authorize policy="@Authz.Policies.SerialNumbers_Sell">

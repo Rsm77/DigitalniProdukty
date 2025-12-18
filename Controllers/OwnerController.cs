@@ -48,6 +48,8 @@ public sealed class OwnerController(
         public string? NewPassword { get; set; }
     }
 
+    public sealed record DeleteConfirmVm(string UserId, string Email);
+
     [HttpGet("")]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -329,5 +331,30 @@ public sealed class OwnerController(
         TempData[ToastMessageTempDataKey] = t["Owner.Toast.AdminDeleted"].Value;
         TempData[ToastKindTempDataKey] = "success";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet("admins/delete-confirm")]
+    public async Task<IActionResult> DeleteAdminConfirm(string? userId)
+    {
+        var id = (userId ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(id)) return Content(string.Empty);
+
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null) return Content(string.Empty);
+
+        var isAdmin = await userManager.IsInRoleAsync(user, Authz.Roles.Admin);
+        if (!isAdmin) return Content(string.Empty);
+
+        var vm = new DeleteConfirmVm(
+            UserId: user.Id,
+            Email: user.Email ?? user.UserName ?? user.Id);
+
+        return PartialView("_DeleteConfirm", vm);
+    }
+
+    [HttpGet("modal/clear")]
+    public IActionResult ClearModal()
+    {
+        return Content(string.Empty);
     }
 }

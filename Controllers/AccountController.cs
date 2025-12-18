@@ -166,6 +166,9 @@ public sealed class AccountController(
     [HttpGet("serials")]
     public async Task<IActionResult> Serials()
     {
+        // Owner (Majitel) never has licenses.
+        if (User.IsInRole(Authz.Roles.Owner)) return Forbid();
+
         var userId = userManager.GetUserId(User);
         if (string.IsNullOrWhiteSpace(userId)) return Challenge();
 

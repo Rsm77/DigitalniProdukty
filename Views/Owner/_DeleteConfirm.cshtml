@@ -1,0 +1,32 @@
+@model DigitalniProdukty.Controllers.OwnerController.DeleteConfirmVm
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<DigitalniProdukty.SharedResources> T
+
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/45">
+    <div class="app-card w-full max-w-lg" role="dialog" aria-modal="true" aria-labelledby="owner-delete-title">
+        <div class="app-card-header">
+            <h2 class="app-card-title" id="owner-delete-title">@T["Owner.DeleteConfirm.Title"]</h2>
+        </div>
+
+        <div class="app-card-body space-y-4">
+            <div class="text-sm text-slate-700">@T["Owner.DeleteConfirm.Body", Model.Email]</div>
+
+            <div class="flex items-center justify-end gap-2">
+                <button type="button"
+                        class="app-btn-secondary"
+                        hx-get="/owner/modal/clear"
+                        hx-target="#owner-modal"
+                        hx-swap="innerHTML">
+                    @T["Owner.DeleteConfirm.Actions.Cancel"]
+                </button>
+
+                <form method="post" asp-controller="Owner" asp-action="DeleteAdmin" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="userId" value="@Model.UserId" />
+                    <button type="submit" class="app-btn-danger whitespace-nowrap">@T["Owner.DeleteConfirm.Actions.Delete"]</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

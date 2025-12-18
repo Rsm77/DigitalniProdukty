@@ -11,7 +11,7 @@
     <div class="app-card-header">
         <div class="flex items-center justify-between gap-4">
             <h1 class="app-card-title">@ViewData["Title"]</h1>
-            <a class="app-btn" asp-controller="Owner" asp-action="CreateAdmin">@T["Owner.Actions.CreateAdmin"]</a>
+            <a class="app-btn-primary whitespace-nowrap" asp-controller="Owner" asp-action="CreateAdmin">@T["Owner.Actions.CreateAdmin"]</a>
         </div>
     </div>
 
@@ -39,12 +39,15 @@
                             <td class="py-1 pr-0">
                                 <div class="flex items-center justify-end gap-2">
                                     <a class="app-btn-secondary" asp-controller="Owner" asp-action="EditAdmin" asp-route-userId="@a.Id">@T["Owner.Actions.Edit"]</a>
-                                    <a class="app-btn-secondary" asp-controller="Owner" asp-action="ResetPassword" asp-route-userId="@a.Id">@T["Owner.Actions.ResetPassword"]</a>
-                                    <form method="post" asp-controller="Owner" asp-action="DeleteAdmin">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="userId" value="@a.Id" />
-                                        <button type="submit" class="app-btn-danger">@T["Owner.Actions.Delete"]</button>
-                                    </form>
+                                    <a class="app-btn-secondary whitespace-nowrap" asp-controller="Owner" asp-action="ResetPassword" asp-route-userId="@a.Id">@T["Owner.Actions.ResetPassword"]</a>
+                                    <button type="button"
+                                            class="app-btn-danger whitespace-nowrap"
+                                            hx-get="/owner/admins/delete-confirm"
+                                            hx-vals='{"userId":"@a.Id"}'
+                                            hx-target="#owner-modal"
+                                            hx-swap="innerHTML">
+                                        @T["Owner.Actions.Delete"]
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -56,3 +59,5 @@
         <div class="text-xs text-slate-500">@T["Owner.Admins.Help"]</div>
     </div>
 </div>
+
+<div id="owner-modal"></div>

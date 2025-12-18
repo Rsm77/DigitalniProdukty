@@ -39,15 +39,18 @@
     </authorize>
 
     <authorize>
-        <a class='@navItemClass("Account", "Serials")'
-           asp-area="" asp-controller="Account" asp-action="Serials"
-           preload>
-            <svg class="h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="7.5" cy="14.5" r="3.5" />
-                <path d="M11 14.5H22v3l-2 2v2h-3v-3h-3" />
-            </svg>
-            <span>@T["Account.Nav.Serials"]</span>
-        </a>
+        @if (!User.IsInRole(Authz.Roles.Owner))
+        {
+            <a class='@navItemClass("Account", "Serials")'
+               asp-area="" asp-controller="Account" asp-action="Serials"
+               preload>
+                <svg class="h-5 w-5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="7.5" cy="14.5" r="3.5" />
+                    <path d="M11 14.5H22v3l-2 2v2h-3v-3h-3" />
+                </svg>
+                <span>@T["Account.Nav.Serials"]</span>
+            </a>
+        }
     </authorize>
 
     <authorize policy="@Authz.Policies.SerialNumbers_Sell">
