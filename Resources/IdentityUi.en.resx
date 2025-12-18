@@ -91,6 +91,19 @@
     <value>Distributor</value>
   </data>
 
+  <data name="Identity.Register.TargetGroup.Label" xml:space="preserve">
+    <value>Target group (tenant)</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Help" xml:space="preserve">
+    <value>Applies to Reseller/End user. A Distributor gets a new group automatically on creation.</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Required" xml:space="preserve">
+    <value>Select a target group.</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Invalid" xml:space="preserve">
+    <value>The selected group does not exist.</value>
+  </data>
+
   <data name="Identity.ForgotPassword.Title" xml:space="preserve">
     <value>Reset password</value>
   </data>

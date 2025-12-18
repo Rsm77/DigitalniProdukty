@@ -91,6 +91,19 @@
     <value>Distributor</value>
   </data>
 
+  <data name="Identity.Register.TargetGroup.Label" xml:space="preserve">
+    <value>Cílová skupina (tenant)</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Help" xml:space="preserve">
+    <value>Platí pro Prodejce/Koncový uživatel. Distributorovi se při vytvoření založí nová skupina automaticky.</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Required" xml:space="preserve">
+    <value>Vyberte cílovou skupinu.</value>
+  </data>
+  <data name="Identity.Register.TargetGroup.Invalid" xml:space="preserve">
+    <value>Vybraná skupina neexistuje.</value>
+  </data>
+
   <data name="Identity.ForgotPassword.Title" xml:space="preserve">
     <value>Obnovení hesla</value>
   </data>

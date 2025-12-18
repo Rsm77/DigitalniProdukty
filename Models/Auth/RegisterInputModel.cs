@@ -10,6 +10,8 @@ public sealed class RegisterInputModel
     [Display(Name = nameof(Annotations.Field_AccountType), ResourceType = typeof(Annotations))]
     public string? AccountType { get; set; }
 
+    public Guid? TargetGroupId { get; set; }
+
     [Required(ErrorMessageResourceName = nameof(Annotations.Validation_Required), ErrorMessageResourceType = typeof(Annotations))]
     [EmailAddress(ErrorMessageResourceName = nameof(Annotations.Validation_EmailAddress), ErrorMessageResourceType = typeof(Annotations))]
     [Display(Name = nameof(Annotations.Field_Email), ResourceType = typeof(Annotations))]

@@ -1,6 +1,7 @@
 ﻿@model DigitalniProdukty.Models.Auth.RegisterInputModel
 @using Microsoft.Extensions.Localization
 @using DigitalniProdukty.Security
+@using DigitalniProdukty.Models.Licensing
 @inject IStringLocalizer<IdentityUi> T
 
 @{
@@ -45,6 +46,23 @@
                             </select>
                             <span asp-validation-for="AccountType"></span>
                         </div>
+
+                        var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
+                        if (groups is not null)
+                        {
+                            <div class="app-field">
+                                <label>@T["Identity.Register.TargetGroup.Label"]</label>
+                                <select asp-for="TargetGroupId">
+                                    <option value="">—</option>
+                                    @foreach (var g in groups)
+                                    {
+                                        <option value="@g.Id">@g.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="TargetGroupId"></span>
+                                <div class="app-help">@T["Identity.Register.TargetGroup.Help"]</div>
+                            </div>
+                        }
                     }
                     else if (User.IsInRole(Authz.Roles.Distributor))
                     {

@@ -9,6 +9,8 @@ using DigitalniProdukty.Extensions;
 using DigitalniProdukty.Models.Auth;
 using DigitalniProdukty.Services;
 using DigitalniProdukty.Security;
+using DigitalniProdukty.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DigitalniProdukty.Controllers;
 
@@ -23,6 +25,7 @@ public sealed class AuthController(
     AuthEmailService authEmailService,
     KeyGroupProvisioningService keyGroups,
     GroupContextService groupContext,
+    ApplicationDbContext db,
     IWebHostEnvironment env,
     ILogger<AuthController> logger,
     IStringLocalizer<IdentityUi> t) : Controller
@@ -60,6 +63,16 @@ public sealed class AuthController(
         {
             Authz.Roles.EndUser,
         };
+    }
+
+    private async Task LoadGroupsForAdminAsync(CancellationToken ct)
+    {
+        if (!User.IsInRole(Authz.Roles.Admin)) return;
+
+        await keyGroups.EnsureAdminGroupExistsAsync(ct);
+        ViewData["KeyGroups"] = await db.KeyGroups
+            .OrderBy(x => x.Name)
+            .ToListAsync(ct);
     }
 
     [HttpGet("login")]
@@ -165,12 +178,18 @@ public sealed class AuthController(
 
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
     [HttpGet("register")]
-    public IActionResult Register(string? returnUrl = null)
+    public async Task<IActionResult> Register(string? returnUrl = null, CancellationToken ct = default)
     {
         ViewData["Title"] = t["Identity.Register.Title"].Value;
         ViewData["ReturnUrl"] = returnUrlService.GetSafeReturnUrl(Url, returnUrl);
 
-        var model = new RegisterInputModel { AccountType = Authz.Roles.EndUser };
+        var model = new RegisterInputModel
+        {
+            AccountType = Authz.Roles.EndUser,
+            TargetGroupId = KeyGroups.AdminGroupId,
+        };
+
+        await LoadGroupsForAdminAsync(ct);
 
         if (Request.IsHtmx()) return PartialView("Register", model);
         return View("Register", model);
@@ -198,8 +217,31 @@ public sealed class AuthController(
             ModelState.AddModelError(nameof(RegisterInputModel.AccountType), DigitalniProdukty.Resources.Annotations.Validation_InvalidAccountType);
         }
 
+        Guid? requestedTargetGroupId = null;
+        if (User.IsInRole(Authz.Roles.Admin) && !string.Equals(accountType, Authz.Roles.Distributor, StringComparison.Ordinal))
+        {
+            requestedTargetGroupId = input.TargetGroupId is null || input.TargetGroupId == Guid.Empty
+                ? null
+                : input.TargetGroupId;
+
+            if (requestedTargetGroupId is null)
+            {
+                ModelState.AddModelError(nameof(RegisterInputModel.TargetGroupId), t["Identity.Register.TargetGroup.Required"].Value);
+            }
+            else
+            {
+                await keyGroups.EnsureAdminGroupExistsAsync(ct);
+                var exists = await db.KeyGroups.AnyAsync(x => x.Id == requestedTargetGroupId.Value, ct);
+                if (!exists)
+                {
+                    ModelState.AddModelError(nameof(RegisterInputModel.TargetGroupId), t["Identity.Register.TargetGroup.Invalid"].Value);
+                }
+            }
+        }
+
         if (!ModelState.IsValid)
         {
+            await LoadGroupsForAdminAsync(ct);
             if (Request.IsHtmx()) return PartialView("Register", input);
             return View("Register", input);
         }
@@ -219,6 +261,7 @@ public sealed class AuthController(
                 logger.LogWarning("Failed to assign default role to new user {Email}: {Errors}", input.Email, string.Join(", ", addRole.Errors.Select(e => e.Code)));
                 await userManager.DeleteAsync(user);
                 ModelState.AddModelError(string.Empty, "Registrace se nezdařila. Zkuste to prosím znovu.");
+                await LoadGroupsForAdminAsync(ct);
                 if (Request.IsHtmx()) return PartialView("Register", input);
                 return View("Register", input);
             }
@@ -235,7 +278,8 @@ public sealed class AuthController(
                     }
                     else
                     {
-                        await keyGroups.EnsureUserInGroupAsync(user.Id, KeyGroups.AdminGroupId, ct);
+                        var targetGroupId = requestedTargetGroupId ?? KeyGroups.AdminGroupId;
+                        await keyGroups.EnsureUserInGroupAsync(user.Id, targetGroupId, ct);
                     }
                 }
                 else if (User.IsInRole(Authz.Roles.Distributor) || User.IsInRole(Authz.Roles.Reseller))
@@ -249,6 +293,7 @@ public sealed class AuthController(
                 logger.LogWarning(ex, "Failed to provision KeyGroup for new user {Email}", input.Email);
                 await userManager.DeleteAsync(user);
                 ModelState.AddModelError(string.Empty, "Registrace se nezdařila. Zkuste to prosím znovu.");
+                await LoadGroupsForAdminAsync(ct);
                 if (Request.IsHtmx()) return PartialView("Register", input);
                 return View("Register", input);
             }
@@ -269,6 +314,7 @@ public sealed class AuthController(
             ModelState.AddModelError(string.Empty, error.Description);
         }
 
+        await LoadGroupsForAdminAsync(ct);
         if (Request.IsHtmx()) return PartialView("Register", input);
         return View("Register", input);
     }
