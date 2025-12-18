@@ -275,6 +275,38 @@ Pokud budeš přidávat další jazyk:
 - přidej jazyk do seznamu supported cultures v `Program.cs` a do whitelistu v `CultureController`,
 - případně uprav přepínač v layoutu (teď je to jednoduché `cs` ↔ `en`).
 
+### CSRF ochrana (antiforgery) a `ValidateAntiForgeryToken`
+
+ASP.NET Core používá tzv. **antiforgery tokeny** jako ochranu proti **CSRF** (Cross‑Site Request Forgery).
+
+Proč je to potřeba:
+
+- Prohlížeč automaticky posílá cookies (včetně přihlášení) i při požadavku vyvolaném z cizí stránky.
+- Bez CSRF ochrany by útočník mohl uživateli „podstrčit“ POST/DELETE akci (změna hesla, přesun licenčního klíče, smazání účtu…) bez toho, aby uživatel chtěl.
+
+Jak to funguje:
+
+- Server vygeneruje token a uloží ho do cookie + zároveň očekává token v samotném requestu.
+- Klient (formulář / JS) pošle token zpět buď:
+  - jako hidden input `__RequestVerificationToken` (typicky přes `@Html.AntiForgeryToken()`), nebo
+  - v hlavičce `RequestVerificationToken` (užitečné pro HTMX/AJAX).
+- Atribut `[ValidateAntiForgeryToken]` na akci kontroluje, že token v requestu odpovídá tokenu/cookie a že request pochází z našeho UI.
+
+Jak je to řešené v této aplikaci:
+
+- V layoutu je token vždy dostupný v `<meta name="csrf-token" ...>` přes `IAntiforgery.GetAndStoreTokens(...)`.
+- V layoutu je také JS hook na `htmx:configRequest`, který pro každý HTMX request přidá hlavičku `RequestVerificationToken`:
+  - přednostně vezme token z nejbližšího `<form>` (`__RequestVerificationToken`),
+  - jinak použije token z `<meta>`.
+
+Kde a proč se používá:
+
+- Na **všech state‑changing akcích** (typicky `POST`) je `[ValidateAntiForgeryToken]`:
+  - auth/účet: login, registrace, reset hesla, změna profilu/hesla, 2FA, …
+  - licencování: generování, přiřazení/odebrání, revokace, přesun licenčního klíče mezi skupinami, …
+  - správa uživatelů: úpravy, mazání, reset hesla admina (přes Majitele), …
+- Na `GET` akcích se obvykle nepoužívá (GET nemá měnit stav; pokud by měl, je to antipattern).
+
 ### Bootstrap majitel (Majitel)
 
 Aplikace umí v Development vytvořit také účet **Majitel** (pokud žádný Majitel neexistuje). Majitel je governance role pro správu adminů.
