@@ -17,7 +17,6 @@ public sealed class KeyGroupProvisioningService(ApplicationDbContext db)
         {
             Id = KeyGroups.AdminGroupId,
             Name = KeyGroups.AdminGroupName,
-            Role = Authz.Roles.Admin,
             CreatedAt = DateTime.UtcNow,
         });
 
@@ -40,7 +39,6 @@ public sealed class KeyGroupProvisioningService(ApplicationDbContext db)
             Name = string.IsNullOrWhiteSpace(distributor.Email)
                 ? $"Distributor {distributor.Id}"
                 : $"Distributor {distributor.Email}",
-            Role = Authz.Roles.Distributor,
             CreatedAt = DateTime.UtcNow,
         };
 

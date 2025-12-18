@@ -20,9 +20,7 @@ public sealed class AdminController(
     private const string ToastMessageTempDataKey = "ToastMessage";
     private const string ToastKindTempDataKey = "ToastKind";
 
-    private static readonly string[] GroupRoles = [Authz.Roles.Distributor, Authz.Roles.Reseller];
-
-    public sealed record GroupRow(Guid Id, string Name, string Role, int Members);
+    public sealed record GroupRow(Guid Id, string Name);
 
     public sealed record UserRow(
         string Id,
@@ -45,9 +43,7 @@ public sealed class AdminController(
             .OrderBy(x => x.Name)
             .Select(g => new GroupRow(
                 g.Id,
-                g.Name,
-                g.Role,
-                Members: db.KeyGroupMembers.Count(m => m.GroupId == g.Id)))
+                g.Name))
             .ToListAsync(ct);
 
         var groupNames = groups.ToDictionary(x => x.Id, x => x.Name);
@@ -94,107 +90,6 @@ public sealed class AdminController(
 
         if (Request.IsHtmx()) return PartialView("Index", vm);
         return View("Index", vm);
-    }
-
-    public sealed class CreateGroupInput
-    {
-        public string? Name { get; set; }
-        public string? Role { get; set; }
-    }
-
-    [HttpPost("groups/create")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateGroup(CreateGroupInput input, CancellationToken ct)
-    {
-        var name = (input.Name ?? string.Empty).Trim();
-        var role = (input.Role ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameRequired"].Value;
-            TempData[ToastKindTempDataKey] = "warning";
-            return RedirectToAction(nameof(Index));
-        }
-
-        if (!GroupRoles.Contains(role, StringComparer.Ordinal))
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
-            TempData[ToastKindTempDataKey] = "error";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var exists = await db.KeyGroups.AnyAsync(x => x.Name == name, ct);
-        if (exists)
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameExists"].Value;
-            TempData[ToastKindTempDataKey] = "warning";
-            return RedirectToAction(nameof(Index));
-        }
-
-        db.KeyGroups.Add(new KeyGroupModel
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Role = role,
-        });
-
-        await db.SaveChangesAsync(ct);
-
-        TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupCreated"].Value;
-        TempData[ToastKindTempDataKey] = "success";
-        return RedirectToAction(nameof(Index));
-    }
-
-    public sealed class RenameGroupInput
-    {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
-        public string? Role { get; set; }
-    }
-
-    [HttpPost("groups/rename")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RenameGroup(RenameGroupInput input, CancellationToken ct)
-    {
-        var name = (input.Name ?? string.Empty).Trim();
-        var role = (input.Role ?? string.Empty).Trim();
-
-        if (input.Id == Guid.Empty || string.IsNullOrWhiteSpace(name))
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
-            TempData[ToastKindTempDataKey] = "error";
-            return RedirectToAction(nameof(Index));
-        }
-
-        if (!GroupRoles.Contains(role, StringComparer.Ordinal))
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
-            TempData[ToastKindTempDataKey] = "error";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var group = await db.KeyGroups.FirstOrDefaultAsync(x => x.Id == input.Id, ct);
-        if (group is null)
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
-            TempData[ToastKindTempDataKey] = "error";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var exists = await db.KeyGroups.AnyAsync(x => x.Id != input.Id && x.Name == name, ct);
-        if (exists)
-        {
-            TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupNameExists"].Value;
-            TempData[ToastKindTempDataKey] = "warning";
-            return RedirectToAction(nameof(Index));
-        }
-
-        group.Name = name;
-        group.Role = role;
-        await db.SaveChangesAsync(ct);
-
-        TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRenamed"].Value;
-        TempData[ToastKindTempDataKey] = "success";
-        return RedirectToAction(nameof(Index));
     }
 
     public sealed class UpdateUserInput
@@ -245,20 +140,11 @@ public sealed class AdminController(
 
         if (desiredGroupId is not null)
         {
-            var group = await db.KeyGroups.FirstOrDefaultAsync(x => x.Id == desiredGroupId.Value, ct);
-            if (group is null)
+            var groupExists = await db.KeyGroups.AnyAsync(x => x.Id == desiredGroupId.Value, ct);
+            if (!groupExists)
             {
                 TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidGroup"].Value;
                 TempData[ToastKindTempDataKey] = "error";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // For Distributor/Reseller accounts, the selected group must match the same role.
-            if ((role == Authz.Roles.Distributor || role == Authz.Roles.Reseller)
-                && !string.Equals(group.Role, role, StringComparison.Ordinal))
-            {
-                TempData[ToastMessageTempDataKey] = t["Admin.Toast.GroupRoleMismatch"].Value;
-                TempData[ToastKindTempDataKey] = "warning";
                 return RedirectToAction(nameof(Index));
             }
         }

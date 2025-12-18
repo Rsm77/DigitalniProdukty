@@ -46,11 +46,6 @@ namespace DigitalniProdukty.Data
             {
                 e.HasIndex(x => x.Name).IsUnique();
                 e.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                e.Property(x => x.Role)
-                    .HasMaxLength(50)
-                    .IsRequired()
-                    .HasDefaultValue(Authz.Roles.Distributor);
             });
 
             builder.Entity<KeyGroupMemberModel>(e =>
