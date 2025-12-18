@@ -271,6 +271,34 @@ Správa admin účtů je dostupná v UI pod `/owner` (v menu jako „Správa adm
 
 Pozn.: Admin účty se vytváří a spravují výhradně přes Majitele (UI `/owner`).
 
+#### Produkce: jak vytvořit prvního Majitele
+
+Na produkci se typicky nevytváří účty automaticky. Tady je doporučený „jednorázový bootstrap“ postup pro první nasazení:
+
+1) Do produkční konfigurace přidej `BootstrapOwner` jen dočasně (nejlépe přes **proměnné prostředí** / secrets, ne do commitnutého `appsettings.json`).
+
+Příklad (env vars):
+
+- `BootstrapOwner__Enabled=true`
+- `BootstrapOwner__Email=owner@tvoje-domena.cz`
+- `BootstrapOwner__Password=<silné jednorázové heslo>`
+- `BootstrapOwner__RequireChangeOnFirstLogin=true`
+
+2) Spusť aplikaci.
+
+- Pokud **zatím neexistuje žádný uživatel v roli Majitel**, aplikace Majitele vytvoří a přiřadí mu roli `Majitel`.
+- Pokud už Majitel existuje, dalšího nevytvoří.
+
+3) Přihlas se jako Majitel a nastav finální heslo.
+
+4) Bootstrap vypni a citlivé údaje odstraň z konfigurace:
+
+- `BootstrapOwner__Enabled=false`
+
+Doporučení: na produkci dlouhodobě nenechávej v konfiguraci žádné heslo. `BootstrapOwner` ber jako jednorázový instalační krok.
+
+Alternativa (bez bootstrapu): vytvoř uživatele mimo aplikaci (např. administračně přes Identity/DB) a přiřaď mu roli `Majitel`. V takovém případě si pohlídej, aby v roli Majitel byl **maximálně jeden** uživatel.
+
 ## DB / migrace
 
 Pokud budeš chtít migrovat ručně:
