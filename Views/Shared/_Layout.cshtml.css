@@ -1,0 +1,6 @@
+﻿/*
+  Intentionally left blank.
+
+  `_Layout.cshtml.css` is a CSS isolation file (it is scoped to the `_Layout.cshtml` markup).
+  The project styling is driven by Tailwind via `wwwroot/css/site.css` -> `wwwroot/css/output.css`.
+*/

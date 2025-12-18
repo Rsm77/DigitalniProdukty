@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="Identity.Login.Title" xml:space="preserve">
+    <value>Přihlášení</value>
+  </data>
+  <data name="Identity.Login.Description" xml:space="preserve">
+    <value>Přihlaste se pomocí e-mailu a hesla.</value>
+  </data>
+  <data name="Identity.Login.Section.Account.Title" xml:space="preserve">
+    <value>Účet</value>
+  </data>
+  <data name="Identity.Login.Section.Account.Help" xml:space="preserve">
+    <value>Zadejte přihlašovací údaje.</value>
+  </data>
+  <data name="Identity.Login.ForgotPassword" xml:space="preserve">
+    <value>Zapomněli jste heslo?</value>
+  </data>
+  <data name="Identity.Login.Section.Actions.Title" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Identity.Login.Section.Actions.Help" xml:space="preserve">
+    <value>Dokončete přihlášení.</value>
+  </data>
+  <data name="Identity.Login.Button.SignIn" xml:space="preserve">
+    <value>Přihlásit</value>
+  </data>
+  <data name="Identity.Login.Button.Register" xml:space="preserve">
+    <value>Vytvořit účet</value>
+  </data>
+  <data name="Identity.Login.NoAccount" xml:space="preserve">
+    <value>Jste tu poprvé?</value>
+  </data>
+  <data name="Identity.Login.RegisterLink" xml:space="preserve">
+    <value>Vytvořte si účet</value>
+  </data>
+  <data name="Identity.Login.InvalidAttempt" xml:space="preserve">
+    <value>Neplatný pokus o přihlášení.</value>
+  </data>
+
+  <data name="Identity.Register.Title" xml:space="preserve">
+    <value>Registrace</value>
+  </data>
+  <data name="Identity.Register.Description" xml:space="preserve">
+    <value>Vytvořte si nový účet.</value>
+  </data>
+  <data name="Identity.Register.Section.Account.Title" xml:space="preserve">
+    <value>Účet</value>
+  </data>
+  <data name="Identity.Register.Section.Account.Help" xml:space="preserve">
+    <value>Základní přihlašovací údaje.</value>
+  </data>
+  <data name="Identity.Register.Section.Actions.Title" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Identity.Register.Section.Actions.Help" xml:space="preserve">
+    <value>Dokončete vytvoření účtu.</value>
+  </data>
+  <data name="Identity.Register.Button.CreateAccount" xml:space="preserve">
+    <value>Vytvořit účet</value>
+  </data>
+  <data name="Identity.Register.Button.BackToLogin" xml:space="preserve">
+    <value>Zpět na přihlášení</value>
+  </data>
+  <data name="Identity.Register.HasAccount" xml:space="preserve">
+    <value>Už máte účet?</value>
+  </data>
+  <data name="Identity.Register.LoginLink" xml:space="preserve">
+    <value>Přihlaste se</value>
+  </data>
+
+  <data name="Identity.Register.AccountType.EndUser" xml:space="preserve">
+    <value>Koncový uživatel</value>
+  </data>
+  <data name="Identity.Register.AccountType.Reseller" xml:space="preserve">
+    <value>Prodejce</value>
+  </data>
+  <data name="Identity.Register.AccountType.Distributor" xml:space="preserve">
+    <value>Distributor</value>
+  </data>
+
+  <data name="Identity.ForgotPassword.Title" xml:space="preserve">
+    <value>Obnovení hesla</value>
+  </data>
+  <data name="Identity.ForgotPassword.Description" xml:space="preserve">
+    <value>Pošleme vám odkaz pro nastavení nového hesla.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Email.Title" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Email.Help" xml:space="preserve">
+    <value>Zadejte e-mail k vašemu účtu.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Actions.Title" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Actions.Help" xml:space="preserve">
+    <value>Odešle odkaz pro reset hesla.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Button.SendLink" xml:space="preserve">
+    <value>Odeslat odkaz</value>
+  </data>
+  <data name="Identity.ForgotPassword.Button.BackToLogin" xml:space="preserve">
+    <value>Zpět na přihlášení</value>
+  </data>
+
+  <data name="Identity.ResetPassword.Title" xml:space="preserve">
+    <value>Reset hesla</value>
+  </data>
+  <data name="Identity.ResetPassword.Description" xml:space="preserve">
+    <value>Nastavte nové heslo.</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Account.Title" xml:space="preserve">
+    <value>Účet</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Account.Help" xml:space="preserve">
+    <value>Ověření a nové heslo.</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Actions.Title" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Actions.Help" xml:space="preserve">
+    <value>Uloží nové heslo.</value>
+  </data>
+  <data name="Identity.ResetPassword.Button.SavePassword" xml:space="preserve">
+    <value>Uložit heslo</value>
+  </data>
+  <data name="Identity.ResetPassword.Button.BackToLogin" xml:space="preserve">
+    <value>Zpět na přihlášení</value>
+  </data>
+
+  <data name="Identity.ConfirmEmail.Title" xml:space="preserve">
+    <value>Potvrzení e-mailu</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Description" xml:space="preserve">
+    <value>Dokončení registrace.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Button.GoToLogin" xml:space="preserve">
+    <value>Přejít na přihlášení</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Button.Home" xml:space="preserve">
+    <value>Domů</value>
+  </data>
+  <data name="Identity.ConfirmEmail.UserNotFound" xml:space="preserve">
+    <value>Uživatel nebyl nalezen.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Success" xml:space="preserve">
+    <value>E-mail byl úspěšně potvrzen. Nyní se můžete přihlásit.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Failure" xml:space="preserve">
+    <value>Nepodařilo se potvrdit e-mail.</value>
+  </data>
+
+  <data name="Identity.RegisterConfirmation.Title" xml:space="preserve">
+    <value>Potvrzení registrace</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Description" xml:space="preserve">
+    <value>Účet je vytvořen. Pro pokračování potvrďte e-mail.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Body.BeforeEmail" xml:space="preserve">
+    <value>Pokud byl e-mail</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Body.AfterEmail" xml:space="preserve">
+    <value>správně zadán, měl by vám přijít odkaz pro potvrzení.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Button.ContinueToLogin" xml:space="preserve">
+    <value>Pokračovat na přihlášení</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Button.Back" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+
+  <data name="Identity.ForgotPasswordConfirmation.Title" xml:space="preserve">
+    <value>Odkaz odeslán</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Description" xml:space="preserve">
+    <value>Pokud e-mail existuje, posíláme odkaz pro reset hesla.</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Body" xml:space="preserve">
+    <value>Zkontrolujte prosím e-mail a pokračujte podle instrukcí.</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Button.BackToLogin" xml:space="preserve">
+    <value>Zpět na přihlášení</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Button.Home" xml:space="preserve">
+    <value>Domů</value>
+  </data>
+
+  <data name="Identity.ResetPasswordConfirmation.Title" xml:space="preserve">
+    <value>Heslo změněno</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Description" xml:space="preserve">
+    <value>Nové heslo je nastavené.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Body" xml:space="preserve">
+    <value>Nyní se můžete přihlásit.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Button.GoToLogin" xml:space="preserve">
+    <value>Přejít na přihlášení</value>
+  </data>
+
+  <data name="Identity.Logout.Title" xml:space="preserve">
+    <value>Odhlášení</value>
+  </data>
+  <data name="Identity.Logout.Description" xml:space="preserve">
+    <value>Potvrzení odhlášení z aplikace.</value>
+  </data>
+  <data name="Identity.Logout.Section.Actions.Title" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Identity.Logout.Section.Actions.Help" xml:space="preserve">
+    <value>Budete odhlášen(a) a vrácen(a) zpět.</value>
+  </data>
+  <data name="Identity.Logout.Button.Logout" xml:space="preserve">
+    <value>Odhlásit</value>
+  </data>
+  <data name="Identity.Logout.Button.Cancel" xml:space="preserve">
+    <value>Zrušit</value>
+  </data>
+
+  <data name="Identity.DevMode.Title" xml:space="preserve">
+    <value>Vývojový režim</value>
+  </data>
+  <data name="Identity.DevMode.EmailNotConfigured.Confirm" xml:space="preserve">
+    <value>Odesílání e-mailů není nakonfigurované. Potvrďte účet přes tento odkaz:</value>
+  </data>
+  <data name="Identity.DevMode.EmailNotConfigured.Reset" xml:space="preserve">
+    <value>Odesílání e-mailů není nakonfigurované. Reset hesla přes tento odkaz:</value>
+  </data>
+
+  <data name="Identity.Email.ConfirmEmail.Subject" xml:space="preserve">
+    <value>Potvrzení e-mailu</value>
+  </data>
+  <data name="Identity.Email.ConfirmEmail.BodyHtml" xml:space="preserve">
+    <value>Prosím potvrďte účet &lt;a href='{0}'&gt;kliknutím zde&lt;/a&gt;.</value>
+  </data>
+  <data name="Identity.Email.ResetPassword.Subject" xml:space="preserve">
+    <value>Reset hesla</value>
+  </data>
+  <data name="Identity.Email.ResetPassword.BodyHtml" xml:space="preserve">
+    <value>Pro reset hesla &lt;a href='{0}'&gt;klikněte zde&lt;/a&gt;.</value>
+  </data>
+
+  <data name="Identity.Login2fa.Title" xml:space="preserve">
+    <value>Dvoufázové ověření</value>
+  </data>
+  <data name="Identity.Login2fa.Description" xml:space="preserve">
+    <value>Zadejte ověřovací kód z autentizační aplikace.</value>
+  </data>
+  <data name="Identity.Login2fa.RememberMachine" xml:space="preserve">
+    <value>Nepřipomínat ověření na tomto zařízení</value>
+  </data>
+  <data name="Identity.Login2fa.Button.Verify" xml:space="preserve">
+    <value>Ověřit</value>
+  </data>
+  <data name="Identity.Login2fa.Button.BackToLogin" xml:space="preserve">
+    <value>Zpět na přihlášení</value>
+  </data>
+  <data name="Identity.Login2fa.InvalidCode" xml:space="preserve">
+    <value>Neplatný ověřovací kód.</value>
+  </data>
+
+  <data name="Identity.AccessDenied.Title" xml:space="preserve">
+    <value>Přístup odepřen</value>
+  </data>
+  <data name="Identity.AccessDenied.Description" xml:space="preserve">
+    <value>Nemáte oprávnění pro přístup k této stránce.</value>
+  </data>
+  <data name="Identity.AccessDenied.Button.Home" xml:space="preserve">
+    <value>Domů</value>
+  </data>
+</root>

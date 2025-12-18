@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Nav.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Nav.Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Nav.Licensing" xml:space="preserve">
+    <value>Licensing</value>
+  </data>
+  <data name="Nav.Licensing.Manage" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="Nav.Licensing.Generate" xml:space="preserve">
+    <value>Generate licenses</value>
+  </data>
+  <data name="Nav.CreateEndUser" xml:space="preserve">
+    <value>Create user</value>
+  </data>
+  <data name="Language.Label" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language.Cs" xml:space="preserve">
+    <value>Čeština</value>
+  </data>
+  <data name="Language.En" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language.Switch" xml:space="preserve">
+    <value>Change language</value>
+  </data>
+  <data name="Layout.ToggleNavigation" xml:space="preserve">
+    <value>Toggle navigation</value>
+  </data>
+  <data name="Home.Index.Title" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Home.Index.Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="Home.Index.Description" xml:space="preserve">
+    <value>Welcome to your HTMX-first admin shell.</value>
+  </data>
+  <data name="Home.Index.Learn.Prefix" xml:space="preserve">
+    <value>Learn about</value>
+  </data>
+  <data name="Home.Index.Learn.LinkText" xml:space="preserve">
+    <value>building Web apps with ASP.NET Core</value>
+  </data>
+  <data name="Home.Privacy.Title" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="Home.Privacy.Body" xml:space="preserve">
+    <value>Use this page to detail your site's privacy policy.</value>
+  </data>
+
+  <data name="LicensingAdmin.Index.Title" xml:space="preserve">
+    <value>Licenses overview</value>
+  </data>
+  <data name="LicensingAdmin.Generate.Title" xml:space="preserve">
+    <value>Generate licenses</value>
+  </data>
+  <data name="LicensingAdmin.Generate.GeneratedKeys" xml:space="preserve">
+    <value>Last generated</value>
+  </data>
+  <data name="LicensingAdmin.Details.Title" xml:space="preserve">
+    <value>Key details</value>
+  </data>
+  <data name="LicensingAdmin.Details.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="LicensingAdmin.Index.Button.Installations" xml:space="preserve">
+    <value>Installations</value>
+  </data>
+  <data name="LicensingAdmin.Index.Callout" xml:space="preserve">
+    <value>Generate serial keys and manage revocation. This page uses HTMX swaps (same pattern as other pages).</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.GroupLength" xml:space="preserve">
+    <value>Group length</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.MaxDevices" xml:space="preserve">
+    <value>Max devices</value>
+  </data>
+  <data name="LicensingAdmin.Index.Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="LicensingAdmin.Index.LatestKeys" xml:space="preserve">
+    <value>Latest keys</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.MaxDevices" xml:space="preserve">
+    <value>Max devices</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Assigned" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="LicensingAdmin.Index.Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="LicensingAdmin.Index.Status.Revoked" xml:space="preserve">
+    <value>Revoked</value>
+  </data>
+  <data name="LicensingAdmin.Index.Action.Revoke" xml:space="preserve">
+    <value>Revoke</value>
+  </data>
+  <data name="LicensingAdmin.Index.Action.Unrevoke" xml:space="preserve">
+    <value>Unrevoke</value>
+  </data>
+
+  <data name="LicensingAdmin.Installations.Title" xml:space="preserve">
+    <value>Installations</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Button.Keys" xml:space="preserve">
+    <value>Licenses overview</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Callout" xml:space="preserve">
+    <value>Latest installation events (audit log). Use this for diagnostics and fraud detection.</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.When" xml:space="preserve">
+    <value>When</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Event" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.IP" xml:space="preserve">
+    <value>IP</value>
+  </data>
+
+  <data name="LicensingAdmin.Toast.Generated" xml:space="preserve">
+    <value>Generated {0} key(s).</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyNotFound" xml:space="preserve">
+    <value>Key not found.</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyRevoked" xml:space="preserve">
+    <value>Key revoked.</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyUnrevoked" xml:space="preserve">
+    <value>Key unrevoked.</value>
+  </data>
+  <data name="Auth.Manage" xml:space="preserve">
+    <value>Manage account</value>
+  </data>
+    <data name="LicensingAdmin.Index.Assign.Placeholder" xml:space="preserve">
+      <value>Email</value>
+    </data>
+    <data name="LicensingAdmin.Index.Assign.Button" xml:space="preserve">
+      <value>Set</value>
+    </data>
+    <data name="LicensingAdmin.Index.Reassign.Placeholder" xml:space="preserve">
+      <value>New email</value>
+    </data>
+    <data name="LicensingAdmin.Index.Reassign.Button" xml:space="preserve">
+      <value>Change</value>
+    </data>
+    <data name="LicensingAdmin.Index.Unassign.Button" xml:space="preserve">
+      <value>Remove</value>
+    </data>
+    <data name="LicensingAdmin.Index.AssignedTo" xml:space="preserve">
+      <value>Owner: {0}</value>
+    </data>
+    <data name="LicensingAdmin.Toast.EmailRequired" xml:space="preserve">
+      <value>Please enter a user email.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.UserNotFound" xml:space="preserve">
+      <value>User with email {0} was not found.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.AlreadyAssigned" xml:space="preserve">
+      <value>The key already has owner {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Assigned" xml:space="preserve">
+      <value>The owner was set to {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Reassigned" xml:space="preserve">
+      <value>The owner was changed to {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Unassigned" xml:space="preserve">
+      <value>The owner was removed.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.NotAssigned" xml:space="preserve">
+      <value>The key has no owner.</value>
+    </data>
+  <data name="Auth.Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Auth.Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Auth.Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Account.Nav.Label" xml:space="preserve">
+    <value>Account settings</value>
+  </data>
+  <data name="Account.Nav.Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Account.Nav.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Account.Nav.TwoFactor" xml:space="preserve">
+    <value>2FA</value>
+  </data>
+  <data name="Account.Nav.Serials" xml:space="preserve">
+    <value>My licenses</value>
+  </data>
+  <data name="Account.Profile.Title" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+
+  <data name="Account.Serials.Title" xml:space="preserve">
+    <value>My licenses</value>
+  </data>
+  <data name="Account.Serials.Description" xml:space="preserve">
+    <value>Overview of serial numbers owned by your account.</value>
+  </data>
+  <data name="Account.Serials.Empty" xml:space="preserve">
+    <value>You don't have any serial numbers yet.</value>
+  </data>
+  <data name="Account.Serials.Table.Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="Account.Serials.Table.MaxDevices" xml:space="preserve">
+    <value>Max devices</value>
+  </data>
+  <data name="Account.Serials.Table.Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Account.Serials.Table.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Account.Serials.Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Account.Serials.Status.Invalid" xml:space="preserve">
+    <value>Invalid</value>
+  </data>
+  <data name="Account.Profile.Heading" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Account.Profile.Section.Basic" xml:space="preserve">
+    <value>Basics</value>
+  </data>
+  <data name="Account.Profile.Section.BasicHelp" xml:space="preserve">
+    <value>Update your account details.</value>
+  </data>
+  <data name="Account.Profile.EmailReadOnlyHelp" xml:space="preserve">
+    <value>Email is read-only in this version.</value>
+  </data>
+  <data name="Account.Profile.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Account.Profile.Saved" xml:space="preserve">
+    <value>Profile saved.</value>
+  </data>
+  <data name="Account.Password.Title" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Account.Password.Heading" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Account.Password.Section.Change" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="Account.Password.Section.ChangeHelp" xml:space="preserve">
+    <value>Choose a new password for sign-in.</value>
+  </data>
+  <data name="Account.Password.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Account.Password.Changed" xml:space="preserve">
+    <value>Password changed.</value>
+  </data>
+  <data name="Account.Password.NoPassword" xml:space="preserve">
+    <value>This account does not have a password set.</value>
+  </data>
+  <data name="Account.FirstLogin.Title" xml:space="preserve">
+    <value>First sign-in</value>
+  </data>
+  <data name="Account.FirstLogin.Heading" xml:space="preserve">
+    <value>First sign-in</value>
+  </data>
+  <data name="Account.FirstLogin.Callout" xml:space="preserve">
+    <value>For security reasons, you must change your email and password on first sign-in.</value>
+  </data>
+  <data name="Account.FirstLogin.CurrentEmail" xml:space="preserve">
+    <value>Current email: {0}</value>
+  </data>
+  <data name="Account.FirstLogin.Section.Credentials" xml:space="preserve">
+    <value>New credentials</value>
+  </data>
+  <data name="Account.FirstLogin.Section.CredentialsHelp" xml:space="preserve">
+    <value>Enter a new email and a new password.</value>
+  </data>
+  <data name="Account.FirstLogin.Save" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="Account.FirstLogin.Changed" xml:space="preserve">
+    <value>Credentials were updated.</value>
+  </data>
+  <data name="Account.FirstLogin.EmailRequired" xml:space="preserve">
+    <value>Please enter an email.</value>
+  </data>
+  <data name="Account.FirstLogin.EmailMustChange" xml:space="preserve">
+    <value>You must change the email to a different one.</value>
+  </data>
+  <data name="Account.FirstLogin.EmailTaken" xml:space="preserve">
+    <value>This email is already taken.</value>
+  </data>
+  <data name="Account.FirstLogin.PasswordMustChange" xml:space="preserve">
+    <value>The new password must be different from the current one.</value>
+  </data>
+  <data name="Account.TwoFactor.Title" xml:space="preserve">
+    <value>Two-factor authentication (2FA)</value>
+  </data>
+  <data name="Account.TwoFactor.Heading" xml:space="preserve">
+    <value>Two-factor authentication (2FA)</value>
+  </data>
+  <data name="Account.TwoFactor.StatusEnabled" xml:space="preserve">
+    <value>2FA is enabled.</value>
+  </data>
+  <data name="Account.TwoFactor.StatusDisabled" xml:space="preserve">
+    <value>2FA is disabled.</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesLeft" xml:space="preserve">
+    <value>Recovery codes left: {0}</value>
+  </data>
+  <data name="Account.TwoFactor.SetupTitle" xml:space="preserve">
+    <value>Authenticator setup</value>
+  </data>
+  <data name="Account.TwoFactor.SetupHelp" xml:space="preserve">
+    <value>Scan the QR code or enter the shared key into your authenticator app, then confirm with a verification code.</value>
+  </data>
+  <data name="Account.TwoFactor.QrCodeLabel" xml:space="preserve">
+    <value>QR code</value>
+  </data>
+  <data name="Account.TwoFactor.QrCodeHelp" xml:space="preserve">
+    <value>Scan this QR code with your authenticator app.</value>
+  </data>
+  <data name="Account.TwoFactor.SharedKeyLabel" xml:space="preserve">
+    <value>Shared key</value>
+  </data>
+  <data name="Account.TwoFactor.SharedKeyHelp" xml:space="preserve">
+    <value>If you cannot scan the QR code, enter this key manually.</value>
+  </data>
+  <data name="Account.TwoFactor.Enable" xml:space="preserve">
+    <value>Enable 2FA</value>
+  </data>
+  <data name="Account.TwoFactor.Disable" xml:space="preserve">
+    <value>Disable 2FA</value>
+  </data>
+  <data name="Account.TwoFactor.ResetKeyAction" xml:space="preserve">
+    <value>Reset key</value>
+  </data>
+  <data name="Account.TwoFactor.GenerateRecoveryCodes" xml:space="preserve">
+    <value>Generate recovery codes</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesHeading" xml:space="preserve">
+    <value>Recovery codes</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesHelp" xml:space="preserve">
+    <value>Store them in a safe place. Each code can be used only once.</value>
+  </data>
+  <data name="Account.TwoFactor.Enabled" xml:space="preserve">
+    <value>2FA enabled.</value>
+  </data>
+  <data name="Account.TwoFactor.Disabled" xml:space="preserve">
+    <value>2FA disabled.</value>
+  </data>
+  <data name="Account.TwoFactor.ResetKey" xml:space="preserve">
+    <value>Authenticator key reset.</value>
+  </data>
+  <data name="Account.TwoFactor.InvalidCode" xml:space="preserve">
+    <value>Invalid verification code.</value>
+  </data>
+  <data name="Account.TwoFactor.NotEnabled" xml:space="preserve">
+    <value>2FA is not enabled.</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesGenerated" xml:space="preserve">
+    <value>New recovery codes generated.</value>
+  </data>
+  <data name="Error.Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Error.Heading" xml:space="preserve">
+    <value>Error.</value>
+  </data>
+  <data name="Error.Subheading" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="Error.RequestId" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
+  <data name="Error.DevMode.Title" xml:space="preserve">
+    <value>Development Mode</value>
+  </data>
+  <data name="Error.DevMode.Description" xml:space="preserve">
+    <value>Swapping to the Development environment will display more detailed information about the error that occurred.</value>
+  </data>
+  <data name="Error.DevMode.Warning" xml:space="preserve">
+    <value>The Development environment shouldn't be enabled for deployed applications.</value>
+  </data>
+  <data name="Error.DevMode.WarningDetails" xml:space="preserve">
+    <value>It can result in displaying sensitive information from exceptions to end users. For local debugging, set the ASPNETCORE_ENVIRONMENT environment variable to Development and restart the app.</value>
+  </data>
+  <data name="App.Name" xml:space="preserve">
+    <value>Digital Products</value>
+  </data>
+</root>

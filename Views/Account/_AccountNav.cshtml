@@ -1,0 +1,20 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    var path = (Context.Request.Path.Value ?? string.Empty).ToLowerInvariant();
+    var isProfile = path == "/account" || path == "/account/";
+    var isPassword = path.StartsWith("/account/password");
+    var isTwoFactor = path.StartsWith("/account/2fa");
+    var isSerials = path.StartsWith("/account/serials");
+
+    const string btnBase = "px-3 py-2 text-sm";
+    string cls(bool active) => active ? $"app-btn-primary {btnBase}" : $"app-btn-secondary {btnBase}";
+}
+
+<nav class="flex flex-wrap items-center gap-2" aria-label="@T["Account.Nav.Label"]">
+    <a class="@cls(isProfile)" asp-controller="Account" asp-action="Profile">@T["Account.Nav.Profile"]</a>
+    <a class="@cls(isPassword)" asp-controller="Account" asp-action="Password">@T["Account.Nav.Password"]</a>
+    <a class="@cls(isTwoFactor)" asp-controller="Account" asp-action="TwoFactor">@T["Account.Nav.TwoFactor"]</a>
+    <a class="@cls(isSerials)" asp-controller="Account" asp-action="Serials">@T["Account.Nav.Serials"]</a>
+</nav>

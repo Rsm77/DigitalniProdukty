@@ -1,0 +1,59 @@
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Local env files
+.env
+.env.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Rider / IntelliJ
+.idea/
+
+# VS Code workspace settings
+.vscode/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Generated CSS
+wwwroot/css/output.css
+
+# App settings (keep only base appsettings.json in git)
+appsettings.*.json
+!appsettings.json
+
+# Others
+*.swp
+*.bak
+*~
+
+# Certificates / keys
+*.pfx
+*.snk

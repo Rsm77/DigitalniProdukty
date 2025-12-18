@@ -1,0 +1,71 @@
+@model IReadOnlyList<DigitalniProdukty.Models.SerialNum.SerialNumberModel>
+
+@using Microsoft.Extensions.Localization
+@using DigitalniProdukty.Security
+@using DigitalniProdukty.Models.Licensing
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = T["LicensingAdmin.Index.Title"].Value;
+}
+
+<div class="app-card" id="licensing-admin">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@ViewData["Title"]</h1>
+    </div>
+
+    <partial name="_Toast" />
+
+    <div class="app-card-body space-y-6">
+        <authorize roles="@Authz.Roles.Admin">
+            @{
+                var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
+                var selectedGroupId = ViewData["SelectedGroupId"] as Guid?;
+            }
+
+            <form method="get" class="app-form">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                    <div class="app-field sm:col-span-2">
+                        <label>Skupina</label>
+                        <select name="groupId">
+                            <option value="">Vše (admin pool + všechny skupiny)</option>
+                            @if (groups is not null)
+                            {
+                                foreach (var g in groups)
+                                {
+                                    if (selectedGroupId == g.Id)
+                                    {
+                                        <option value="@g.Id" selected>@g.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@g.Id">@g.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="sm:col-span-2 flex items-end justify-end">
+                        <button type="submit" class="app-btn-secondary">Zobrazit</button>
+                    </div>
+                </div>
+            </form>
+        </authorize>
+
+        <partial name="_LatestKeys" model="Model" />
+    </div>
+
+    <dialog id="license-details" class="app-dialog">
+        <div class="app-card">
+            <div class="app-card-header">
+                <h2 class="app-card-title">@T["LicensingAdmin.Details.Title"]</h2>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="app-btn-secondary" onclick="window.appLicensing?.closeDetails?.();">@T["LicensingAdmin.Details.Close"]</button>
+                </div>
+            </div>
+
+            <div class="app-card-body" id="license-details-body"></div>
+        </div>
+    </dialog>
+</div>

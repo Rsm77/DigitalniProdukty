@@ -1,0 +1,23 @@
+@{
+    var message = (TempData["ToastMessage"] as string)
+        ?? (TempData["AccountStatus"] as string);
+
+    var kind = (TempData["ToastKind"] as string)
+        ?? (TempData["AccountStatusKind"] as string)
+        ?? "success";
+
+    var variantClass = kind switch
+    {
+        "success" => "app-toast-success",
+        "error" => "app-toast-error",
+        "warning" => "app-toast-warning",
+        _ => "app-toast-success"
+    };
+}
+
+@if (!string.IsNullOrWhiteSpace(message))
+{
+    <div class="app-toast-wrap" role="status" aria-live="polite">
+        <div class="app-toast @variantClass">@message</div>
+    </div>
+}

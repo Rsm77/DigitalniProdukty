@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="ConcurrencyFailure" xml:space="preserve">
+    <value>Současná změna dat – akci se nepodařilo dokončit. Zkuste to prosím znovu.</value>
+  </data>
+  <data name="PasswordMismatch" xml:space="preserve">
+    <value>Nesprávné heslo.</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Neplatný token.</value>
+  </data>
+  <data name="LoginAlreadyAssociated" xml:space="preserve">
+    <value>Uživatel už má přihlášení tohoto typu.</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>Uživatelské jméno '{0}' je neplatné. Povolené jsou pouze písmena a číslice.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>E-mail '{0}' je neplatný.</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>Uživatelské jméno '{0}' je už obsazené.</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>E-mail '{0}' je už používán.</value>
+  </data>
+  <data name="InvalidRoleName" xml:space="preserve">
+    <value>Název role '{0}' je neplatný.</value>
+  </data>
+  <data name="DuplicateRoleName" xml:space="preserve">
+    <value>Název role '{0}' už existuje.</value>
+  </data>
+  <data name="UserAlreadyHasPassword" xml:space="preserve">
+    <value>Uživatel už má nastavené heslo.</value>
+  </data>
+  <data name="UserLockoutNotEnabled" xml:space="preserve">
+    <value>Uzamčení uživatele není povoleno.</value>
+  </data>
+  <data name="UserAlreadyInRole" xml:space="preserve">
+    <value>Uživatel už je v roli '{0}'.</value>
+  </data>
+  <data name="UserNotInRole" xml:space="preserve">
+    <value>Uživatel není v roli '{0}'.</value>
+  </data>
+
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Heslo musí mít alespoň {0} znaků.</value>
+  </data>
+  <data name="PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň jeden nealfanumerický znak.</value>
+  </data>
+  <data name="PasswordRequiresDigit" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň jednu číslici ('0'-'9').</value>
+  </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň jedno malé písmeno ('a'-'z').</value>
+  </data>
+  <data name="PasswordRequiresUpper" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň jedno velké písmeno ('A'-'Z').</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň {0} jedinečných znaků.</value>
+  </data>
+
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Neplatný recovery kód.</value>
+  </data>
+</root>

@@ -1,0 +1,160 @@
+﻿@using Microsoft.AspNetCore.Antiforgery
+@using System.Globalization
+@using DigitalniProdukty.Security
+@inject IAntiforgery Antiforgery
+@inject Microsoft.Extensions.Localization.IStringLocalizer<DigitalniProdukty.SharedResources> T
+
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="view-transition" content="same-origin" />
+    <title>@ViewData["Title"] - @T["App.Name"]</title>
+
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+
+    <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DigitalniProdukty.styles.css" asp-append-version="true" />
+
+    <script src="~/lib/htmx/htmx.min.js" asp-append-version="true"></script>
+    <script src="~/lib/htmx/ext/preload.js" asp-append-version="true"></script>
+</head>
+<body hx-boost="true"
+      hx-push-url="true"
+      hx-target="#main"
+      hx-ext="preload">
+
+    <div class="min-h-screen lg:flex">
+        <!-- Progress bar pro HTMX navigaci -->
+        <div id="htmx-progress" class="htmx-progress"></div>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-20 w-64 -translate-x-full bg-gray-800 lg:translate-x-0 lg:static">
+            <div class="h-16 px-6 flex items-center bg-gray-900 text-white">
+                <a class="text-lg font-semibold text-white hover:text-white" asp-area="" asp-controller="Home" asp-action="Index">@T["App.Name"]</a>
+            </div>
+
+            @{
+                var currentController = (ViewContext.RouteData.Values["controller"] as string) ?? string.Empty;
+                var currentAction = (ViewContext.RouteData.Values["action"] as string) ?? string.Empty;
+            }
+
+            <div id="sidebar-nav"
+                 hx-get="/_fragments/sidebar-nav"
+                 hx-trigger="auth-changed from:body"
+                 hx-target="this"
+                 hx-swap="innerHTML">
+                <partial name="_SidebarNav" />
+            </div>
+        </aside>
+
+        <div class="flex min-w-0 flex-1 flex-col">
+            <header class="sticky top-0 z-10 h-16 bg-white border-b border-slate-200">
+                <div class="h-full px-4 lg:px-6 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <button id="sidebar-toggle" type="button" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-300" aria-label="@T["Layout.ToggleNavigation"]">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <a class="text-sm font-semibold text-slate-900 hover:text-slate-900" asp-area="" asp-controller="Home" asp-action="Index">@T["App.Name"]</a>
+                    </div>
+
+                    @{
+                        var currentUrl = Context.Request.PathBase + Context.Request.Path + Context.Request.QueryString;
+                        var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                        var targetCulture = lang == "cs" ? "en" : "cs";
+                        var targetLabel = targetCulture == "cs" ? T["Language.Cs"] : T["Language.En"];
+                        var targetFlag = targetCulture == "cs" ? "cz" : "gb";
+                        var flagClass = targetCulture == "cs" ? "h-[10px] rounded-xs" : "h-[10px] rounded-xs translate-y-px";
+                    }
+
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2" aria-label="@T["Language.Switch"]">
+                            <a class="app-btn-secondary w-24 inline-flex items-center justify-center gap-2 px-2 py-1 text-xs"
+                               asp-controller="Culture"
+                               asp-action="Set"
+                               asp-route-culture="@targetCulture"
+                               asp-route-returnUrl="@currentUrl">
+                                <img src="~/img/flags/@(targetFlag).png" alt="" class="@flagClass" aria-hidden="true" />
+                                <span>@targetLabel</span>
+                            </a>
+                        </div>
+
+                        <div id="login-partial"
+                             hx-get="/_fragments/login"
+                             hx-trigger="auth-changed from:body"
+                             hx-target="this"
+                             hx-swap="innerHTML">
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 p-4 lg:p-6">
+                <div class="mx-auto w-full max-w-5xl space-y-6">
+                    <section class="app-card">
+                        <div class="app-card-body">
+                            <div id="main" role="main" hx-history-elt>
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="text-sm text-slate-500">
+                        &copy; 2025 - @T["App.Name"]
+                    </footer>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // CSRF token pro HTMX požadavky
+        document.body.addEventListener('htmx:configRequest', function (evt) {
+            const elt = evt.detail.elt;
+            const form = (elt && elt.tagName === 'FORM') ? elt : elt?.closest?.('form');
+            const formToken = form?.querySelector?.('input[name="__RequestVerificationToken"]')?.value;
+            const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const token = formToken || metaToken;
+            if (token) {
+                evt.detail.headers['RequestVerificationToken'] = token;
+            }
+        });
+
+        // Progress bar pro HTMX navigaci
+        (function() {
+            const progress = document.getElementById('htmx-progress');
+            if (!progress) return;
+
+            document.body.addEventListener('htmx:beforeRequest', function(evt) {
+                progress.classList.remove('htmx-settling', 'htmx-settled');
+                progress.classList.add('htmx-request');
+                progress.style.width = '0';
+                // Force reflow
+                progress.offsetHeight;
+            });
+
+            document.body.addEventListener('htmx:afterRequest', function(evt) {
+                progress.classList.remove('htmx-request');
+                progress.classList.add('htmx-settling');
+            });
+
+            document.body.addEventListener('htmx:afterSettle', function(evt) {
+                progress.classList.remove('htmx-settling');
+                progress.classList.add('htmx-settled');
+                setTimeout(function() {
+                    progress.classList.remove('htmx-settled');
+                    progress.style.width = '0';
+                }, 300);
+            });
+        })();
+    </script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

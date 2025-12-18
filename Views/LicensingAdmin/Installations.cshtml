@@ -1,0 +1,50 @@
+@model IReadOnlyList<DigitalniProdukty.Models.SerialNum.InstallationModel>
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = T["LicensingAdmin.Installations.Title"].Value;
+}
+
+<div class="app-card" id="licensing-installations">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="app-card-body space-y-4">
+        <div class="app-callout app-callout-info">
+            @T["LicensingAdmin.Installations.Callout"]
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="app-table min-w-full table-fixed text-xs">
+                <thead class="text-left text-slate-500">
+                    <tr>
+                        <th class="py-1 pr-3 w-40">@T["LicensingAdmin.Installations.Table.When"]</th>
+                        <th class="py-1 pr-3 w-28">@T["LicensingAdmin.Installations.Table.Event"]</th>
+                        <th class="py-1 pr-3">@T["LicensingAdmin.Installations.Table.Key"]</th>
+                        <th class="py-1 pr-3">@T["LicensingAdmin.Installations.Table.Device"]</th>
+                        <th class="py-1 pr-0 w-40">@T["LicensingAdmin.Installations.Table.IP"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="py-1 pr-3 text-slate-500 whitespace-nowrap">@item.OccurredAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                            <td class="py-1 pr-3 whitespace-nowrap">@item.EventType</td>
+                            <td class="py-1 pr-3">
+                                <span class="font-mono">@item.SerialNumber?.Key</span>
+                            </td>
+                            <td class="py-1 pr-3">
+                                <span class="font-mono">@item.Device?.HardwareIdentifier</span>
+                            </td>
+                            <td class="py-1 pr-0 text-slate-500 whitespace-nowrap">@item.IpAddress</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

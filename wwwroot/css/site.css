@@ -1,0 +1,324 @@
+@import "tailwindcss" source(none);
+
+/* Skenovat pouze view soubory, ne dokumentaci */
+@source "../../Views/**/*.cshtml";
+
+/* View Transitions API - plynulé přechody mezi stránkami */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: fade-out 0.15s ease-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 0.15s ease-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased;
+  }
+
+  :where(a) {
+    @apply text-indigo-600 hover:text-indigo-700;
+  }
+
+  /* Forms: minimal "admin" look without extra plugins */
+  :where(label) {
+    @apply block text-sm font-medium text-slate-700;
+  }
+
+  :where(input, select, textarea) {
+    @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-2xs;
+    @apply placeholder:text-slate-400;
+    @apply focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-hidden;
+  }
+
+  :where(input[type="checkbox"], input[type="radio"]) {
+    @apply h-4 w-4 border-slate-300 text-indigo-600 shadow-none;
+    @apply focus:ring-2 focus:ring-indigo-200;
+  }
+
+  :where(input[readonly], textarea[readonly]) {
+    @apply bg-slate-50 text-slate-700;
+  }
+
+  :where(input:disabled, select:disabled, textarea:disabled) {
+    @apply cursor-not-allowed bg-slate-100 text-slate-500;
+  }
+}
+
+@layer components {
+  /* HTMX Progress Bar - zobrazí se při navigaci */
+  .htmx-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    z-index: 9999;
+    transition: width 0.3s ease-out;
+    pointer-events: none;
+  }
+
+  .htmx-progress.htmx-request {
+    width: 90%;
+    transition: width 10s ease-out;
+  }
+
+  .htmx-progress.htmx-settling {
+    width: 100%;
+    transition: width 0.1s ease-out;
+  }
+
+  .htmx-progress.htmx-settled {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+
+  /* HTMX indicators: show only during in-flight requests */
+  .htmx-indicator {
+    @apply hidden;
+  }
+
+  .htmx-request .htmx-indicator,
+  .htmx-request.htmx-indicator {
+    @apply inline;
+  }
+
+  /* Show spinner during HTMX request (without shifting button text) */
+  .htmx-request .htmx-indicator {
+    @apply inline-flex;
+  }
+
+  .app-btn-primary,
+  .app-btn-secondary {
+    @apply relative;
+  }
+
+  .app-btn-primary .htmx-indicator,
+  .app-btn-secondary .htmx-indicator {
+    @apply absolute right-3 top-1/2 -translate-y-1/2;
+  }
+
+  /* Disable button during HTMX request */
+  form.htmx-request button[type="submit"],
+  button.htmx-request {
+    @apply cursor-not-allowed opacity-70;
+    pointer-events: none;
+  }
+
+  /* Spinner animation */
+  .htmx-indicator svg,
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .app-card {
+    @apply rounded-lg border border-slate-200 bg-white shadow-xs;
+  }
+
+  .app-card-header {
+    @apply flex items-center justify-between border-b border-slate-200 px-6 py-4;
+  }
+
+  .app-card-title {
+    @apply text-base font-semibold text-slate-900;
+  }
+
+  .app-card-body {
+    @apply px-6 py-6;
+  }
+
+  /* Status toast (neposouvá layout) */
+  .app-toast-wrap {
+    @apply fixed top-4 right-4 left-4 z-50 sm:left-auto sm:w-96;
+    @apply pointer-events-none;
+  }
+
+  .app-toast {
+    @apply pointer-events-none;
+    @apply rounded-md border border-slate-600 bg-slate-800/70 px-4 py-3 text-sm text-slate-100 shadow-xs;
+    @apply border-l-4;
+    @apply font-medium backdrop-blur-sm;
+    animation: app-toast-life 2.4s ease-out forwards;
+  }
+
+  .app-toast-success {
+    @apply border-l-green-400;
+  }
+
+  .app-toast-error {
+    @apply border-l-red-400;
+  }
+
+  .app-toast-warning {
+    @apply border-l-amber-400;
+  }
+
+  /* In-flow messages (informace v obsahu stránky) */
+  .app-callout {
+    @apply rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700;
+    @apply border-l-4;
+  }
+
+  .app-callout-info {
+    @apply border-l-indigo-400;
+  }
+
+  .app-callout-success {
+    @apply border-l-green-400;
+  }
+
+  .app-callout-error {
+    @apply border-l-red-400;
+  }
+
+  .app-callout-warning {
+    @apply border-l-amber-400;
+  }
+
+  @keyframes app-toast-life {
+    0% {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    8% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    85% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  /* Buttons: shared base + variants */
+  .app-btn-primary,
+  .app-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold;
+    @apply transition-colors duration-150;
+    @apply focus:outline-hidden focus:ring-2 focus:ring-gray-400 focus:ring-offset-1;
+  }
+
+  .app-btn-primary {
+    @apply bg-gray-700 text-white hover:bg-gray-600;
+    @apply active:bg-gray-800;
+  }
+
+  .app-btn-secondary {
+    @apply bg-gray-800 text-gray-200 hover:bg-gray-700 hover:text-white;
+    @apply active:bg-gray-900;
+  }
+
+  /* Buttons inside tables: compact density (systemic) */
+  .app-table .app-btn-primary,
+  .app-table .app-btn-secondary {
+    @apply px-3 py-1 text-xs;
+  }
+
+  .app-table .app-btn-primary .htmx-indicator,
+  .app-table .app-btn-secondary .htmx-indicator {
+    @apply right-2;
+  }
+
+  .app-table :where(input, select, textarea) {
+    @apply px-2 py-1 text-xs;
+  }
+
+  dialog.app-dialog {
+    border: none;
+    padding: 0;
+    width: min(48rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    background: transparent;
+  }
+
+  dialog.app-dialog::backdrop {
+    background: rgb(15 23 42 / 0.45);
+  }
+
+  /* Sidebar nav */
+  .app-nav-link {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium;
+    @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+  }
+
+  .app-nav-link-active {
+    @apply bg-gray-700 text-white font-semibold;
+  }
+
+  /* "Form sections" (Admin One-ish): left heading + right fields */
+  .app-form {
+    @apply space-y-8;
+  }
+
+  .app-form-section {
+    @apply grid gap-6 border-t border-slate-200 pt-6;
+    @apply md:grid-cols-[14rem_1fr];
+  }
+
+  .app-form-section:first-child {
+    @apply border-t-0 pt-0;
+  }
+
+  .app-form-section-heading {
+    @apply space-y-1;
+  }
+
+  .app-form-section-title {
+    @apply text-sm font-semibold text-slate-900;
+  }
+
+  .app-form-section-help {
+    @apply text-sm text-slate-500;
+  }
+
+  .app-form-section-fields {
+    @apply space-y-4;
+  }
+
+  .app-field {
+    @apply space-y-1;
+  }
+
+  /* ASP.NET validation helpers */
+  .field-validation-error {
+    @apply mt-1 block text-sm text-red-600;
+  }
+
+  .validation-summary-errors {
+    @apply rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700;
+  }
+
+  .validation-summary-valid {
+    @apply hidden;
+  }
+}

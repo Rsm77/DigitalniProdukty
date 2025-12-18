@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="Identity.Login.Title" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Identity.Login.Description" xml:space="preserve">
+    <value>Sign in with your email and password.</value>
+  </data>
+  <data name="Identity.Login.Section.Account.Title" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Identity.Login.Section.Account.Help" xml:space="preserve">
+    <value>Enter your credentials.</value>
+  </data>
+  <data name="Identity.Login.ForgotPassword" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="Identity.Login.Section.Actions.Title" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Identity.Login.Section.Actions.Help" xml:space="preserve">
+    <value>Complete sign in.</value>
+  </data>
+  <data name="Identity.Login.Button.SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Identity.Login.Button.Register" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="Identity.Login.NoAccount" xml:space="preserve">
+    <value>New here?</value>
+  </data>
+  <data name="Identity.Login.RegisterLink" xml:space="preserve">
+    <value>Create an account</value>
+  </data>
+  <data name="Identity.Login.InvalidAttempt" xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+
+  <data name="Identity.Register.Title" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Identity.Register.Description" xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="Identity.Register.Section.Account.Title" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Identity.Register.Section.Account.Help" xml:space="preserve">
+    <value>Basic credentials.</value>
+  </data>
+  <data name="Identity.Register.Section.Actions.Title" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Identity.Register.Section.Actions.Help" xml:space="preserve">
+    <value>Complete registration.</value>
+  </data>
+  <data name="Identity.Register.Button.CreateAccount" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="Identity.Register.Button.BackToLogin" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+  <data name="Identity.Register.HasAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="Identity.Register.LoginLink" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+
+  <data name="Identity.Register.AccountType.EndUser" xml:space="preserve">
+    <value>End user</value>
+  </data>
+  <data name="Identity.Register.AccountType.Reseller" xml:space="preserve">
+    <value>Reseller</value>
+  </data>
+  <data name="Identity.Register.AccountType.Distributor" xml:space="preserve">
+    <value>Distributor</value>
+  </data>
+
+  <data name="Identity.ForgotPassword.Title" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Identity.ForgotPassword.Description" xml:space="preserve">
+    <value>We'll send you a link to set a new password.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Email.Title" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Email.Help" xml:space="preserve">
+    <value>Enter the email for your account.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Actions.Title" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Identity.ForgotPassword.Section.Actions.Help" xml:space="preserve">
+    <value>Sends a password reset link.</value>
+  </data>
+  <data name="Identity.ForgotPassword.Button.SendLink" xml:space="preserve">
+    <value>Send link</value>
+  </data>
+  <data name="Identity.ForgotPassword.Button.BackToLogin" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+
+  <data name="Identity.ResetPassword.Title" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Identity.ResetPassword.Description" xml:space="preserve">
+    <value>Set a new password.</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Account.Title" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Account.Help" xml:space="preserve">
+    <value>Verification and new password.</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Actions.Title" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Identity.ResetPassword.Section.Actions.Help" xml:space="preserve">
+    <value>Saves your new password.</value>
+  </data>
+  <data name="Identity.ResetPassword.Button.SavePassword" xml:space="preserve">
+    <value>Save password</value>
+  </data>
+  <data name="Identity.ResetPassword.Button.BackToLogin" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+
+  <data name="Identity.ConfirmEmail.Title" xml:space="preserve">
+    <value>Confirm email</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Description" xml:space="preserve">
+    <value>Complete your registration.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Button.GoToLogin" xml:space="preserve">
+    <value>Go to sign in</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Button.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Identity.ConfirmEmail.UserNotFound" xml:space="preserve">
+    <value>User was not found.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Success" xml:space="preserve">
+    <value>Email confirmed successfully. You can now sign in.</value>
+  </data>
+  <data name="Identity.ConfirmEmail.Failure" xml:space="preserve">
+    <value>Failed to confirm email.</value>
+  </data>
+
+  <data name="Identity.RegisterConfirmation.Title" xml:space="preserve">
+    <value>Registration confirmation</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Description" xml:space="preserve">
+    <value>Your account is created. Please confirm your email to continue.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Body.BeforeEmail" xml:space="preserve">
+    <value>If the email</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Body.AfterEmail" xml:space="preserve">
+    <value>was entered correctly, you should receive a confirmation link shortly.</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Button.ContinueToLogin" xml:space="preserve">
+    <value>Continue to sign in</value>
+  </data>
+  <data name="Identity.RegisterConfirmation.Button.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+
+  <data name="Identity.ForgotPasswordConfirmation.Title" xml:space="preserve">
+    <value>Link sent</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Description" xml:space="preserve">
+    <value>If the email exists, we're sending a password reset link.</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Body" xml:space="preserve">
+    <value>Please check your email and follow the instructions.</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Button.BackToLogin" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+  <data name="Identity.ForgotPasswordConfirmation.Button.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+
+  <data name="Identity.ResetPasswordConfirmation.Title" xml:space="preserve">
+    <value>Password changed</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Description" xml:space="preserve">
+    <value>Your new password is set.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Body" xml:space="preserve">
+    <value>You can now sign in.</value>
+  </data>
+  <data name="Identity.ResetPasswordConfirmation.Button.GoToLogin" xml:space="preserve">
+    <value>Go to sign in</value>
+  </data>
+
+  <data name="Identity.Logout.Title" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="Identity.Logout.Description" xml:space="preserve">
+    <value>Confirm signing out of the application.</value>
+  </data>
+  <data name="Identity.Logout.Section.Actions.Title" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Identity.Logout.Section.Actions.Help" xml:space="preserve">
+    <value>You will be signed out and redirected back.</value>
+  </data>
+  <data name="Identity.Logout.Button.Logout" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="Identity.Logout.Button.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+
+  <data name="Identity.DevMode.Title" xml:space="preserve">
+    <value>Development mode</value>
+  </data>
+  <data name="Identity.DevMode.EmailNotConfigured.Confirm" xml:space="preserve">
+    <value>Email sending is not configured. Confirm the account using this link:</value>
+  </data>
+  <data name="Identity.DevMode.EmailNotConfigured.Reset" xml:space="preserve">
+    <value>Email sending is not configured. Reset the password using this link:</value>
+  </data>
+
+  <data name="Identity.Email.ConfirmEmail.Subject" xml:space="preserve">
+    <value>Confirm your email</value>
+  </data>
+  <data name="Identity.Email.ConfirmEmail.BodyHtml" xml:space="preserve">
+    <value>Please confirm your account by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  </data>
+  <data name="Identity.Email.ResetPassword.Subject" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Identity.Email.ResetPassword.BodyHtml" xml:space="preserve">
+    <value>To reset your password, &lt;a href='{0}'&gt;click here&lt;/a&gt;.</value>
+  </data>
+
+  <data name="Identity.Login2fa.Title" xml:space="preserve">
+    <value>Two-factor authentication</value>
+  </data>
+  <data name="Identity.Login2fa.Description" xml:space="preserve">
+    <value>Enter the verification code from your authenticator app.</value>
+  </data>
+  <data name="Identity.Login2fa.RememberMachine" xml:space="preserve">
+    <value>Don't ask again on this device</value>
+  </data>
+  <data name="Identity.Login2fa.Button.Verify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="Identity.Login2fa.Button.BackToLogin" xml:space="preserve">
+    <value>Back to sign in</value>
+  </data>
+  <data name="Identity.Login2fa.InvalidCode" xml:space="preserve">
+    <value>Invalid verification code.</value>
+  </data>
+
+  <data name="Identity.AccessDenied.Title" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="Identity.AccessDenied.Description" xml:space="preserve">
+    <value>You do not have permission to access this page.</value>
+  </data>
+  <data name="Identity.AccessDenied.Button.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+</root>

@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Nav.Home" xml:space="preserve">
+    <value>Domů</value>
+  </data>
+  <data name="Nav.Privacy" xml:space="preserve">
+    <value>Soukromí</value>
+  </data>
+  <data name="Nav.Licensing" xml:space="preserve">
+    <value>Licencování</value>
+  </data>
+  <data name="Nav.Licensing.Manage" xml:space="preserve">
+    <value>Přehled licencí</value>
+  </data>
+  <data name="Nav.Licensing.Generate" xml:space="preserve">
+    <value>Generování licencí</value>
+  </data>
+  <data name="Nav.CreateEndUser" xml:space="preserve">
+    <value>Vytvořit uživatele</value>
+  </data>
+  <data name="Language.Label" xml:space="preserve">
+    <value>Jazyk</value>
+  </data>
+  <data name="Language.Cs" xml:space="preserve">
+    <value>Česky</value>
+  </data>
+  <data name="Language.En" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language.Switch" xml:space="preserve">
+    <value>Změnit jazyk</value>
+  </data>
+  <data name="Layout.ToggleNavigation" xml:space="preserve">
+    <value>Přepnout navigaci</value>
+  </data>
+  <data name="Home.Index.Title" xml:space="preserve">
+    <value>Domů</value>
+  </data>
+  <data name="Home.Index.Welcome" xml:space="preserve">
+    <value>Vítejte</value>
+  </data>
+  <data name="Home.Index.Description" xml:space="preserve">
+    <value>Vítejte ve vašem HTMX-first admin shellu.</value>
+  </data>
+  <data name="Home.Index.Learn.Prefix" xml:space="preserve">
+    <value>Zjistěte více o</value>
+  </data>
+  <data name="Home.Index.Learn.LinkText" xml:space="preserve">
+    <value>tvorbě webových aplikací v ASP.NET Core</value>
+  </data>
+  <data name="Home.Privacy.Title" xml:space="preserve">
+    <value>Soukromí</value>
+  </data>
+  <data name="Home.Privacy.Body" xml:space="preserve">
+    <value>Použijte tuto stránku pro popis zásad ochrany osobních údajů.</value>
+  </data>
+
+  <data name="LicensingAdmin.Index.Title" xml:space="preserve">
+    <value>Přehled licencí</value>
+  </data>
+  <data name="LicensingAdmin.Generate.Title" xml:space="preserve">
+    <value>Generování licencí</value>
+  </data>
+  <data name="LicensingAdmin.Generate.GeneratedKeys" xml:space="preserve">
+    <value>Naposledy vygenerované</value>
+  </data>
+  <data name="LicensingAdmin.Details.Title" xml:space="preserve">
+    <value>Detail klíče</value>
+  </data>
+  <data name="LicensingAdmin.Details.Close" xml:space="preserve">
+    <value>Zavřít</value>
+  </data>
+  <data name="LicensingAdmin.Index.Button.Installations" xml:space="preserve">
+    <value>Instalace</value>
+  </data>
+  <data name="LicensingAdmin.Index.Callout" xml:space="preserve">
+    <value>Generujte licenční klíče a spravujte jejich zneplatnění. Tato stránka používá HTMX swapy (stejný vzor jako ostatní stránky).</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.Count" xml:space="preserve">
+    <value>Počet</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.Groups" xml:space="preserve">
+    <value>Skupiny</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.GroupLength" xml:space="preserve">
+    <value>Délka skupiny</value>
+  </data>
+  <data name="LicensingAdmin.Index.Form.MaxDevices" xml:space="preserve">
+    <value>Max. zařízení</value>
+  </data>
+  <data name="LicensingAdmin.Index.Generate" xml:space="preserve">
+    <value>Vygenerovat</value>
+  </data>
+  <data name="LicensingAdmin.Index.LatestKeys" xml:space="preserve">
+    <value>Poslední klíče</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Key" xml:space="preserve">
+    <value>Klíč</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.MaxDevices" xml:space="preserve">
+    <value>Max. zařízení</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Created" xml:space="preserve">
+    <value>Vytvořeno</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Status" xml:space="preserve">
+    <value>Stav</value>
+  </data>
+  <data name="LicensingAdmin.Index.Table.Assigned" xml:space="preserve">
+    <value>Vlastník</value>
+  </data>
+  <data name="LicensingAdmin.Index.Status.Active" xml:space="preserve">
+    <value>Aktivní</value>
+  </data>
+  <data name="LicensingAdmin.Index.Status.Revoked" xml:space="preserve">
+    <value>Zneplatněno</value>
+  </data>
+  <data name="LicensingAdmin.Index.Action.Revoke" xml:space="preserve">
+    <value>Zneplatnit</value>
+  </data>
+  <data name="LicensingAdmin.Index.Action.Unrevoke" xml:space="preserve">
+    <value>Obnovit platnost</value>
+  </data>
+
+  <data name="LicensingAdmin.Installations.Title" xml:space="preserve">
+    <value>Instalace</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Button.Keys" xml:space="preserve">
+    <value>Přehled licencí</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Callout" xml:space="preserve">
+    <value>Poslední instalační události (audit log). Použijte to pro diagnostiku a detekci podvodů.</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.When" xml:space="preserve">
+    <value>Kdy</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Event" xml:space="preserve">
+    <value>Událost</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Key" xml:space="preserve">
+    <value>Klíč</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.Device" xml:space="preserve">
+    <value>Zařízení</value>
+  </data>
+  <data name="LicensingAdmin.Installations.Table.IP" xml:space="preserve">
+    <value>IP</value>
+  </data>
+
+  <data name="LicensingAdmin.Toast.Generated" xml:space="preserve">
+    <value>Vygenerováno {0} klíčů.</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyNotFound" xml:space="preserve">
+    <value>Klíč nebyl nalezen.</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyRevoked" xml:space="preserve">
+    <value>Klíč byl zneplatněn.</value>
+  </data>
+  <data name="LicensingAdmin.Toast.KeyUnrevoked" xml:space="preserve">
+    <value>Platnost klíče byla obnovena.</value>
+  </data>
+    <data name="LicensingAdmin.Index.Assign.Placeholder" xml:space="preserve">
+      <value>E-mail</value>
+    </data>
+    <data name="LicensingAdmin.Index.Assign.Button" xml:space="preserve">
+      <value>Nastavit</value>
+    </data>
+    <data name="LicensingAdmin.Index.Reassign.Placeholder" xml:space="preserve">
+      <value>Nový e-mail</value>
+    </data>
+    <data name="LicensingAdmin.Index.Reassign.Button" xml:space="preserve">
+      <value>Změnit</value>
+    </data>
+    <data name="LicensingAdmin.Index.Unassign.Button" xml:space="preserve">
+      <value>Odebrat</value>
+    </data>
+    <data name="LicensingAdmin.Index.AssignedTo" xml:space="preserve">
+      <value>Vlastník: {0}</value>
+    </data>
+    <data name="LicensingAdmin.Toast.EmailRequired" xml:space="preserve">
+      <value>Zadejte e-mail uživatele.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.UserNotFound" xml:space="preserve">
+      <value>Uživatel s e-mailem {0} nebyl nalezen.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.AlreadyAssigned" xml:space="preserve">
+      <value>Klíč už má vlastníka {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Assigned" xml:space="preserve">
+      <value>Vlastník byl nastaven na {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Reassigned" xml:space="preserve">
+      <value>Vlastník byl změněn na {0}.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.Unassigned" xml:space="preserve">
+      <value>Vlastník byl odebrán.</value>
+    </data>
+    <data name="LicensingAdmin.Toast.NotAssigned" xml:space="preserve">
+      <value>Klíč nemá žádného vlastníka.</value>
+    </data>
+  <data name="Auth.Manage" xml:space="preserve">
+    <value>Správa účtu</value>
+  </data>
+  <data name="Auth.Logout" xml:space="preserve">
+    <value>Odhlásit</value>
+  </data>
+  <data name="Auth.Register" xml:space="preserve">
+    <value>Registrace</value>
+  </data>
+  <data name="Auth.Login" xml:space="preserve">
+    <value>Přihlášení</value>
+  </data>
+  <data name="Account.Nav.Label" xml:space="preserve">
+    <value>Nastavení účtu</value>
+  </data>
+  <data name="Account.Nav.Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Account.Nav.Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Account.Nav.TwoFactor" xml:space="preserve">
+    <value>2FA</value>
+  </data>
+  <data name="Account.Nav.Serials" xml:space="preserve">
+    <value>Moje licence</value>
+  </data>
+  <data name="Account.Profile.Title" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+
+  <data name="Account.Serials.Title" xml:space="preserve">
+    <value>Moje licence</value>
+  </data>
+  <data name="Account.Serials.Description" xml:space="preserve">
+    <value>Přehled sériových čísel ve vlastnictví vašeho účtu.</value>
+  </data>
+  <data name="Account.Serials.Empty" xml:space="preserve">
+    <value>Zatím nemáte žádná sériová čísla.</value>
+  </data>
+  <data name="Account.Serials.Table.Key" xml:space="preserve">
+    <value>Klíč</value>
+  </data>
+  <data name="Account.Serials.Table.MaxDevices" xml:space="preserve">
+    <value>Max. zařízení</value>
+  </data>
+  <data name="Account.Serials.Table.Created" xml:space="preserve">
+    <value>Vytvořeno</value>
+  </data>
+  <data name="Account.Serials.Table.Status" xml:space="preserve">
+    <value>Stav</value>
+  </data>
+  <data name="Account.Serials.Status.Active" xml:space="preserve">
+    <value>Aktivní</value>
+  </data>
+  <data name="Account.Serials.Status.Invalid" xml:space="preserve">
+    <value>Zneplatněno</value>
+  </data>
+  <data name="Account.Profile.Heading" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Account.Profile.Section.Basic" xml:space="preserve">
+    <value>Základní údaje</value>
+  </data>
+  <data name="Account.Profile.Section.BasicHelp" xml:space="preserve">
+    <value>Změňte údaje svého účtu.</value>
+  </data>
+  <data name="Account.Profile.EmailReadOnlyHelp" xml:space="preserve">
+    <value>E-mail je v této verzi jen pro čtení.</value>
+  </data>
+  <data name="Account.Profile.Save" xml:space="preserve">
+    <value>Uložit</value>
+  </data>
+  <data name="Account.Profile.Saved" xml:space="preserve">
+    <value>Profil byl uložen.</value>
+  </data>
+  <data name="Account.Password.Title" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Account.Password.Heading" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Account.Password.Section.Change" xml:space="preserve">
+    <value>Změna hesla</value>
+  </data>
+  <data name="Account.Password.Section.ChangeHelp" xml:space="preserve">
+    <value>Zvolte si nové heslo pro přihlášení.</value>
+  </data>
+  <data name="Account.Password.Save" xml:space="preserve">
+    <value>Uložit</value>
+  </data>
+  <data name="Account.Password.Changed" xml:space="preserve">
+    <value>Heslo bylo změněno.</value>
+  </data>
+  <data name="Account.Password.NoPassword" xml:space="preserve">
+    <value>Tento účet nemá nastavené heslo.</value>
+  </data>
+  <data name="Account.TwoFactor.Title" xml:space="preserve">
+    <value>Dvoufázové ověření (2FA)</value>
+  </data>
+    <data name="Account.FirstLogin.Title" xml:space="preserve">
+      <value>První přihlášení</value>
+    </data>
+    <data name="Account.FirstLogin.Heading" xml:space="preserve">
+      <value>První přihlášení</value>
+    </data>
+    <data name="Account.FirstLogin.Callout" xml:space="preserve">
+      <value>Z bezpečnostních důvodů musíte při prvním přihlášení změnit e-mail i heslo.</value>
+    </data>
+    <data name="Account.FirstLogin.CurrentEmail" xml:space="preserve">
+      <value>Aktuální e-mail: {0}</value>
+    </data>
+    <data name="Account.FirstLogin.Section.Credentials" xml:space="preserve">
+      <value>Nové přihlašovací údaje</value>
+    </data>
+    <data name="Account.FirstLogin.Section.CredentialsHelp" xml:space="preserve">
+      <value>Zadejte nový e-mail a nové heslo.</value>
+    </data>
+    <data name="Account.FirstLogin.Save" xml:space="preserve">
+      <value>Uložit změny</value>
+    </data>
+    <data name="Account.FirstLogin.Changed" xml:space="preserve">
+      <value>Přihlašovací údaje byly změněny.</value>
+    </data>
+    <data name="Account.FirstLogin.EmailRequired" xml:space="preserve">
+      <value>Zadejte e-mail.</value>
+    </data>
+    <data name="Account.FirstLogin.EmailMustChange" xml:space="preserve">
+      <value>E-mail musíte změnit na jiný.</value>
+    </data>
+    <data name="Account.FirstLogin.EmailTaken" xml:space="preserve">
+      <value>Tento e-mail je už obsazený.</value>
+    </data>
+    <data name="Account.FirstLogin.PasswordMustChange" xml:space="preserve">
+      <value>Nové heslo musí být jiné než aktuální.</value>
+    </data>
+  <data name="Account.TwoFactor.Heading" xml:space="preserve">
+    <value>Dvoufázové ověření (2FA)</value>
+  </data>
+  <data name="Account.TwoFactor.StatusEnabled" xml:space="preserve">
+    <value>2FA je zapnuté.</value>
+  </data>
+  <data name="Account.TwoFactor.StatusDisabled" xml:space="preserve">
+    <value>2FA je vypnuté.</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesLeft" xml:space="preserve">
+    <value>Zbývá recovery kódů: {0}</value>
+  </data>
+  <data name="Account.TwoFactor.SetupTitle" xml:space="preserve">
+    <value>Nastavení autentizátoru</value>
+  </data>
+  <data name="Account.TwoFactor.SetupHelp" xml:space="preserve">
+    <value>Naskenujte QR kód nebo zadejte klíč do autentizační aplikace a potvrďte ověřovacím kódem.</value>
+  </data>
+  <data name="Account.TwoFactor.QrCodeLabel" xml:space="preserve">
+    <value>QR kód</value>
+  </data>
+  <data name="Account.TwoFactor.QrCodeHelp" xml:space="preserve">
+    <value>Naskenujte tento QR kód pomocí autentizační aplikace.</value>
+  </data>
+  <data name="Account.TwoFactor.SharedKeyLabel" xml:space="preserve">
+    <value>Sdílený klíč</value>
+  </data>
+  <data name="Account.TwoFactor.SharedKeyHelp" xml:space="preserve">
+    <value>Pokud nelze naskenovat QR kód, zadejte tento klíč ručně.</value>
+  </data>
+  <data name="Account.TwoFactor.Enable" xml:space="preserve">
+    <value>Zapnout 2FA</value>
+  </data>
+  <data name="Account.TwoFactor.Disable" xml:space="preserve">
+    <value>Vypnout 2FA</value>
+  </data>
+  <data name="Account.TwoFactor.ResetKeyAction" xml:space="preserve">
+    <value>Resetovat klíč</value>
+  </data>
+  <data name="Account.TwoFactor.GenerateRecoveryCodes" xml:space="preserve">
+    <value>Generovat recovery kódy</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesHeading" xml:space="preserve">
+    <value>Recovery kódy</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesHelp" xml:space="preserve">
+    <value>Uložte si je na bezpečné místo. Každý kód lze použít jen jednou.</value>
+  </data>
+  <data name="Account.TwoFactor.Enabled" xml:space="preserve">
+    <value>2FA bylo zapnuto.</value>
+  </data>
+  <data name="Account.TwoFactor.Disabled" xml:space="preserve">
+    <value>2FA bylo vypnuto.</value>
+  </data>
+  <data name="Account.TwoFactor.ResetKey" xml:space="preserve">
+    <value>Klíč autentizátoru byl resetován.</value>
+  </data>
+  <data name="Account.TwoFactor.InvalidCode" xml:space="preserve">
+    <value>Neplatný ověřovací kód.</value>
+  </data>
+  <data name="Account.TwoFactor.NotEnabled" xml:space="preserve">
+    <value>2FA není zapnuté.</value>
+  </data>
+  <data name="Account.TwoFactor.RecoveryCodesGenerated" xml:space="preserve">
+    <value>Byly vygenerovány nové recovery kódy.</value>
+  </data>
+  <data name="Error.Title" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="Error.Heading" xml:space="preserve">
+    <value>Chyba.</value>
+  </data>
+  <data name="Error.Subheading" xml:space="preserve">
+    <value>Při zpracování požadavku došlo k chybě.</value>
+  </data>
+  <data name="Error.RequestId" xml:space="preserve">
+    <value>ID požadavku:</value>
+  </data>
+  <data name="Error.DevMode.Title" xml:space="preserve">
+    <value>Vývojový režim</value>
+  </data>
+  <data name="Error.DevMode.Description" xml:space="preserve">
+    <value>Přepnutí na prostředí Development zobrazí více detailů o vzniklé chybě.</value>
+  </data>
+  <data name="Error.DevMode.Warning" xml:space="preserve">
+    <value>Pro nasazené aplikace by prostředí Development nemělo být zapnuté.</value>
+  </data>
+  <data name="Error.DevMode.WarningDetails" xml:space="preserve">
+    <value>Může to vést k zobrazení citlivých informací z výjimek koncovým uživatelům. Pro lokální ladění nastavte proměnnou prostředí ASPNETCORE_ENVIRONMENT na Development a restartujte aplikaci.</value>
+  </data>
+  <data name="App.Name" xml:space="preserve">
+    <value>Digitální produkty</value>
+  </data>
+</root>

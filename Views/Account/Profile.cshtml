@@ -1,0 +1,62 @@
+﻿@model DigitalniProdukty.Models.Account.ProfileInputModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Account.Profile.Title"].Value;
+}
+
+<div class="app-card" id="profile-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Account.Profile.Heading"]</h1>
+        <partial name="_AccountNav" />
+    </div>
+
+    <partial name="_Toast" />
+
+    <div class="app-card-body">
+        <div asp-validation-summary="All" class="mb-4"></div>
+
+        <form id="profile-form" 
+              method="post" 
+              class="app-form" 
+              novalidate
+              hx-post="@Url.Action("Profile", "Account")" 
+              hx-target="#profile-card" 
+              hx-swap="outerHTML">
+            <div class="app-form-section">
+                <div class="app-form-section-heading">
+                    <div class="app-form-section-title">@T["Account.Profile.Section.Basic"]</div>
+                    <div class="app-form-section-help">@T["Account.Profile.Section.BasicHelp"]</div>
+                </div>
+
+                <div class="app-form-section-fields">
+                    <div class="app-field">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" readonly />
+                        <div class="mt-1 text-sm text-slate-500">@T["Account.Profile.EmailReadOnlyHelp"]</div>
+                    </div>
+
+                    <div class="app-field">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" />
+                        <span asp-validation-for="PhoneNumber"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button type="submit" class="app-btn-primary">
+                    <span class="htmx-indicator items-center gap-2">
+                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                    <span class="htmx-content">@T["Account.Profile.Save"]</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

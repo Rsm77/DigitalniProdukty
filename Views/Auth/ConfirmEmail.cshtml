@@ -1,0 +1,35 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<IdentityUi> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Identity.ConfirmEmail.Title"].Value;
+    var status = (string?)ViewData["ConfirmEmailStatus"] ?? string.Empty;
+    var statusKind = (string?)ViewData["ConfirmEmailStatusKind"] ?? "info";
+    var statusClass = statusKind switch
+    {
+        "success" => "app-callout-success",
+        "error" => "app-callout-error",
+        "warning" => "app-callout-warning",
+        _ => "app-callout-info"
+    };
+}
+
+<div class="app-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Identity.ConfirmEmail.Title"]</h1>
+    </div>
+
+    <div class="app-card-body space-y-4">
+        <p class="text-sm text-slate-600">@T["Identity.ConfirmEmail.Description"]</p>
+
+        @if (!string.IsNullOrWhiteSpace(status))
+        {
+            <div class="app-callout @statusClass">@status</div>
+        }
+
+        <div class="flex flex-wrap items-center justify-end gap-2">
+            <a class="app-btn-primary" asp-controller="Auth" asp-action="Login">@T["Identity.ConfirmEmail.Button.GoToLogin"]</a>
+            <a class="app-btn-secondary" asp-controller="Home" asp-action="Index">@T["Identity.ConfirmEmail.Button.Home"]</a>
+        </div>
+    </div>
+</div>

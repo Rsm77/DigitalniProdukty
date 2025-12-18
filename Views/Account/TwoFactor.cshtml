@@ -1,0 +1,142 @@
+﻿@model DigitalniProdukty.Models.Account.TwoFactorViewModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Account.TwoFactor.Title"].Value;
+}
+
+<div class="app-card" id="twofactor-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Account.TwoFactor.Heading"]</h1>
+        <partial name="_AccountNav" />
+    </div>
+
+    <partial name="_Toast" />
+
+    <div class="app-card-body space-y-6">
+        <div class="text-sm text-slate-700">
+            @if (Model.Is2faEnabled)
+            {
+                <span class="font-medium">@T["Account.TwoFactor.StatusEnabled"]</span>
+            }
+            else
+            {
+                <span class="font-medium">@T["Account.TwoFactor.StatusDisabled"]</span>
+            }
+            <span class="text-slate-500">@T["Account.TwoFactor.RecoveryCodesLeft", Model.RecoveryCodesLeft]</span>
+        </div>
+
+        @if (Model.NewRecoveryCodes is { Length: > 0 })
+        {
+            <div class="app-callout app-callout-info">
+                <div class="text-sm font-semibold text-slate-900">@T["Account.TwoFactor.RecoveryCodesHeading"]</div>
+                <div class="mt-1 text-sm text-slate-600">@T["Account.TwoFactor.RecoveryCodesHelp"]</div>
+                <pre class="mt-3 overflow-x-auto whitespace-pre-wrap text-sm text-slate-900">@string.Join("\n", Model.NewRecoveryCodes)</pre>
+            </div>
+        }
+
+        @if (!Model.Is2faEnabled)
+        {
+            <div class="app-form">
+                <div class="app-form-section">
+                    <div class="app-form-section-heading">
+                        <div class="app-form-section-title">@T["Account.TwoFactor.SetupTitle"]</div>
+                        <div class="app-form-section-help">@T["Account.TwoFactor.SetupHelp"]</div>
+                    </div>
+
+                    <div class="app-form-section-fields">
+                        @if (!string.IsNullOrEmpty(Model.QrCodeSvg))
+                        {
+                            <div class="app-field">
+                                <label>@T["Account.TwoFactor.QrCodeLabel"]</label>
+                                <div class="mt-2 inline-block rounded-lg border border-slate-200 bg-white p-3">
+                                    @Html.Raw(Model.QrCodeSvg)
+                                </div>
+                                <div class="mt-1 text-sm text-slate-500">@T["Account.TwoFactor.QrCodeHelp"]</div>
+                            </div>
+                        }
+
+                        <div class="app-field">
+                            <label>@T["Account.TwoFactor.SharedKeyLabel"]</label>
+                            <input readonly value="@Model.SharedKeyFormatted" />
+                            <div class="mt-1 text-sm text-slate-500">@T["Account.TwoFactor.SharedKeyHelp"]</div>
+                        </div>
+
+                        <form id="enable-2fa-form" 
+                              method="post" 
+                              class="space-y-4" 
+                              novalidate
+                              hx-post="@Url.Action("EnableTwoFactor", "Account")" 
+                              hx-target="#twofactor-card" 
+                              hx-swap="outerHTML"
+              asp-action="EnableTwoFactor">
+                            <div asp-validation-summary="All"></div>
+
+                            <div class="app-field">
+                                <label asp-for="Enable.Code"></label>
+                                <input asp-for="Enable.Code" autocomplete="one-time-code" />
+                                <span asp-validation-for="Enable.Code"></span>
+                            </div>
+
+                            <div class="flex items-center justify-end">
+                                <button type="submit" class="app-btn-primary">
+                                    <span class="htmx-indicator items-center gap-2">
+                                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="htmx-content">@T["Account.TwoFactor.Enable"]</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="flex flex-wrap items-center gap-2">
+                <form method="post" 
+                      novalidate
+                      hx-post="@Url.Action("DisableTwoFactor", "Account")" 
+                      hx-target="closest .app-card-body" 
+                      hx-swap="innerHTML"
+                      asp-action="DisableTwoFactor">
+                    <button type="submit" class="app-btn-secondary">
+                        <span class="htmx-indicator items-center gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span class="htmx-content">@T["Account.TwoFactor.Disable"]</span>
+                    </button>
+                </form>
+
+                <form method="post" 
+                      novalidate
+                      hx-post="@Url.Action("ResetAuthenticatorKey", "Account")" 
+                      hx-target="closest .app-card-body" 
+                      hx-swap="innerHTML"
+                      asp-action="ResetAuthenticatorKey">
+                    <button type="submit" class="app-btn-secondary">
+                        <span class="htmx-indicator items-center gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span class="htmx-content">@T["Account.TwoFactor.ResetKeyAction"]</span>
+                    </button>
+                </form>
+
+                <form method="post" asp-action="GenerateRecoveryCodes">
+                    <button type="submit" class="app-btn-secondary">@T["Account.TwoFactor.GenerateRecoveryCodes"]</button>
+                </form>
+            </div>
+        }
+    </div>
+</div>
+

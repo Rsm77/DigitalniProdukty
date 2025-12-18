@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="Field_Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Field_Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Field_CurrentPassword" xml:space="preserve">
+    <value>Aktuální heslo</value>
+  </data>
+  <data name="Field_NewPassword" xml:space="preserve">
+    <value>Nové heslo</value>
+  </data>
+  <data name="Field_ConfirmPassword" xml:space="preserve">
+    <value>Potvrzení hesla</value>
+  </data>
+  <data name="Field_RememberMe" xml:space="preserve">
+    <value>Zapamatovat si mě</value>
+  </data>
+  <data name="Field_PhoneNumber" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Field_VerificationCode" xml:space="preserve">
+    <value>Ověřovací kód</value>
+  </data>
+
+  <data name="Field_AccountType" xml:space="preserve">
+    <value>Typ účtu</value>
+  </data>
+
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Pole {0} je povinné.</value>
+  </data>
+  <data name="Validation_EmailAddress" xml:space="preserve">
+    <value>Zadejte platnou e-mailovou adresu.</value>
+  </data>
+  <data name="Validation_StringLength" xml:space="preserve">
+    <value>{0} musí mít alespoň {2} a nejvýše {1} znaků.</value>
+  </data>
+  <data name="Validation_PasswordsDoNotMatch" xml:space="preserve">
+    <value>Hesla se neshodují.</value>
+  </data>
+
+  <data name="Validation_InvalidAccountType" xml:space="preserve">
+    <value>Neplatný typ účtu.</value>
+  </data>
+
+  <data name="ResetPassword_MissingCode" xml:space="preserve">
+    <value>Chybí resetovací kód.</value>
+  </data>
+</root>

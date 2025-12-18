@@ -1,0 +1,76 @@
+@model IReadOnlyList<DigitalniProdukty.Models.SerialNum.SerialNumberModel>
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    var selectedGroupId = ViewData["SelectedGroupId"] as Guid?;
+    var latestUrl = selectedGroupId is null
+        ? Url.Action("LatestKeys", "LicensingAdmin")
+        : Url.Action("LatestKeys", "LicensingAdmin", new { groupId = selectedGroupId });
+}
+
+<div id="licensing-latest-keys"
+     class="space-y-2"
+    hx-get="@latestUrl"
+     hx-trigger="licensing-updated from:body"
+    hx-target="this"
+     hx-swap="outerHTML">
+    <div class="text-sm font-semibold text-slate-900">@T["LicensingAdmin.Index.LatestKeys"]</div>
+
+    <div class="overflow-x-auto">
+        <table class="app-table min-w-full table-fixed text-xs">
+            <thead class="text-left text-slate-500">
+                <tr>
+                    <th class="py-1 pr-8 w-16">@T["LicensingAdmin.Index.Table.Id"]</th>
+                    <th class="py-1 pr-2">@T["LicensingAdmin.Index.Table.Key"]</th>
+                    <th class="py-1 pr-4 w-28">@T["LicensingAdmin.Index.Table.MaxDevices"]</th>
+                    <th class="py-1 pr-3 w-36">@T["LicensingAdmin.Index.Table.Created"]</th>
+                    <th class="py-1 pr-2 w-28 whitespace-nowrap">@T["LicensingAdmin.Index.Table.Status"]</th>
+                    <th class="py-1 pr-0 w-44">@T["LicensingAdmin.Index.Table.Assigned"]</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @foreach (var item in Model)
+                {
+                    var detailsUrl = selectedGroupId is null
+                        ? Url.Action("Details", "LicensingAdmin", new { id = item.Id })
+                        : Url.Action("Details", "LicensingAdmin", new { id = item.Id, groupId = selectedGroupId });
+
+                    <tr>
+                        <td class="py-1 pr-8 text-slate-500 whitespace-nowrap">@item.Id</td>
+                        <td class="py-1 pr-2 whitespace-nowrap">
+                            <button type="button"
+                                    class="font-mono text-slate-900 hover:underline"
+                                    onclick="window.appLicensing?.openDetails?.('@detailsUrl');">
+                                @item.Key
+                            </button>
+                        </td>
+                        <td class="py-1 pr-4 whitespace-nowrap">@item.MaxDevices</td>
+                        <td class="py-1 pr-3 text-slate-500 whitespace-nowrap">@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="py-1 pr-2 whitespace-nowrap">
+                            @if (item.IsRevoked)
+                            {
+                                <span class="inline-flex rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">@T["LicensingAdmin.Index.Status.Revoked"]</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">@T["LicensingAdmin.Index.Status.Active"]</span>
+                            }
+                        </td>
+                        <td class="py-1 pr-0 whitespace-nowrap text-slate-700">
+                            @if (string.IsNullOrWhiteSpace(item.OwnerUserId))
+                            {
+                                <span class="text-slate-500">—</span>
+                            }
+                            else
+                            {
+                                @(item.OwnerUser?.Email ?? item.OwnerUserId)
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

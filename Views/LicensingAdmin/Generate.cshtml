@@ -1,0 +1,162 @@
+@model IReadOnlyList<DigitalniProdukty.Models.SerialNum.SerialNumberModel>
+
+@using Microsoft.Extensions.Localization
+@using DigitalniProdukty.Security
+@using DigitalniProdukty.Models.Licensing
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = T["LicensingAdmin.Generate.Title"].Value;
+
+    var groups = ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>;
+    var selectedGroupId = ViewData["SelectedGroupId"] as Guid?;
+}
+
+<div class="app-card" id="licensing-generate">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@ViewData["Title"]</h1>
+    </div>
+
+    <partial name="_Toast" />
+
+    <div class="app-card-body space-y-6">
+        <authorize roles="@Authz.Roles.Admin">
+            <form method="get" class="app-form">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                    <div class="app-field sm:col-span-2">
+                        <label>Skupina</label>
+                        <select name="groupId">
+                            @if (groups is not null)
+                            {
+                                foreach (var g in groups)
+                                {
+                                    if (selectedGroupId == g.Id)
+                                    {
+                                        <option value="@g.Id" selected>@g.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@g.Id">@g.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="sm:col-span-2 flex items-end justify-end">
+                        <button type="submit" class="app-btn-secondary">Zobrazit</button>
+                    </div>
+                </div>
+            </form>
+        </authorize>
+
+        <form method="post"
+              class="app-form"
+              hx-post="@Url.Action("Generate", "LicensingAdmin")"
+              hx-target="#licensing-generate"
+              hx-swap="outerHTML">
+            @Html.AntiForgeryToken()
+
+            <authorize roles="@Authz.Roles.Admin">
+                @if (selectedGroupId is not null)
+                {
+                    <input type="hidden" name="groupId" value="@selectedGroupId" />
+                }
+            </authorize>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                <div class="app-field">
+                    <label>@T["LicensingAdmin.Index.Form.Count"]</label>
+                    <input name="Count" type="number" min="1" max="5000" value="1" />
+                </div>
+                <div class="app-field">
+                    <label>@T["LicensingAdmin.Index.Form.Groups"]</label>
+                    <input name="Groups" type="number" min="1" max="32" value="4" />
+                </div>
+                <div class="app-field">
+                    <label>@T["LicensingAdmin.Index.Form.GroupLength"]</label>
+                    <input name="GroupLength" type="number" min="4" max="16" value="5" />
+                </div>
+                <div class="app-field">
+                    <label>@T["LicensingAdmin.Index.Form.MaxDevices"]</label>
+                    <input name="MaxDevices" type="number" min="1" max="100" value="1" />
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button type="submit" class="app-btn-primary">
+                    <span class="htmx-indicator items-center gap-2">
+                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                    <span class="htmx-content">@T["LicensingAdmin.Index.Generate"]</span>
+                </button>
+            </div>
+        </form>
+
+        @if (Model is { Count: > 0 })
+        {
+            <div class="space-y-2">
+                <div class="text-sm font-semibold text-slate-900">@T["LicensingAdmin.Generate.GeneratedKeys"]</div>
+
+                <div class="overflow-x-auto">
+                    <table class="app-table min-w-full table-fixed text-xs">
+                        <thead class="text-left text-slate-500">
+                            <tr>
+                                <th class="py-1 pr-8 w-16">@T["LicensingAdmin.Index.Table.Id"]</th>
+                                <th class="py-1 pr-2">@T["LicensingAdmin.Index.Table.Key"]</th>
+                                <th class="py-1 pr-4 w-28">@T["LicensingAdmin.Index.Table.MaxDevices"]</th>
+                                <th class="py-1 pr-3 w-36">@T["LicensingAdmin.Index.Table.Created"]</th>
+                                <th class="py-1 pr-2 w-28 whitespace-nowrap">@T["LicensingAdmin.Index.Table.Status"]</th>
+                                <th class="py-1 pr-0 w-44">@T["LicensingAdmin.Index.Table.Assigned"]</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach (var item in Model)
+                            {
+                                var detailsUrl = selectedGroupId is null
+                                    ? Url.Action("Details", "LicensingAdmin", new { id = item.Id })
+                                    : Url.Action("Details", "LicensingAdmin", new { id = item.Id, groupId = selectedGroupId });
+
+                                <tr>
+                                    <td class="py-1 pr-8 text-slate-500 whitespace-nowrap">@item.Id</td>
+                                    <td class="py-1 pr-2 whitespace-nowrap">
+                                        <button type="button"
+                                                class="font-mono text-slate-900 hover:underline"
+                                                onclick="window.appLicensing?.openDetails?.('@detailsUrl');">
+                                            @item.Key
+                                        </button>
+                                    </td>
+                                    <td class="py-1 pr-4 whitespace-nowrap">@item.MaxDevices</td>
+                                    <td class="py-1 pr-3 text-slate-500 whitespace-nowrap">@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td class="py-1 pr-2 whitespace-nowrap">
+                                        @if (item.IsRevoked)
+                                        {
+                                            <span class="inline-flex rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">@T["LicensingAdmin.Index.Status.Revoked"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">@T["LicensingAdmin.Index.Status.Active"]</span>
+                                        }
+                                    </td>
+                                    <td class="py-1 pr-0 whitespace-nowrap text-slate-700">
+                                        @if (string.IsNullOrWhiteSpace(item.OwnerUserId))
+                                        {
+                                            <span class="text-slate-500">—</span>
+                                        }
+                                        else
+                                        {
+                                            @(item.OwnerUser?.Email ?? item.OwnerUserId)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>

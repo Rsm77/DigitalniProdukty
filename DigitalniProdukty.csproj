@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>DigitalniProdukty</RootNamespace>
+    <AssemblyName>DigitalniProdukty</AssemblyName>
+<Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-DigitalniProdukty-012f25af-c0df-4c68-9ef5-9f84303dbb3b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Htmx" Version="1.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.1" />
+    <PackageReference Include="QRCoder" Version="1.7.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Tailwind CSS Build Integration -->
+  <Target Name="CheckNodeModules" BeforeTargets="TailwindBuild">
+    <Message Importance="high" Text="Checking node_modules..." />
+    <Exec Command="npm install" Condition="!Exists('node_modules')" />
+  </Target>
+
+  <Target Name="TailwindBuild" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release' Or !Exists('wwwroot\css\output.css')">
+    <Message Importance="high" Text="Building Tailwind CSS..." />
+    <Exec Command="npm run build:css" />
+  </Target>
+
+  <Target Name="TailwindPublish" BeforeTargets="Publish">
+    <Message Importance="high" Text="Building Tailwind CSS for publish..." />
+    <Exec Command="npm install" Condition="!Exists('node_modules')" />
+    <Exec Command="npm run build:css" />
+  </Target>
+
+</Project>
+
+

@@ -1,0 +1,111 @@
+﻿@model DigitalniProdukty.Models.Auth.RegisterInputModel
+@using Microsoft.Extensions.Localization
+@using DigitalniProdukty.Security
+@inject IStringLocalizer<IdentityUi> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Identity.Register.Title"].Value;
+    var returnUrl = (string?)ViewData["ReturnUrl"] ?? Url.Content("~");
+}
+
+<div class="app-card" id="register-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Identity.Register.Title"]</h1>
+    </div>
+
+    <div class="app-card-body">
+        <p class="mb-6 text-sm text-slate-600">@T["Identity.Register.Description"]</p>
+
+        <div asp-validation-summary="All" class="mb-4"></div>
+
+        <form id="register-form" 
+              method="post" 
+              class="app-form" 
+              novalidate
+              hx-post="@Url.Action("Register", "Auth", new { returnUrl })" 
+              hx-target="#register-card" 
+              hx-swap="outerHTML"
+              asp-action="Register" 
+              asp-route-returnUrl="@returnUrl">
+            <div class="app-form-section">
+                <div class="app-form-section-heading">
+                    <div class="app-form-section-title">@T["Identity.Register.Section.Account.Title"]</div>
+                    <div class="app-form-section-help">@T["Identity.Register.Section.Account.Help"]</div>
+                </div>
+
+                <div class="app-form-section-fields">
+                    @if (User.IsInRole(Authz.Roles.Admin))
+                    {
+                        <div class="app-field">
+                            <label asp-for="AccountType"></label>
+                            <select asp-for="AccountType">
+                                <option value="@Authz.Roles.EndUser">@T["Identity.Register.AccountType.EndUser"]</option>
+                                <option value="@Authz.Roles.Reseller">@T["Identity.Register.AccountType.Reseller"]</option>
+                                <option value="@Authz.Roles.Distributor">@T["Identity.Register.AccountType.Distributor"]</option>
+                            </select>
+                            <span asp-validation-for="AccountType"></span>
+                        </div>
+                    }
+                    else if (User.IsInRole(Authz.Roles.Distributor))
+                    {
+                        <div class="app-field">
+                            <label asp-for="AccountType"></label>
+                            <select asp-for="AccountType">
+                                <option value="@Authz.Roles.EndUser">@T["Identity.Register.AccountType.EndUser"]</option>
+                                <option value="@Authz.Roles.Reseller">@T["Identity.Register.AccountType.Reseller"]</option>
+                            </select>
+                            <span asp-validation-for="AccountType"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="AccountType" value="@Authz.Roles.EndUser" />
+                    }
+
+                    <div class="app-field">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" autocomplete="username" />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+
+                    <div class="app-field">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" autocomplete="new-password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+
+                    <div class="app-field">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmPassword"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-form-section">
+                <div class="app-form-section-heading">
+                    <div class="app-form-section-title">@T["Identity.Register.Section.Actions.Title"]</div>
+                    <div class="app-form-section-help">@T["Identity.Register.Section.Actions.Help"]</div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-2">
+                    <button id="register-submit" type="submit" class="app-btn-primary">
+                        <span class="htmx-indicator items-center gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span class="htmx-content">@T["Identity.Register.Button.CreateAccount"]</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-slate-600">
+            @T["Identity.Register.HasAccount"]
+            <a class="font-medium text-indigo-600 hover:text-indigo-500" asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@returnUrl">@T["Identity.Register.LoginLink"]</a>
+        </p>
+    </div>
+</div>
+

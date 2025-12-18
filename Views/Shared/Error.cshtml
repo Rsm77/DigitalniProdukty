@@ -1,0 +1,25 @@
+﻿@model ErrorViewModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+@{
+    ViewData["Title"] = T["Error.Title"];
+}
+
+<h1 class="text-red-600 text-4xl font-bold">@T["Error.Heading"]</h1>
+<h2 class="text-red-600 text-2xl font-semibold mt-2">@T["Error.Subheading"]</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p class="mt-4">
+        <strong>@T["Error.RequestId"]</strong> <code class="bg-gray-100 px-2 py-1 rounded-sm">@Model.RequestId</code>
+    </p>
+}
+
+<h3 class="text-xl font-semibold mt-6">@T["Error.DevMode.Title"]</h3>
+<p class="mt-2 text-gray-700">
+    @T["Error.DevMode.Description"]
+</p>
+<p class="mt-2 text-gray-700">
+    <strong>@T["Error.DevMode.Warning"]</strong>
+    @T["Error.DevMode.WarningDetails"]
+</p>

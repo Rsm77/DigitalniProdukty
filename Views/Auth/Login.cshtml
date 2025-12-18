@@ -1,0 +1,83 @@
+﻿@model DigitalniProdukty.Models.Auth.LoginInputModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<IdentityUi> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Identity.Login.Title"].Value;
+    var returnUrl = (string?)ViewData["ReturnUrl"] ?? Url.Content("~");
+}
+
+<div class="app-card" id="login-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Identity.Login.Title"]</h1>
+    </div>
+
+    <div class="app-card-body">
+        <p class="mb-6 text-sm text-slate-600">@T["Identity.Login.Description"]</p>
+
+        <div asp-validation-summary="All" class="mb-4"></div>
+
+        <form id="login-form" 
+              method="post" 
+              class="app-form" 
+              novalidate
+              hx-post="@Url.Action("Login", "Auth", new { returnUrl })" 
+              hx-target="#login-card" 
+              hx-swap="outerHTML"
+              asp-action="Login" 
+              asp-route-returnUrl="@returnUrl">
+            <div class="app-form-section">
+                <div class="app-form-section-heading">
+                    <div class="app-form-section-title">@T["Identity.Login.Section.Account.Title"]</div>
+                    <div class="app-form-section-help">@T["Identity.Login.Section.Account.Help"]</div>
+                </div>
+
+                <div class="app-form-section-fields">
+                    <div class="app-field">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" autocomplete="username" />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+
+                    <div class="app-field">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" autocomplete="current-password" />
+                        <span asp-validation-for="Password"></span>
+                    </div>
+
+                    <div class="app-field">
+                        <label class="inline-flex items-center gap-2">
+                            <input asp-for="RememberMe" class="h-4 w-4" data-val="false" />
+                            <span class="text-sm text-slate-700">@Html.DisplayNameFor(m => m.RememberMe)</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <a class="text-sm text-slate-700 underline hover:text-slate-900" asp-controller="Auth" asp-action="ForgotPassword">@T["Identity.Login.ForgotPassword"]</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-form-section">
+                <div class="app-form-section-heading">
+                    <div class="app-form-section-title">@T["Identity.Login.Section.Actions.Title"]</div>
+                    <div class="app-form-section-help">@T["Identity.Login.Section.Actions.Help"]</div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-2">
+                    <button id="login-submit" type="submit" class="app-btn-primary">
+                        <span class="htmx-indicator items-center gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span class="htmx-content">@T["Identity.Login.Button.SignIn"]</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+

@@ -1,0 +1,63 @@
+﻿@model DigitalniProdukty.Models.Auth.Login2faInputModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<IdentityUi> T
+
+@{
+    ViewData["Title"] = ViewData["Title"] ?? T["Identity.Login2fa.Title"].Value;
+    var returnUrl = (string?)ViewData["ReturnUrl"] ?? Url.Content("~");
+    var rememberMe = (bool?)ViewData["RememberMe"] ?? false;
+}
+
+<div class="app-card" id="login2fa-card">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@T["Identity.Login2fa.Title"]</h1>
+    </div>
+
+    <div class="app-card-body">
+        <p class="mb-6 text-sm text-slate-600">@T["Identity.Login2fa.Description"]</p>
+
+        <div asp-validation-summary="All" class="mb-4"></div>
+
+        <form id="login2fa-form" 
+              method="post" 
+              class="app-form" 
+              novalidate
+              hx-post="@Url.Action("Login2fa", "Auth", new { returnUrl, rememberMe })" 
+              hx-target="#login2fa-card" 
+              hx-swap="outerHTML"
+              asp-action="Login2fa" 
+              asp-route-returnUrl="@returnUrl" 
+              asp-route-rememberMe="@rememberMe">
+            <div class="app-form-section">
+                <div class="app-form-section-fields">
+                    <div class="app-field">
+                        <label asp-for="Code"></label>
+                        <input asp-for="Code" autocomplete="one-time-code" />
+                        <span asp-validation-for="Code"></span>
+                    </div>
+
+                    <div class="app-field">
+                        <label class="inline-flex items-center gap-2">
+                            <input asp-for="RememberMachine" class="h-4 w-4" data-val="false" />
+                            <span class="text-sm text-slate-700">@T["Identity.Login2fa.RememberMachine"]</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-end gap-2">
+                <button type="submit" class="app-btn-primary">
+                    <span class="htmx-indicator items-center gap-2">
+                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                    <span class="htmx-content">@T["Identity.Login2fa.Button.Verify"]</span>
+                </button>
+                <a class="app-btn-secondary" asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@returnUrl">@T["Identity.Login2fa.Button.BackToLogin"]</a>
+            </div>
+        </form>
+    </div>
+</div>
+

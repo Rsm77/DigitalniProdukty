@@ -1,0 +1,17 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = T["Home.Index.Title"];
+}
+
+<div class="space-y-4">
+    <div class="space-y-1">
+        <h1 class="text-2xl font-semibold text-slate-900">@ViewData["Title"]</h1>
+        <p class="text-sm text-slate-500">@T["Home.Index.Welcome"]</p>
+    </div>
+    <p class="text-slate-700">@T["Home.Index.Description"]</p>
+    <div class="app-callout app-callout-info">
+        @T["Home.Index.Learn.Prefix"] <a class="underline" href="https://learn.microsoft.com/aspnet/core">@T["Home.Index.Learn.LinkText"]</a>.
+    </div>
+</div>

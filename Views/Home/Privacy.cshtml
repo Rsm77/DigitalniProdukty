@@ -1,0 +1,10 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> T
+
+@{
+    ViewData["Title"] = T["Home.Privacy.Title"];
+}
+<div class="space-y-3">
+    <h1 class="text-2xl font-semibold text-slate-900">@ViewData["Title"]</h1>
+    <p class="text-slate-700">@T["Home.Privacy.Body"]</p>
+</div>
