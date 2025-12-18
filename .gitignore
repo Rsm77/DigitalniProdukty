@@ -28,6 +28,9 @@ bld/
 # VS Code workspace settings
 .vscode/
 
+# Copilot local folder
+.copilot/
+
 # Visual Studio
 .vs/
 *.suo
