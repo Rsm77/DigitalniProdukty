@@ -45,6 +45,7 @@ Projekt je postaven tak, aby šel postupně rozšiřovat (produkty, objednávky,
 
 Typicky se pracuje s rolemi:
 
+- **Majitel**: *vždy jen jeden*. Jediný, kdo může vytvářet/upravovat/mazat účty **Admin** (včetně resetu hesla admina).
 - **Admin**: vidí vše (případně filtruje dle skupiny), může přesouvat klíče mezi skupinami.
 - **Distributor**: může generovat klíče a spravovat licencování pouze ve své skupině.
 - **Reseller (prodejce) / End-user (koncový uživatel)**: podle nastavených pravidel přístupu (policy).
@@ -67,6 +68,8 @@ UI používá HTMX pro částečné aktualizace bez nutnosti plného znovunačte
 - Ne-admin uživatelé jsou automaticky omezeni na svou skupinu (scoping).
 - Admin může vidět všechny skupiny a cíleně filtrovat.
 - Přesun klíče mezi skupinami je auditovaný.
+
+Poznámka: skupiny se v aktuální verzi **nevytváří ručně přes UI** – jsou provisionované aplikací (admin group + skupina pro distributora).
 
 ## Možná budoucí rozšíření
 
@@ -172,6 +175,25 @@ Příklad lokální konfigurace (do `appsettings.Development.json`):
   }
 }
 ```
+
+### Bootstrap majitel (Majitel)
+
+Aplikace umí v Development vytvořit také účet **Majitel** (pokud žádný Majitel neexistuje). Majitel je governance role pro správu adminů.
+
+Příklad lokální konfigurace (do `appsettings.Development.json`):
+
+```json
+{
+  "BootstrapOwner": {
+    "Enabled": true,
+    "Email": "owner@local.test",
+    "Password": "ChangeMe!12345",
+    "RequireChangeOnFirstLogin": true
+  }
+}
+```
+
+Správa admin účtů je dostupná v UI pod `/owner` (v menu jako „Správa adminů“).
 
 ## DB / migrace
 
