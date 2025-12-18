@@ -1,0 +1,47 @@
+@model DigitalniProdukty.Controllers.OwnerController.CreateAdminInput
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<DigitalniProdukty.SharedResources> T
+
+@{
+    ViewData["Title"] = T["Owner.Create.Title"].Value;
+}
+
+<div class="app-card" id="owner-create-admin">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="app-card-body space-y-6">
+        <form method="post" asp-controller="Owner" asp-action="CreateAdmin" class="space-y-4">
+            @Html.AntiForgeryToken()
+
+            <div class="space-y-2">
+                <label class="app-label" asp-for="Email">@T["Owner.Create.Email"]</label>
+                <input class="app-input" asp-for="Email" autocomplete="email" />
+                <span class="app-validation" asp-validation-for="Email"></span>
+            </div>
+
+            <div class="space-y-2">
+                <label class="app-label" asp-for="DisplayName">@T["Owner.Create.DisplayName"]</label>
+                <input class="app-input" asp-for="DisplayName" autocomplete="organization" />
+                <span class="app-validation" asp-validation-for="DisplayName"></span>
+            </div>
+
+            <div class="space-y-2">
+                <label class="app-label" asp-for="Password">@T["Owner.Create.Password"]</label>
+                <input class="app-input" asp-for="Password" type="password" autocomplete="new-password" />
+                <span class="app-validation" asp-validation-for="Password"></span>
+            </div>
+
+            <div class="app-validation" asp-validation-summary="All"></div>
+
+            <div class="flex items-center justify-between">
+                <a class="app-btn-secondary" asp-controller="Owner" asp-action="Index">@T["Owner.Actions.Back"]</a>
+                <button type="submit" class="app-btn">@T["Owner.Actions.Create"]</button>
+            </div>
+        </form>
+
+        <div class="text-xs text-slate-500">@T["Owner.Create.Help"]</div>
+    </div>
+</div>

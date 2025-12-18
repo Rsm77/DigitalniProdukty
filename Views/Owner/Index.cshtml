@@ -1,0 +1,58 @@
+@model DigitalniProdukty.Controllers.OwnerController.IndexVm
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<DigitalniProdukty.SharedResources> T
+
+@{
+    ViewData["Title"] = T["Owner.Index.Title"].Value;
+}
+
+<div class="app-card" id="owner-index">
+    <div class="app-card-header">
+        <div class="flex items-center justify-between gap-4">
+            <h1 class="app-card-title">@ViewData["Title"]</h1>
+            <a class="app-btn" asp-controller="Owner" asp-action="CreateAdmin">@T["Owner.Actions.CreateAdmin"]</a>
+        </div>
+    </div>
+
+    <partial name="_Toast" />
+
+    <div class="app-card-body space-y-4">
+        <div class="overflow-x-auto">
+            <table class="app-table min-w-full table-fixed text-xs">
+                <thead class="text-left text-slate-500">
+                    <tr>
+                        <th class="py-1 pr-4 w-96">@T["Owner.Admins.Table.Email"]</th>
+                        <th class="py-1 pr-4 w-64">@T["Owner.Admins.Table.DisplayName"]</th>
+                        <th class="py-1 pr-0 w-44">@T["Owner.Admins.Table.Actions"]</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var a in Model.Admins)
+                    {
+                        <tr>
+                            <td class="py-1 pr-4 text-slate-900 whitespace-nowrap">
+                                <div>@a.Email</div>
+                                <div class="font-mono text-slate-500 text-[11px]">@a.Id</div>
+                            </td>
+                            <td class="py-1 pr-4 text-slate-900">@(a.DisplayName ?? "—")</td>
+                            <td class="py-1 pr-0">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a class="app-btn-secondary" asp-controller="Owner" asp-action="EditAdmin" asp-route-userId="@a.Id">@T["Owner.Actions.Edit"]</a>
+                                    <a class="app-btn-secondary" asp-controller="Owner" asp-action="ResetPassword" asp-route-userId="@a.Id">@T["Owner.Actions.ResetPassword"]</a>
+                                    <form method="post" asp-controller="Owner" asp-action="DeleteAdmin">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@a.Id" />
+                                        <button type="submit" class="app-btn-danger">@T["Owner.Actions.Delete"]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-xs text-slate-500">@T["Owner.Admins.Help"]</div>
+    </div>
+</div>

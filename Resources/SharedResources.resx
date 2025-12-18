@@ -30,6 +30,9 @@
   <data name="Nav.CreateEndUser" xml:space="preserve">
     <value>Vytvořit uživatele</value>
   </data>
+  <data name="Nav.Owner.AdminManagement" xml:space="preserve">
+    <value>Správa adminů</value>
+  </data>
   <data name="Language.Label" xml:space="preserve">
     <value>Jazyk</value>
   </data>
@@ -117,6 +120,136 @@
   </data>
   <data name="LicensingAdmin.Index.Form.MaxDevices" xml:space="preserve">
     <value>Max. zařízení</value>
+  </data>
+
+  <data name="Owner.Index.Title" xml:space="preserve">
+    <value>Správa adminů</value>
+  </data>
+  <data name="Owner.Admins.Table.Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Owner.Admins.Table.DisplayName" xml:space="preserve">
+    <value>Jméno / název</value>
+  </data>
+  <data name="Owner.Admins.Table.Actions" xml:space="preserve">
+    <value>Akce</value>
+  </data>
+  <data name="Owner.Admins.Help" xml:space="preserve">
+    <value>Majitel (role „Majitel“) je jediný, kdo může vytvářet, upravovat a mazat účty Admin.</value>
+  </data>
+
+  <data name="Owner.Actions.CreateAdmin" xml:space="preserve">
+    <value>Vytvořit admina</value>
+  </data>
+  <data name="Owner.Actions.Edit" xml:space="preserve">
+    <value>Upravit</value>
+  </data>
+  <data name="Owner.Actions.Delete" xml:space="preserve">
+    <value>Smazat</value>
+  </data>
+  <data name="Owner.Actions.ResetPassword" xml:space="preserve">
+    <value>Reset hesla</value>
+  </data>
+  <data name="Owner.Actions.Back" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="Owner.Actions.Create" xml:space="preserve">
+    <value>Vytvořit</value>
+  </data>
+  <data name="Owner.Actions.Save" xml:space="preserve">
+    <value>Uložit</value>
+  </data>
+
+  <data name="Owner.Create.Title" xml:space="preserve">
+    <value>Vytvořit admina</value>
+  </data>
+  <data name="Owner.Create.Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Owner.Create.DisplayName" xml:space="preserve">
+    <value>Jméno / název</value>
+  </data>
+  <data name="Owner.Create.Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="Owner.Create.Help" xml:space="preserve">
+    <value>Účet je vytvořen s potvrzeným e-mailem (pro dev prostředí). Při prvním přihlášení může být vyžadována změna hesla podle nastavení.</value>
+  </data>
+  <data name="Owner.Create.Email.Required" xml:space="preserve">
+    <value>E-mail je povinný.</value>
+  </data>
+  <data name="Owner.Create.Password.Required" xml:space="preserve">
+    <value>Heslo je povinné.</value>
+  </data>
+  <data name="Owner.Create.DisplayName.Required" xml:space="preserve">
+    <value>Jméno / název je povinné.</value>
+  </data>
+  <data name="Owner.Create.Email.Exists" xml:space="preserve">
+    <value>Uživatel s tímto e-mailem už existuje.</value>
+  </data>
+
+  <data name="Owner.Edit.Title" xml:space="preserve">
+    <value>Upravit admina</value>
+  </data>
+  <data name="Owner.Edit.EmailLabel" xml:space="preserve">
+    <value>Účet:</value>
+  </data>
+  <data name="Owner.Edit.DisplayName" xml:space="preserve">
+    <value>Jméno / název</value>
+  </data>
+  <data name="Owner.Edit.Help" xml:space="preserve">
+    <value>Upravuje se pouze identifikace (jméno / název). Ostatní změny účtu Admin držíme minimální.</value>
+  </data>
+  <data name="Owner.Edit.DisplayName.Required" xml:space="preserve">
+    <value>Jméno / název je povinné.</value>
+  </data>
+
+  <data name="Owner.Toast.AdminCreated" xml:space="preserve">
+    <value>Admin byl vytvořen.</value>
+  </data>
+  <data name="Owner.Toast.AdminUpdated" xml:space="preserve">
+    <value>Admin byl upraven.</value>
+  </data>
+  <data name="Owner.Toast.AdminDeleted" xml:space="preserve">
+    <value>Admin byl smazán.</value>
+  </data>
+  <data name="Owner.Toast.AdminDeleteFailed" xml:space="preserve">
+    <value>Nepodařilo se smazat admina.</value>
+  </data>
+
+  <data name="Owner.ResetPassword.Title" xml:space="preserve">
+    <value>Reset hesla admina</value>
+  </data>
+  <data name="Owner.ResetPassword.EmailLabel" xml:space="preserve">
+    <value>Účet:</value>
+  </data>
+  <data name="Owner.ResetPassword.NewPassword" xml:space="preserve">
+    <value>Nové heslo</value>
+  </data>
+  <data name="Owner.ResetPassword.NewPassword.Required" xml:space="preserve">
+    <value>Nové heslo je povinné.</value>
+  </data>
+  <data name="Owner.ResetPassword.Actions.Reset" xml:space="preserve">
+    <value>Nastavit nové heslo</value>
+  </data>
+  <data name="Owner.ResetPassword.Help" xml:space="preserve">
+    <value>Nastaví nové heslo pro účet Admin. Uživatel se pak přihlásí novým heslem.</value>
+  </data>
+  <data name="Owner.Toast.PasswordReset" xml:space="preserve">
+    <value>Heslo bylo změněno.</value>
+  </data>
+
+  <data name="Admin.Users.ProtectedAccount" xml:space="preserve">
+    <value>Tento účet se spravuje mimo tuto stránku.</value>
+  </data>
+  <data name="Admin.Toast.AdminRoleOwnerOnly" xml:space="preserve">
+    <value>Roli Admin může spravovat pouze Majitel.</value>
+  </data>
+  <data name="Admin.Toast.OwnerAccountReadOnly" xml:space="preserve">
+    <value>Účet Majitel nelze spravovat z této stránky.</value>
+  </data>
+  <data name="Admin.Toast.AdminAccountOwnerOnly" xml:space="preserve">
+    <value>Účty Admin může spravovat pouze Majitel.</value>
   </data>
   <data name="LicensingAdmin.Index.Generate" xml:space="preserve">
     <value>Vygenerovat</value>

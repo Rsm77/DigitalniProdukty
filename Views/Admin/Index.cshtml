@@ -33,33 +33,51 @@
                         @foreach (var u in Model.Users)
                         {
                             var formId = $"user-{u.Id}";
+                            var isProtected = string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Admin, StringComparison.Ordinal)
+                                              || string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Owner, StringComparison.Ordinal);
                             <tr>
                                 <td class="py-1 pr-4 text-slate-900 whitespace-nowrap">
                                     <div>@u.Email</div>
                                     <div class="font-mono text-slate-500 text-[11px]">@u.Id</div>
                                 </td>
                                 <td class="py-1 pr-4">
-                                    <input name="DisplayName" form="@formId" value="@u.DisplayName" />
+                                    @if (isProtected)
+                                    {
+                                        <div class="text-slate-900">@(u.DisplayName ?? "—")</div>
+                                        <div class="text-[11px] text-slate-500">@T["Admin.Users.ProtectedAccount"]</div>
+                                    }
+                                    else
+                                    {
+                                        <input name="DisplayName" form="@formId" value="@u.DisplayName" />
+                                    }
                                 </td>
                                 <td class="py-1 pr-4">
                                     <div class="flex items-center gap-3">
-                                        <select name="Role" form="@formId">
-                                            @foreach (var r in Model.Roles)
-                                            {
-                                                if (string.Equals(u.Role, r, StringComparison.Ordinal))
+                                        @if (isProtected)
+                                        {
+                                            <div class="text-slate-900">@u.Role</div>
+                                        }
+                                        else
+                                        {
+                                            <select name="Role" form="@formId">
+                                                @foreach (var r in Model.Roles)
                                                 {
-                                                    <option value="@r" selected>@r</option>
+                                                    if (string.Equals(u.Role, r, StringComparison.Ordinal))
+                                                    {
+                                                        <option value="@r" selected>@r</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@r">@r</option>
+                                                    }
                                                 }
-                                                else
-                                                {
-                                                    <option value="@r">@r</option>
-                                                }
-                                            }
-                                        </select>
+                                            </select>
+                                        }
                                     </div>
                                 </td>
                                 <td class="py-1 pr-4">
-                                    @if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Admin, StringComparison.Ordinal))
+                                    @if (string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Admin, StringComparison.Ordinal)
+                                         || string.Equals(u.Role, DigitalniProdukty.Security.Authz.Roles.Owner, StringComparison.Ordinal))
                                     {
                                         <div class="text-slate-900">—</div>
                                         <div class="text-[11px] text-slate-500">@T["Admin.Users.GroupNotApplicable"]</div>
@@ -90,13 +108,20 @@
                                     }
                                 </td>
                                 <td class="py-1 pr-0">
-                                    <form id="@formId" method="post" asp-controller="Admin" asp-action="UpdateUser">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="UserId" value="@u.Id" />
-                                        <div class="flex items-center justify-end">
-                                            <button type="submit" class="app-btn-secondary whitespace-nowrap">@T["Admin.Users.Save"]</button>
-                                        </div>
-                                    </form>
+                                    @if (isProtected)
+                                    {
+                                        <div class="text-right text-slate-500">—</div>
+                                    }
+                                    else
+                                    {
+                                        <form id="@formId" method="post" asp-controller="Admin" asp-action="UpdateUser">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="UserId" value="@u.Id" />
+                                            <div class="flex items-center justify-end">
+                                                <button type="submit" class="app-btn-secondary whitespace-nowrap">@T["Admin.Users.Save"]</button>
+                                            </div>
+                                        </form>
+                                    }
                                 </td>
                             </tr>
                         }

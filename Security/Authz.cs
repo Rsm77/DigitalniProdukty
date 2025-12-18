@@ -9,12 +9,20 @@ public static class Authz
 
     public static class Roles
     {
+        // Governance role: exactly one user should have this role.
+        // This role manages Admin accounts.
+        public const string Owner = "Majitel";
+
         public const string Admin = "Admin";
         public const string EndUser = "EndUser";
         public const string Reseller = "Reseller";
         public const string Distributor = "Distributor";
 
-        public static readonly string[] All = [Admin, EndUser, Reseller, Distributor];
+        // All known roles (including governance role).
+        public static readonly string[] All = [Owner, Admin, EndUser, Reseller, Distributor];
+
+        // Roles that an Admin is allowed to assign/manage via the Admin UI.
+        public static readonly string[] AdminManageable = [Admin, EndUser, Reseller, Distributor];
     }
 
     public static class Policies

@@ -92,7 +92,7 @@ public sealed class AdminController(
         {
             Groups = groups,
             Users = userRows,
-            Roles = Authz.Roles.All,
+            Roles = Authz.Roles.AdminManageable,
         };
 
         if (Request.IsHtmx()) return PartialView("Index", vm);
@@ -122,10 +122,18 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        if (!Authz.Roles.All.Contains(role, StringComparer.Ordinal))
+        if (!Authz.Roles.AdminManageable.Contains(role, StringComparer.Ordinal))
         {
             TempData[ToastMessageTempDataKey] = t["Admin.Toast.InvalidRole"].Value;
             TempData[ToastKindTempDataKey] = "error";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Governance: Admin UI must not manage the Owner (Majitel) role nor Admin accounts.
+        if (string.Equals(role, Authz.Roles.Admin, StringComparison.Ordinal))
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.AdminRoleOwnerOnly"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
             return RedirectToAction(nameof(Index));
         }
 
@@ -157,16 +165,26 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
+        // Prevent Admin from modifying Owner (Majitel) or Admin accounts.
+        var isOwner = await userManager.IsInRoleAsync(user, Authz.Roles.Owner);
+        if (isOwner)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.OwnerAccountReadOnly"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var isAdmin = await userManager.IsInRoleAsync(user, Authz.Roles.Admin);
+        if (isAdmin)
+        {
+            TempData[ToastMessageTempDataKey] = t["Admin.Toast.AdminAccountOwnerOnly"].Value;
+            TempData[ToastKindTempDataKey] = "warning";
+            return RedirectToAction(nameof(Index));
+        }
+
         // Normalize desired group (Admin is never scoped by group).
         Guid? desiredGroupId;
-        if (string.Equals(role, Authz.Roles.Admin, StringComparison.Ordinal))
-        {
-            desiredGroupId = null;
-        }
-        else
-        {
-            desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
-        }
+        desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
 
         // Security: never allow non-admin roles to be placed into the Admin tenant.
         if (desiredGroupId == KeyGroups.AdminGroupId)
@@ -197,7 +215,7 @@ public sealed class AdminController(
 
         // Roles: enforce exactly one of our known roles.
         var currentRoles = await userManager.GetRolesAsync(user);
-        foreach (var knownRole in Authz.Roles.All)
+        foreach (var knownRole in Authz.Roles.AdminManageable)
         {
             if (!string.Equals(knownRole, role, StringComparison.Ordinal) && currentRoles.Contains(knownRole, StringComparer.Ordinal))
             {

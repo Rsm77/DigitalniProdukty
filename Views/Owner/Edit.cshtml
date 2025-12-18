@@ -1,0 +1,42 @@
+@model DigitalniProdukty.Controllers.OwnerController.EditAdminInput
+
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<DigitalniProdukty.SharedResources> T
+
+@{
+    ViewData["Title"] = T["Owner.Edit.Title"].Value;
+    var email = (ViewData["AdminEmail"] as string) ?? string.Empty;
+}
+
+<div class="app-card" id="owner-edit-admin">
+    <div class="app-card-header">
+        <h1 class="app-card-title">@ViewData["Title"]</h1>
+    </div>
+
+    <div class="app-card-body space-y-6">
+        <div class="text-sm text-slate-700">
+            <span class="text-slate-500">@T["Owner.Edit.EmailLabel"]</span>
+            <span class="font-medium text-slate-900">@email</span>
+        </div>
+
+        <form method="post" asp-controller="Owner" asp-action="EditAdmin" class="space-y-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="UserId" />
+
+            <div class="space-y-2">
+                <label class="app-label" asp-for="DisplayName">@T["Owner.Edit.DisplayName"]</label>
+                <input class="app-input" asp-for="DisplayName" autocomplete="organization" />
+                <span class="app-validation" asp-validation-for="DisplayName"></span>
+            </div>
+
+            <div class="app-validation" asp-validation-summary="All"></div>
+
+            <div class="flex items-center justify-between">
+                <a class="app-btn-secondary" asp-controller="Owner" asp-action="Index">@T["Owner.Actions.Back"]</a>
+                <button type="submit" class="app-btn">@T["Owner.Actions.Save"]</button>
+            </div>
+        </form>
+
+        <div class="text-xs text-slate-500">@T["Owner.Edit.Help"]</div>
+    </div>
+</div>
