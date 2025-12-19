@@ -8,6 +8,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class AddKeyGroupRole : Migration
     {
         /// <inheritdoc />
+        // Historická změna: přidává sloupec `Role` do KeyGroups a seeduje hodnotu pro Admin pool.
+        // (Později bylo odstraněno, viz navazující migrace.)
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -18,12 +20,13 @@ namespace DigitalniProdukty.Data.Migrations
                 nullable: false,
                 defaultValue: "Distributor");
 
-            // Ensure seeded Admin pool keeps its intended role.
+            // Zajistí, že seedovaný Admin pool má správnou roli.
             migrationBuilder.Sql(
                 "UPDATE [KeyGroups] SET [Role] = 'Admin' WHERE [Id] = '00000000-0000-0000-0000-000000000001'");
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (odebere sloupec `Role`).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
@@ -32,3 +35,11 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: historická úprava KeyGroups (pokus o explicitní „roli“ skupiny).
+- Poznámka:
+    - Následná migrace `RemoveKeyGroupRole` sloupec odstraní.
+*/

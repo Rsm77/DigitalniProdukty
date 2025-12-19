@@ -13,6 +13,8 @@ namespace DigitalniProdukty.Data.Migrations
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
+        // EF Core snapshot aktuálního modelu (auto-generated).
+        // Slouží pro porovnání změn při generování dalších migrací.
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -649,3 +651,13 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: auto-generated snapshot databázového modelu pro `ApplicationDbContext`.
+- Použití:
+    - EF Core jej používá při vytváření dalších migrací (diff modelu vs. poslední snapshot).
+- Poznámka:
+    - Obsah generuje EF Core; běžně se neupravuje ručně.
+*/

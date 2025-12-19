@@ -6,6 +6,8 @@ namespace DigitalniProdukty.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
+        // Vytvoří základní tabulky ASP.NET Identity (uživatelé, role, claims, loginy, tokeny).
+        // Spouští se při inicializaci databáze pro autentizaci/autorizaci.
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -193,6 +195,7 @@ namespace DigitalniProdukty.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
         }
 
+        // Vrátí změny z `Up` zpět (drop tabulek Identity v opačném pořadí kvůli FK).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -218,4 +221,17 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: inicializační migrace pro ASP.NET Identity schéma.
+- Vytvářené tabulky (výběr):
+    - `AspNetUsers`, `AspNetRoles`
+    - `AspNetUserClaims`, `AspNetRoleClaims`
+    - `AspNetUserLogins`, `AspNetUserRoles`, `AspNetUserTokens`
+- Vazby:
+    - Používá se přes `IdentityDbContext` v [Data/ApplicationDbContext.cs](Data/ApplicationDbContext.cs).
+    - Auth flow je implementovaný v controllerech pod `/auth` a `/account`.
+*/
 

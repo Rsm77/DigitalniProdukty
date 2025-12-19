@@ -50,6 +50,7 @@ public sealed class OwnerController(
 
     public sealed record DeleteConfirmVm(string UserId, string Email);
 
+    // Přehled admin účtů (správa adminů je vyhrazena roli Owner).
     [HttpGet("")]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -75,6 +76,7 @@ public sealed class OwnerController(
         return View("Index", vm);
     }
 
+    // Zobrazí formulář pro vytvoření nového admin účtu.
     [HttpGet("admins/create")]
     public IActionResult CreateAdmin()
     {
@@ -84,6 +86,7 @@ public sealed class OwnerController(
         return View("Create", model);
     }
 
+    // Vytvoří admin účet v Identity a uloží profil (display name).
     [HttpPost("admins/create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateAdmin(CreateAdminInput input, CancellationToken ct)
@@ -156,6 +159,7 @@ public sealed class OwnerController(
         return RedirectToAction(nameof(Index));
     }
 
+    // Zobrazí formulář pro úpravu display name admin účtu.
     [HttpGet("admins/edit")]
     public async Task<IActionResult> EditAdmin(string? userId, CancellationToken ct)
     {
@@ -183,6 +187,7 @@ public sealed class OwnerController(
         return View("Edit", model);
     }
 
+    // Uloží změnu display name admin účtu (v tabulce UserProfiles).
     [HttpPost("admins/edit")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditAdmin(EditAdminInput input, CancellationToken ct)
@@ -233,6 +238,7 @@ public sealed class OwnerController(
         return RedirectToAction(nameof(Index));
     }
 
+    // Zobrazí formulář pro reset hesla admin účtu.
     [HttpGet("admins/reset-password")]
     public async Task<IActionResult> ResetPassword(string? userId)
     {
@@ -253,6 +259,7 @@ public sealed class OwnerController(
         return View("ResetPassword", model);
     }
 
+    // Provede reset hesla admin účtu pomocí reset tokenu z Identity.
     [HttpPost("admins/reset-password")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ResetPassword(ResetPasswordInput input)
@@ -300,6 +307,7 @@ public sealed class OwnerController(
         return RedirectToAction(nameof(Index));
     }
 
+    // Smaže admin účet (nejdřív odstraní profil) a vrátí se do přehledu.
     [HttpPost("admins/delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteAdmin(string? userId, CancellationToken ct)
@@ -333,6 +341,7 @@ public sealed class OwnerController(
         return RedirectToAction(nameof(Index));
     }
 
+    // Vrátí partial s potvrzením smazání (modal) pro zadané userId.
     [HttpGet("admins/delete-confirm")]
     public async Task<IActionResult> DeleteAdminConfirm(string? userId)
     {
@@ -352,9 +361,30 @@ public sealed class OwnerController(
         return PartialView("_DeleteConfirm", vm);
     }
 
+    // Vyčistí obsah modalu (HTMX helper endpoint).
     [HttpGet("modal/clear")]
     public IActionResult ClearModal()
     {
         return Content(string.Empty);
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: „Owner UI“ pro životní cyklus admin účtů (create/edit/reset password/delete).
+- Routy:
+    - GET `/owner`: přehled adminů
+    - GET/POST `/owner/admins/create`: vytvoření admina
+    - GET/POST `/owner/admins/edit`: úprava display name
+    - GET/POST `/owner/admins/reset-password`: reset hesla
+    - POST `/owner/admins/delete`: smazání admina
+    - GET `/owner/admins/delete-confirm`: partial pro potvrzení
+    - GET `/owner/modal/clear`: vyčištění modalu
+- Závislosti:
+    - `UserManager`: create/delete/reset password a role `Admin`.
+    - `ApplicationDbContext`: `UserProfiles` (display name).
+- Bezpečnost:
+    - `[Authorize(Roles = Owner)]` brání přístupu mimo roli Owner.
+    - Mutace jsou chráněné `ValidateAntiForgeryToken`.
+*/

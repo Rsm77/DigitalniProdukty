@@ -2,17 +2,11 @@
 
 namespace DigitalniProdukty.Services;
 
-/// <summary>
-/// Service for generating QR codes as SVG strings.
-/// </summary>
+// Generuje QR kódy jako SVG řetězec (použitelné přímo v Razor view).
 public sealed class QrCodeService
 {
-    /// <summary>
-    /// Generates a QR code as an SVG string.
-    /// </summary>
-    /// <param name="content">The content to encode in the QR code.</param>
-    /// <param name="pixelsPerModule">Size of each module (pixel) in the QR code. Default is 4.</param>
-    /// <returns>SVG markup string that can be embedded directly in HTML.</returns>
+    // Vygeneruje QR kód pro daný obsah a vrátí SVG markup.
+    // Prázdný obsah vrací prázdný string, aby UI nemuselo řešit null.
     public string GenerateSvg(string content, int pixelsPerModule = 4)
     {
         if (string.IsNullOrWhiteSpace(content))
@@ -25,14 +19,8 @@ public sealed class QrCodeService
         return svgQrCode.GetGraphic(pixelsPerModule);
     }
 
-    /// <summary>
-    /// Generates a QR code as an SVG string with custom colors.
-    /// </summary>
-    /// <param name="content">The content to encode in the QR code.</param>
-    /// <param name="darkColor">Color for the dark modules (e.g., "#000000").</param>
-    /// <param name="lightColor">Color for the light modules (e.g., "#ffffff").</param>
-    /// <param name="pixelsPerModule">Size of each module (pixel) in the QR code. Default is 4.</param>
-    /// <returns>SVG markup string that can be embedded directly in HTML.</returns>
+    // Vygeneruje QR kód se zadanými barvami (světlá/tmavá) a vrátí SVG markup.
+    // Používá quiet-zone, aby byl kód dobře čitelný v UI.
     public string GenerateSvg(string content, string darkColor, string lightColor, int pixelsPerModule = 4)
     {
         if (string.IsNullOrWhiteSpace(content))
@@ -49,4 +37,16 @@ public sealed class QrCodeService
             drawQuietZones: true);
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: generování QR kódů pro 2FA (otpauth URI) jako SVG, aby nebyla potřeba ukládat obrázky.
+- Závislosti:
+    - Knihovna QRCoder: `QRCodeGenerator`, `SvgQRCode`.
+- Vazby na zbytek aplikace:
+    - Používá `TwoFactorService`, který sestaví otpauth URI a nechá ho převést na SVG.
+    - Výstup (`QrCodeSvg`) se vykresluje ve view pro nastavení 2FA (typicky `Views/Account/TwoFactor.cshtml`).
+- Poznámka: SVG se vrací jako string, takže ho lze vložit do HTML (pozor na správné enkódování v UI).
+*/
 

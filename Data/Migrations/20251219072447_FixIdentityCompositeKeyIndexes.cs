@@ -8,6 +8,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class FixIdentityCompositeKeyIndexes : Migration
     {
         /// <inheritdoc />
+        // Opraví Identity kompozitní PK pro SQL Server/Azure SQL: zkrátí sloupce a nastaví PK jako NONCLUSTERED.
+        // Předchází tak chybám/varováním s limitem délky clustered index key (např. AspNetUserTokens).
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(
@@ -78,6 +80,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (obnoví původní délky a clustered PK nastavení).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(
@@ -145,3 +148,15 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: kompatibilita se SQL Server/Azure SQL omezeními pro clustered index key (900 bajtů).
+- Změny:
+    - `AspNetUserTokens`: `LoginProvider`/`Name` max 128 + PK nonclustered.
+    - `AspNetUserLogins`: `LoginProvider`/`ProviderKey` max 128 + PK nonclustered.
+    - `AspNetUserRoles`: PK nonclustered.
+- Vazby:
+    - Odpovídá mapování v `ApplicationDbContext.OnModelCreating`.
+*/

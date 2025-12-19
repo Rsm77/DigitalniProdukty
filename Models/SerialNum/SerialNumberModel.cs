@@ -5,6 +5,7 @@ using DigitalniProdukty.Models.Licensing;
 using Microsoft.AspNetCore.Identity;
 
 namespace DigitalniProdukty.Models.SerialNum {
+    // Entity licenčního klíče (sériového čísla) v systému.
     public class SerialNumberModel {
         public int Id { get; set; }
 
@@ -36,3 +37,17 @@ namespace DigitalniProdukty.Models.SerialNum {
         public ICollection<InstallationModel> Installations { get; set; } = new List<InstallationModel>();
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: reprezentuje vydaný licenční klíč (`Key`) a jeho metadata (skupina, vlastník, limity).
+- Vazby v DB:
+    - `Key` má maxLength=64 a unikátní index (konfigurace v `Data/ApplicationDbContext`).
+    - `GroupId` je scoping do `KeyGroupModel` (multi-tenant) – FK nastavuje `ApplicationDbContext`.
+    - `OwnerUserId` je Identity userId (string); `OwnerUser` je navigace na `IdentityUser`.
+    - `LicenseDevices` a `Installations` jsou kolekce na vazební/auditní entity.
+- Vazby na zbytek aplikace:
+    - Generování klíčů dělá `Services/LicensingService` (ukládá do tabulky `SerialNumbers`).
+    - Admin UI pracuje s touto entitou přes `Controllers/LicensingAdminController`.
+*/

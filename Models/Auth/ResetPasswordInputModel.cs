@@ -5,6 +5,7 @@ namespace DigitalniProdukty.Models.Auth;
 
 public sealed class ResetPasswordInputModel
 {
+    // Email se používá jako identifikátor účtu při resetu (společně s tokenem).
     [Required(ErrorMessageResourceName = nameof(Annotations.Validation_Required), ErrorMessageResourceType = typeof(Annotations))]
     [EmailAddress(ErrorMessageResourceName = nameof(Annotations.Validation_EmailAddress), ErrorMessageResourceType = typeof(Annotations))]
     [Display(Name = nameof(Annotations.Field_Email), ResourceType = typeof(Annotations))]
@@ -25,4 +26,15 @@ public sealed class ResetPasswordInputModel
     [Required(ErrorMessageResourceName = nameof(Annotations.Validation_Required), ErrorMessageResourceType = typeof(Annotations))]
     public string Code { get; set; } = string.Empty;
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: input model pro dokončení resetu hesla (nové heslo + token).
+- Použité atributy:
+    - DataAnnotations (validace) + lokalizované texty přes `Resources/Annotations*.resx`.
+- Vazby na zbytek aplikace:
+    - Používá `Controllers/AuthController` a view `Views/Auth/ResetPassword.cshtml`.
+    - Token (`Code`) je typicky Base64Url varianta; dekódování řeší `Services/TokenCodec`.
+*/
 

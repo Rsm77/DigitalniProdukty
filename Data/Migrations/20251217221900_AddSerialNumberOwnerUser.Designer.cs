@@ -16,6 +16,8 @@ namespace DigitalniProdukty.Data.Migrations
     partial class AddSerialNumberOwnerUser
     {
         /// <inheritdoc />
+        // EF Core target model pro tuto migraci (auto-generated).
+        // Slouží jako přesný popis modelu po aplikaci migrace.
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -470,3 +472,11 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: auto-generated „designer“ část migrace (EF Core snapshot modelu pro tuto migraci).
+- Poznámka:
+    - Obsah generuje EF Core; běžně se neupravuje ručně.
+*/

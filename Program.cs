@@ -17,9 +17,11 @@ namespace DigitalniProdukty
 {
     public class Program
     {
+        // Sestaví a spustí ASP.NET Core aplikaci (DI, middleware, routování).
+        // Obsahuje i bootstrap seed (role, owner účet, skupiny) pro vývoj.
         public static void Main(string[] args)
         {
-            // Configure Serilog early for bootstrap logging
+            // Nastaví Serilog co nejdřív (bootstrap logování během startu).
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
@@ -39,25 +41,25 @@ namespace DigitalniProdukty
 
                 var builder = WebApplication.CreateBuilder(args);
 
-                // Use Serilog as the logging provider
+                // Použije Serilog jako logging provider.
                 builder.Host.UseSerilog();
 
-                // Add services to the container.
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+                // Registrace služeb do DI kontejneru.
+                var connectionString = builder.Configuration.GetConnectionString("DigiProdConnection") ?? throw new InvalidOperationException("Connection string 'DigiProdConnection' not found.");
                 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(connectionString));
                 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-                // Health checks with SQL Server connectivity check
+                // Health checks včetně ověření konektivity na SQL Server.
                 builder.Services.AddHealthChecks()
                     .AddSqlServer(connectionString, name: "sqlserver", tags: ["db", "sql"]);
 
-                // Rate limiting for auth endpoints (brute-force protection)
+                // Rate limiting pro auth endpointy (ochrana proti brute-force).
                 builder.Services.AddRateLimiter(options =>
                 {
                     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-                    // Sliding window policy for authentication endpoints
+                    // Sliding window policy pro přihlašovací endpointy.
                     options.AddSlidingWindowLimiter("auth", limiterOptions =>
                     {
                         limiterOptions.PermitLimit = 10;
@@ -67,7 +69,7 @@ namespace DigitalniProdukty
                         limiterOptions.QueueLimit = 2;
                     });
 
-                    // Stricter policy for password reset (prevent email enumeration attacks)
+                    // Přísnější policy pro reset hesla (omezení enumerace přes email).
                     options.AddFixedWindowLimiter("auth-strict", limiterOptions =>
                     {
                         limiterOptions.PermitLimit = 3;
@@ -77,7 +79,7 @@ namespace DigitalniProdukty
                     });
                 });
 
-                // HSTS configuration with preload
+                // HSTS konfigurace včetně preload.
                 builder.Services.AddHsts(options =>
                 {
                     options.Preload = true;
@@ -85,7 +87,7 @@ namespace DigitalniProdukty
                     options.MaxAge = TimeSpan.FromDays(365);
                 });
 
-                // Identity backend only (UI is implemented via MVC controllers/views under /auth and /account).
+                // Pouze Identity backend (UI je řešené přes MVC controllery/views pod /auth a /account).
                 builder.Services
                     .AddIdentity<IdentityUser, IdentityRole>(options =>
                     {
@@ -96,8 +98,8 @@ namespace DigitalniProdukty
                     .AddDefaultTokenProviders()
                     .AddErrorDescriber<LocalizedIdentityErrorDescriber>();
 
-                // Defensive: avoid empty claim-type strings which can throw when creating ClaimsIdentity
-                // (seen as ArgumentException: "The value cannot be an empty string.")
+                // Obrana: vyhne se prázdným typům claimů, které mohou shodit ClaimsIdentity.
+                // (v praxi se objevovalo ArgumentException: "The value cannot be an empty string.")
                 builder.Services.Configure<IdentityOptions>(options =>
                 {
                     if (string.IsNullOrWhiteSpace(options.ClaimsIdentity.UserIdClaimType))
@@ -134,8 +136,8 @@ namespace DigitalniProdukty
                 builder.Services.AddScoped<GroupContextService>();
                 builder.Services.AddScoped<KeyGroupProvisioningService>();
 
-                // Our .resx files are embedded with base names like "DigitalniProdukty.SharedResources".
-                // Using ResourcesPath would make the localizer look under "...Resources.*" and it would fall back to keys.
+                // .resx jsou embedded s base name např. "DigitalniProdukty.SharedResources".
+                // Nastavení ResourcesPath by způsobilo lookup pod "...Resources.*" a fallback na klíče.
                 builder.Services.AddLocalization();
 
                 builder.Services
@@ -187,7 +189,7 @@ namespace DigitalniProdukty
 
                 var app = builder.Build();
 
-                // Ensure the database exists and is migrated (Development convenience).
+                // Vývojová pomůcka: DB se při startu zmigruje.
                 if (app.Environment.IsDevelopment())
                 {
                     using var scope = app.Services.CreateScope();
@@ -195,7 +197,7 @@ namespace DigitalniProdukty
                     db.Database.Migrate();
                 }
 
-                // Seed required roles (safe to run multiple times).
+                // Seed rolí (bezpečné opakované spuštění).
                 {
                     using var scope = app.Services.CreateScope();
                     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -212,8 +214,8 @@ namespace DigitalniProdukty
                     }
                 }
 
-                // Seed default owner user ("Majitel") (configurable, safe to run multiple times).
-                // This role should exist on exactly one account.
+                // Seed výchozího owner uživatele ("Majitel") (konfigurovatelné, bezpečné opakovaně).
+                // Role by měla existovat přesně na jednom účtu.
                 {
                     using var scope = app.Services.CreateScope();
                     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -255,7 +257,7 @@ namespace DigitalniProdukty
                             }
                             else
                             {
-                                // Ensure the seeded account can log in (RequireConfirmedAccount = true)
+                                // Zajistí, že seedovaný účet je přihlásitelný (RequireConfirmedAccount = true)
                                 if (!user.EmailConfirmed)
                                 {
                                     user.EmailConfirmed = true;
@@ -293,7 +295,7 @@ namespace DigitalniProdukty
                     }
                 }
 
-                // Seed key groups (safe to run multiple times).
+                // Seed skupin (KeyGroups) (bezpečné opakované spuštění).
                 {
                     using var scope = app.Services.CreateScope();
                     var provisioning = scope.ServiceProvider.GetRequiredService<KeyGroupProvisioningService>();
@@ -314,7 +316,7 @@ namespace DigitalniProdukty
                     }
                 }
 
-                // Configure the HTTP request pipeline.
+                // Konfigurace HTTP pipeline.
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseMigrationsEndPoint();
@@ -322,16 +324,16 @@ namespace DigitalniProdukty
                 else
                 {
                     app.UseExceptionHandler("/Home/Error");
-                    // HSTS with preload configured in services
+                    // HSTS s preload je nakonfigurované ve službách.
                     app.UseHsts();
                 }
 
                 app.UseHttpsRedirection();
 
-                // Content Security Policy header
+                // Bezpečnostní hlavičky včetně Content Security Policy.
                 app.Use(async (ctx, next) =>
                 {
-                    // CSP: restrict sources to same origin, allow inline styles/scripts for HTMX and Tailwind
+                    // CSP: zdroje jen z same-origin; inline style/script je povolený kvůli HTMX a Tailwind.
                     ctx.Response.Headers.Append("Content-Security-Policy",
                         "default-src 'self'; " +
                         "script-src 'self' 'unsafe-inline'; " +
@@ -342,7 +344,7 @@ namespace DigitalniProdukty
                         "form-action 'self'; " +
                         "base-uri 'self'");
 
-                    // Additional security headers
+                    // Další bezpečnostní hlavičky.
                     ctx.Response.Headers.Append("X-Content-Type-Options", "nosniff");
                     ctx.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
                     ctx.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -350,7 +352,7 @@ namespace DigitalniProdukty
                     await next();
                 });
 
-                // Rate limiting middleware
+                // Middleware pro rate limiting.
                 app.UseRateLimiter();
 
                 var supportedCultures = new[] { new CultureInfo("cs"), new CultureInfo("en") };
@@ -359,7 +361,7 @@ namespace DigitalniProdukty
                     DefaultRequestCulture = new RequestCulture("cs"),
                     SupportedCultures = supportedCultures,
                     SupportedUICultures = supportedCultures,
-                    // Cookie-driven locale (no Accept-Language fallback by design)
+                    // Locale je řízené cookie (bez fallbacku na Accept-Language).
                     RequestCultureProviders = new IRequestCultureProvider[]
                     {
                         new CookieRequestCultureProvider()
@@ -377,7 +379,7 @@ namespace DigitalniProdukty
                 app.UseAuthentication();
                 app.UseAuthorization();
 
-                // Force users with a bootstrap-claim to update credentials before accessing the app.
+                // Uživatelé s bootstrap claimem musí nejdřív změnit přihlašovací údaje.
                 app.Use(async (ctx, next) =>
                 {
                     if (ctx.User?.Identity?.IsAuthenticated == true
@@ -412,9 +414,9 @@ namespace DigitalniProdukty
                     await next();
                 });
 
-                // Global HTMX error handling:
-                // - Auth/forbid results should navigate normally (not swap login/access denied HTML into hx-target)
-                // - Convert 401/403 to HX-Redirect (and also auth-related 30x redirects)
+                // Globální HTMX error handling:
+                // - Auth/forbid výsledky mají navigovat (ne swapnout HTML login/denied do hx-target)
+                // - 401/403 převádí na HX-Redirect (stejně tak auth-related 30x redirecty)
                 app.Use(async (ctx, next) =>
                 {
                     await next();
@@ -431,6 +433,7 @@ namespace DigitalniProdukty
                     string currentUrl = ctx.Request.PathBase + ctx.Request.Path + ctx.Request.QueryString;
                     string loginWithReturnUrl = loginPath + Microsoft.AspNetCore.Http.QueryString.Create("returnUrl", currentUrl);
 
+                    // Pozná redirect na login/denied (u cookie auth je to nejčastější 302).
                     bool IsAuthRedirectLocation(string? location)
                     {
                         if (string.IsNullOrWhiteSpace(location)) return false;
@@ -443,7 +446,7 @@ namespace DigitalniProdukty
                                || path.StartsWith(accessDeniedPath, StringComparison.OrdinalIgnoreCase);
                     }
 
-                    // Handle explicit 401/403 (common for APIs or custom policies)
+                    // Zpracuje explicitní 401/403 (běžné pro API nebo custom policies).
                     if (ctx.Response.StatusCode == StatusCodes.Status401Unauthorized)
                     {
                         ctx.Response.Htmx(h => h.Redirect(loginWithReturnUrl));
@@ -460,7 +463,7 @@ namespace DigitalniProdukty
                         return;
                     }
 
-                    // Handle cookie-auth redirects (most common for MVC + Identity)
+                    // Zpracuje cookie-auth redirecty (nejčastější případ pro MVC + Identity).
                     if (ctx.Response.StatusCode is StatusCodes.Status301MovedPermanently
                         or StatusCodes.Status302Found
                         or StatusCodes.Status303SeeOther
@@ -477,7 +480,7 @@ namespace DigitalniProdukty
                     }
                 });
 
-                // Health check endpoint
+                // Health check endpoint.
                 app.MapHealthChecks("/health");
 
                 app.MapStaticAssets();
@@ -499,4 +502,24 @@ namespace DigitalniProdukty
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: bootstrap aplikace (DI registrace, middleware pipeline, routování) a vývojové seedování.
+- Závislosti (výběr):
+    - EF Core + `ApplicationDbContext`: DB a migrace.
+    - ASP.NET Identity: autentizace, role, tokeny; UI je řešené přes controllery `/auth` a `/account`.
+    - Serilog: logování do konzole a souboru (rolling).
+    - Localization: `.resx` marker typy `SharedResources` a `IdentityUi`.
+    - Rate limiting: politiky `auth` a `auth-strict` pro ochranu auth endpointů.
+    - HTMX: Vary hlavička, a middleware který převádí 401/403/redirecty na `HX-Redirect`.
+- Seedování:
+    - Role z `Authz.Roles.All` (idempotentně).
+    - Owner (Majitel) účet z konfigurace `BootstrapOwner:*` + claim `ForceCredentialsChange`.
+    - KeyGroups: admin group + skupiny pro distributory, členství pro resellery.
+- Bezpečnost:
+    - CSP + základní bezpečnostní hlavičky.
+    - Vynucení „first-login“ pro bootstrap claim (pouští jen whitelisted cesty a statiku).
+*/
 

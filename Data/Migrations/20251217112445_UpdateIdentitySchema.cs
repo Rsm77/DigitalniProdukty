@@ -8,6 +8,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class UpdateIdentitySchema : Migration
     {
         /// <inheritdoc />
+        // Upraví délky některých Identity sloupců (Logins/Tokens) podle tehdejší konfigurace modelu.
+        // V projektech na SQL Serveru/Azure SQL může mít dopad na délku kompozitních klíčů.
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
@@ -48,6 +50,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (obnoví původní maxLength).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
@@ -88,4 +91,12 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: historická úprava Identity schématu (změny maxLength na tabulkách login/token).
+- Poznámka:
+    - Pozdější migrace může tyto změny přepsat (např. kvůli limitům clustered index key na Azure SQL).
+*/
 

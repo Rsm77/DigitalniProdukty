@@ -8,6 +8,7 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class RemoveKeyGroupRole : Migration
     {
         /// <inheritdoc />
+        // Odstraní sloupec `Role` z tabulky KeyGroups (rollback předchozí změny).
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
@@ -16,6 +17,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (znovu přidá sloupec `Role` s defaultem).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -28,3 +30,11 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: odstranění historického sloupce `KeyGroups.Role`.
+- Poznámka:
+    - Tato migrace existuje pro konzistenci historie a možnost rollbacku.
+*/

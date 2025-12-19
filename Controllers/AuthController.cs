@@ -41,15 +41,16 @@ public sealed class AuthController(
         Authz.Roles.Distributor,
     };
 
+    // Určí, jaké typy účtů může vytvářet aktuální uživatel podle své role.
     private HashSet<string> GetAllowedAccountTypesForCreator()
     {
-        // Admin can create: Distributor, Reseller, EndUser
+        // Admin může vytvořit: Distributor, Reseller, EndUser
         if (User.IsInRole(Authz.Roles.Admin))
         {
             return CreatableAccountTypes;
         }
 
-        // Distributor can create: Reseller, EndUser
+        // Distributor může vytvořit: Reseller, EndUser
         if (User.IsInRole(Authz.Roles.Distributor))
         {
             return new HashSet<string>(StringComparer.Ordinal)
@@ -59,13 +60,14 @@ public sealed class AuthController(
             };
         }
 
-        // Reseller can create: EndUser
+        // Reseller může vytvořit: EndUser
         return new HashSet<string>(StringComparer.Ordinal)
         {
             Authz.Roles.EndUser,
         };
     }
 
+    // Pro admina načte seznam skupin do ViewData (pro UI výběr cílové skupiny).
     private async Task LoadGroupsForAdminAsync(CancellationToken ct)
     {
         if (!User.IsInRole(Authz.Roles.Admin)) return;
@@ -76,6 +78,7 @@ public sealed class AuthController(
             .ToListAsync(ct);
     }
 
+            // Zobrazí login stránku; pokud je uživatel přihlášený, vrací redirect na safe returnUrl.
     [HttpGet("login")]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -91,6 +94,7 @@ public sealed class AuthController(
         return View("Login", new LoginInputModel());
     }
 
+    // Provede přihlášení heslem; při 2FA přesměruje na 2FA krok.
     [HttpPost("login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginInputModel input, string? returnUrl = null)
@@ -132,6 +136,7 @@ public sealed class AuthController(
         return View("Login", input);
     }
 
+    // Zobrazí 2FA krok pro uživatele, který právě prošel přihlášením heslem.
     [HttpGet("login-2fa")]
     public async Task<IActionResult> Login2fa(string? returnUrl = null, bool rememberMe = false)
     {
@@ -149,6 +154,7 @@ public sealed class AuthController(
         return View("Login2fa", new Login2faInputModel());
     }
 
+    // Ověří 2FA kód a dokončí přihlášení.
     [HttpPost("login-2fa")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login2fa(Login2faInputModel input, string? returnUrl = null, bool rememberMe = false)
@@ -177,6 +183,7 @@ public sealed class AuthController(
         return View("Login2fa", input);
     }
 
+    // Zobrazí registrační formulář (vytváření účtů je řízené policy/rolemi).
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
     [HttpGet("register")]
     public async Task<IActionResult> Register(string? returnUrl = null, CancellationToken ct = default)
@@ -199,6 +206,7 @@ public sealed class AuthController(
         return View("Register", model);
     }
 
+    // Vrátí dynamickou část registrace podle zvoleného typu účtu (HTMX meta partial).
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
     [HttpGet("register-meta")]
     public async Task<IActionResult> RegisterAccountTypeMeta(RegisterInputModel input, CancellationToken ct = default)
@@ -217,6 +225,7 @@ public sealed class AuthController(
         return PartialView("_RegisterAccountTypeMeta", input);
     }
 
+    // Vytvoří nový účet (Identity + role) a zajistí členství ve skupině (KeyGroups).
     [Authorize(Policy = Authz.Policies.Users_CreateEndUser)]
     [HttpPost("register")]
     [ValidateAntiForgeryToken]
@@ -372,6 +381,7 @@ public sealed class AuthController(
         return View("Register", input);
     }
 
+    // Zobrazí potvrzení registrace; v dev režimu může ukázat potvrzovací link.
     [HttpGet("register-confirmation")]
     public IActionResult RegisterConfirmation(string? email = null)
     {
@@ -383,6 +393,7 @@ public sealed class AuthController(
         return View("RegisterConfirmation");
     }
 
+    // Potvrdí email přes token (token může být URL-safe kódovaný přes TokenCodec).
     [HttpGet("confirm-email")]
     public async Task<IActionResult> ConfirmEmail(string? userId = null, string? code = null)
     {
@@ -417,6 +428,7 @@ public sealed class AuthController(
         return View("ConfirmEmail");
     }
 
+    // Zobrazí formulář pro požadavek na reset hesla.
     [HttpGet("forgot-password")]
     public IActionResult ForgotPassword()
     {
@@ -426,6 +438,7 @@ public sealed class AuthController(
         return View("ForgotPassword", new ForgotPasswordInputModel());
     }
 
+    // Pošle email pro reset hesla (bez prozrazení existence účtu kvůli enumeraci).
     [HttpPost("forgot-password")]
     [ValidateAntiForgeryToken]
     [EnableRateLimiting("auth-strict")]
@@ -439,7 +452,7 @@ public sealed class AuthController(
             return View("ForgotPassword", input);
         }
 
-        // Log the request (but not whether user exists - prevent enumeration)
+        // Zaloguje požadavek (ale neinformuje, zda účet existuje – prevence enumerace).
         logger.LogInformation("Password reset requested for email: {Email}", input.Email);
 
         var user = await userManager.FindByEmailAsync(input.Email);
@@ -453,6 +466,7 @@ public sealed class AuthController(
         return this.HtmxRedirectOrLocalRedirect(url);
     }
 
+    // Zobrazí potvrzení o odeslání emailu pro reset hesla; v dev režimu může ukázat link.
     [HttpGet("forgot-password-confirmation")]
     public IActionResult ForgotPasswordConfirmation()
     {
@@ -463,6 +477,7 @@ public sealed class AuthController(
         return View("ForgotPasswordConfirmation");
     }
 
+    // Zobrazí formulář pro nastavení nového hesla (email + code typicky přijdou z linku).
     [HttpGet("reset-password")]
     public IActionResult ResetPassword(string? email = null, string? code = null)
     {
@@ -478,6 +493,7 @@ public sealed class AuthController(
         return View("ResetPassword", model);
     }
 
+    // Provede reset hesla pomocí reset tokenu.
     [HttpPost("reset-password")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ResetPassword(ResetPasswordInputModel input)
@@ -513,6 +529,7 @@ public sealed class AuthController(
         return View("ResetPassword", input);
     }
 
+    // Zobrazí potvrzení o úspěšném resetu hesla.
     [HttpGet("reset-password-confirmation")]
     public IActionResult ResetPasswordConfirmation()
     {
@@ -522,6 +539,7 @@ public sealed class AuthController(
         return View("ResetPasswordConfirmation");
     }
 
+    // Odhlásí uživatele a vrátí se na bezpečný returnUrl.
     [HttpPost("logout")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout(string? returnUrl = null)
@@ -530,6 +548,7 @@ public sealed class AuthController(
         return RedirectToLocal(returnUrl);
     }
 
+    // Stránka „Access denied“ pro neautorizované přístupy.
     [HttpGet("denied")]
     public IActionResult AccessDenied()
     {
@@ -538,10 +557,38 @@ public sealed class AuthController(
         return View("AccessDenied");
     }
 
+    // Provede safe redirect pouze na lokální URL (bez open-redirect).
     private IActionResult RedirectToLocal(string? returnUrl)
     {
         var safe = returnUrlService.GetSafeReturnUrl(Url, returnUrl);
         return this.HtmxRedirectOrLocalRedirect(safe);
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: kompletní auth flow nad ASP.NET Identity (login, 2FA, registrace řízená rolemi, reset hesla).
+- Routy (výběr):
+    - GET/POST `/auth/login`: přihlášení
+    - GET/POST `/auth/login-2fa`: 2FA krok
+    - GET/POST `/auth/register`: vytvoření účtu (policy `Users_CreateEndUser`)
+    - GET `/auth/register-meta`: HTMX partial pro dynamické části formuláře
+    - GET `/auth/confirm-email`: potvrzení emailu
+    - GET/POST `/auth/forgot-password`: požadavek na reset hesla
+    - GET/POST `/auth/reset-password`: nastavení nového hesla
+    - POST `/auth/logout`: odhlášení
+    - GET `/auth/denied`: access denied
+- Závislosti:
+    - `UserManager`/`SignInManager`: Identity operace.
+    - `ReturnUrlService`: bezpečné návraty (bez open-redirect).
+    - `TwoFactorService`: normalizace 2FA kódu.
+    - `AuthEmailService`: odesílání potvrzovacích a reset emailů.
+    - `TokenCodec`: URL-safe kódování/decoding tokenů.
+    - `KeyGroupProvisioningService` + `GroupContextService` + `ApplicationDbContext`: při registraci zajišťují skupiny a profily.
+- Bezpečnost:
+    - `ValidateAntiForgeryToken` na mutacích.
+    - Rate limiting na auth endpointy (`EnableRateLimiting`).
+    - Forgot password flow neprozrazuje existenci účtu (prevence enumerace).
+*/
 

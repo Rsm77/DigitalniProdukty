@@ -9,13 +9,13 @@ namespace DigitalniProdukty.TagHelpers;
 public sealed class AuthorizeTagHelper(IAuthorizationService authorizationService) : TagHelper
 {
     /// <summary>
-    /// Authorization policy name.
+    /// Název autorizační policy.
     /// </summary>
     [HtmlAttributeName("policy")]
     public string? Policy { get; set; }
 
     /// <summary>
-    /// Comma-separated list of roles. If specified, user must be in at least one role.
+    /// Seznam rolí oddělený čárkami. Pokud je zadaný, uživatel musí být alespoň v jedné z nich.
     /// </summary>
     [HtmlAttributeName("roles")]
     public string? Roles { get; set; }
@@ -24,11 +24,12 @@ public sealed class AuthorizeTagHelper(IAuthorizationService authorizationServic
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = default!;
 
+    // Rozhodne, zda se obsah vyrenderuje (dle loginu/rolí/policy), nebo se element potlačí.
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         var user = ViewContext?.HttpContext?.User;
 
-        // Default behavior: require authenticated user.
+        // Výchozí chování: vyžaduje přihlášeného uživatele.
         var authorized = user?.Identity?.IsAuthenticated == true;
 
         if (authorized && !string.IsNullOrWhiteSpace(Roles))
@@ -51,8 +52,22 @@ public sealed class AuthorizeTagHelper(IAuthorizationService authorizationServic
             return;
         }
 
-        // Render only children (no wrapping <authorize> element).
+        // Vyrenderuje pouze potomky (bez obalového <authorize> elementu).
         output.TagName = null;
         output.Attributes.Clear();
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: jednoduchá deklarativní autorizace v Razor views přes `<authorize ...>`.
+- Vstupy:
+    - `roles`: alespoň jedna role musí sedět.
+    - `policy`: spustí `IAuthorizationService.AuthorizeAsync` nad danou policy.
+- Chování:
+    - Když autorizace neprojde, použije `SuppressOutput()` a nic se nevyrenderuje.
+    - Když autorizace projde, odstraní obalový tag a nechá vyrenderovat jen children.
+- Vazby:
+    - Políčka `roles`/`policy` typicky odkazují na konstanty v `Security/Authz`.
+*/

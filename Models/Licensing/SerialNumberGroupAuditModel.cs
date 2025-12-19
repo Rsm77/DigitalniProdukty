@@ -4,6 +4,7 @@ using DigitalniProdukty.Models.SerialNum;
 
 namespace DigitalniProdukty.Models.Licensing;
 
+// Auditní záznam změny skupiny (přesunu) licenčního klíče mezi tenaty.
 public class SerialNumberGroupAuditModel
 {
     public long Id { get; set; }
@@ -26,3 +27,15 @@ public class SerialNumberGroupAuditModel
 
     public DateTime ChangedAt { get; set; }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: audit trail pro změny `SerialNumberModel.GroupId` (kdo/kdy/odkud/kam).
+- Vazby v DB:
+    - FK na `SerialNumberModel`.
+    - Index na (`SerialNumberId`, `ChangedAt`) pro rychlé zobrazení historie.
+- Vazby na zbytek aplikace:
+    - Typicky se plní při reassign/re-group operacích v admin licenční správě.
+    - `ChangedByUserId` je Identity userId (string), aby šlo dohledat autora změny.
+*/

@@ -10,6 +10,8 @@ public sealed class AuthEmailService(
     TokenCodec tokenCodec,
     IStringLocalizer<IdentityUi> t)
 {
+    // Vygeneruje potvrzovací token, zabalí ho do URL-safe podoby a odešle email.
+    // Vrací callback URL (hodí se do logu / pro zobrazení ve vývoji).
     public async Task<string> SendConfirmEmailAsync(IdentityUser user, string email, IUrlHelper urlHelper, string scheme)
     {
         var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -28,6 +30,8 @@ public sealed class AuthEmailService(
         return callbackUrl;
     }
 
+    // Vygeneruje token pro reset hesla, zakóduje ho a odešle email s odkazem.
+    // Vrací callback URL, kterou pak UI používá jen jako „kam jsme poslali odkaz“.
     public async Task<string> SendResetPasswordEmailAsync(IdentityUser user, string email, IUrlHelper urlHelper, string scheme)
     {
         var code = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -46,4 +50,18 @@ public sealed class AuthEmailService(
         return callbackUrl;
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: centrální služba pro sestavení a odesílání emailů Identity (potvrzení emailu, reset hesla).
+- Závislosti:
+    - UserManager<IdentityUser>: generuje bezpečné tokeny (`GenerateEmailConfirmationTokenAsync`, `GeneratePasswordResetTokenAsync`).
+    - TokenCodec: převod tokenu do Base64Url formátu vhodného do query stringu (bez `+`, `/`, `=`).
+    - IEmailSender: abstrakce odeslání (v dev režimu typicky `NoOpEmailSender`).
+    - IStringLocalizer<IdentityUi>: bere lokalizované subject/body z `Resources/IdentityUi*.resx`.
+- Vazby na zbytek aplikace:
+    - Voláno z `Controllers/AuthController` při registraci a při "Forgot password" flow.
+    - Odkazy míří na akce `AuthController.ConfirmEmail` a `AuthController.ResetPassword`.
+*/
 

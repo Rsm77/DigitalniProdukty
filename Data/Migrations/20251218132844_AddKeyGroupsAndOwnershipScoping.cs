@@ -9,6 +9,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class AddKeyGroupsAndOwnershipScoping : Migration
     {
         /// <inheritdoc />
+        // Zavede skupiny (KeyGroups) a scoping licencí přes `SerialNumbers.GroupId`.
+        // Přidává i členství uživatelů ve skupinách a audit přesunů mezi skupinami.
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<Guid>(
@@ -124,6 +126,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (drop skupin/členství/auditů a odstranění GroupId ze SerialNumbers).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
@@ -149,3 +152,17 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: multi-tenant scoping licencí přes KeyGroups.
+- Změny:
+    - `SerialNumbers.GroupId` (default na AdminGroupId) + FK do `KeyGroups`.
+    - `KeyGroups` (včetně seed „Admin pool“).
+    - `KeyGroupMembers` (uživatel ↔ skupina; indexy pro unikátnost).
+    - `SerialNumberGroupAudits` (audit přesunů).
+- Vazby:
+    - Služby: `KeyGroupProvisioningService`, `GroupContextService`.
+    - UI: `AdminController`, `LicensingAdminController`, registrace v `AuthController`.
+*/

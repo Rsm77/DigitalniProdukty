@@ -39,6 +39,7 @@ public sealed class AdminController(
         public required IReadOnlyList<string> Roles { get; init; }
     }
 
+    // Přehled uživatelů a skupin pro admin UI (role + skupina + display name).
     [HttpGet("")]
     public async Task<IActionResult> Index(CancellationToken ct)
     {
@@ -107,6 +108,7 @@ public sealed class AdminController(
         public string? DisplayName { get; set; }
     }
 
+    // Upraví roli, skupinu a display name uživatele (s governance omezeními).
     [HttpPost("users/update")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateUser(UpdateUserInput input, CancellationToken ct)
@@ -129,7 +131,7 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Governance: Admin UI must not manage the Owner (Majitel) role nor Admin accounts.
+        // Governance: Admin UI nesmí spravovat roli Owner (Majitel) ani účty Admin.
         if (string.Equals(role, Authz.Roles.Admin, StringComparison.Ordinal))
         {
             TempData[ToastMessageTempDataKey] = t["Admin.Toast.AdminRoleOwnerOnly"].Value;
@@ -137,7 +139,7 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Reseller/EndUser must be explicitly scoped to a group. Distributor gets its own group automatically.
+        // Reseller/EndUser musí být explicitně přiřazeni do skupiny; Distributor má skupinu automaticky.
         if (role != Authz.Roles.Admin
             && role != Authz.Roles.Distributor
             && (input.GroupId is null || input.GroupId == Guid.Empty))
@@ -165,7 +167,7 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Prevent Admin from modifying Owner (Majitel) or Admin accounts.
+        // Zabrání tomu, aby Admin UI měnilo účty Owner (Majitel) nebo Admin.
         var isOwner = await userManager.IsInRoleAsync(user, Authz.Roles.Owner);
         if (isOwner)
         {
@@ -182,11 +184,11 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Normalize desired group (Admin is never scoped by group).
+        // Normalizace cílové skupiny (Admin není nikdy scopeovaný skupinou).
         Guid? desiredGroupId;
         desiredGroupId = input.GroupId is null || input.GroupId == Guid.Empty ? (Guid?)null : input.GroupId;
 
-        // Security: never allow non-admin roles to be placed into the Admin tenant.
+        // Security: nikdy nedovolí neumístit ne-admin role do Admin tenant/poolu.
         if (desiredGroupId == KeyGroups.AdminGroupId)
         {
             TempData[ToastMessageTempDataKey] = t["Admin.Toast.AdminGroupForbidden"].Value;
@@ -194,7 +196,7 @@ public sealed class AdminController(
             return RedirectToAction(nameof(Index));
         }
 
-        // Distributor: group is always auto-provisioned (do not allow manual selection).
+        // Distributor: skupina je vždy auto-provisionovaná (ruční volba je zakázaná).
         if (string.Equals(role, Authz.Roles.Distributor, StringComparison.Ordinal))
         {
             await keyGroups.EnsureAdminGroupExistsAsync(ct);
@@ -213,7 +215,7 @@ public sealed class AdminController(
             }
         }
 
-        // Roles: enforce exactly one of our known roles.
+        // Role: vynutí přesně jednu z "našich" známých rolí.
         var currentRoles = await userManager.GetRolesAsync(user);
         foreach (var knownRole in Authz.Roles.AdminManageable)
         {
@@ -228,7 +230,7 @@ public sealed class AdminController(
             await userManager.AddToRoleAsync(user, role);
         }
 
-        // Group membership: 1 row per user (by design).
+        // Členství ve skupině: 1 řádek na uživatele (záměrný design).
         var member = await db.KeyGroupMembers.FirstOrDefaultAsync(x => x.UserId == user.Id, ct);
         if (desiredGroupId is null)
         {
@@ -255,7 +257,7 @@ public sealed class AdminController(
 
         await db.SaveChangesAsync(ct);
 
-        // Display name (optional in DB, required by policy for some roles).
+        // Display name (v DB volitelné, ale pro některé role vyžadované politikou).
         var profile = await db.UserProfiles.FirstOrDefaultAsync(x => x.UserId == user.Id, ct);
         if (string.IsNullOrWhiteSpace(displayName))
         {
@@ -288,3 +290,19 @@ public sealed class AdminController(
         return RedirectToAction(nameof(Index));
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: interní Admin UI pro správu uživatelů, rolí a skupin (KeyGroups).
+- Routy:
+    - GET `/admin`: přehled (uživatelé + jejich role + skupiny)
+    - POST `/admin/users/update`: změna role/skupiny/display name
+- Závislosti:
+    - `ApplicationDbContext`: čtení/úprava `KeyGroups`, `KeyGroupMembers`, `UserProfiles`.
+    - `UserManager`: práce s Identity uživateli a rolemi.
+    - `KeyGroupProvisioningService`: zajištění skupin (Admin group, distributor group).
+- Bezpečnost (governance):
+    - Správa účtů `Owner` a `Admin` je zakázaná (řeší jen Owner UI).
+    - Ne-admin role nesmí být přiřazeny do `KeyGroups.AdminGroupId`.
+*/

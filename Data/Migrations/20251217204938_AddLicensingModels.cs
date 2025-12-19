@@ -9,6 +9,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class AddLicensingModels : Migration
     {
         /// <inheritdoc />
+        // Zavede základní licencovací tabulky (SerialNumbers, Devices, LicenseDevices, Installations).
+        // Vytváří i unikátní indexy, aby se zabránilo duplicitám (např. Key, HardwareIdentifier).
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -137,6 +139,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (drop licencovacích tabulek).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -153,3 +156,17 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: první zavedení licencovací domény do DB.
+- Tabulky:
+    - `SerialNumbers`: licenční klíče.
+    - `Devices`: zařízení identifikované `HardwareIdentifier`.
+    - `LicenseDevices`: vazba licence ↔ zařízení.
+    - `Installations`: auditní události instalací.
+- Vazby:
+    - Entitní modely jsou v `Models/Licensing` a `Models/SerialNum`.
+    - Logiku generování a čtení klíčů řeší `Services/LicensingService`.
+*/

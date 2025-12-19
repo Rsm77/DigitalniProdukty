@@ -9,8 +9,8 @@ public static class Authz
 
     public static class Roles
     {
-        // Governance role: exactly one user should have this role.
-        // This role manages Admin accounts.
+        // Governance role: přesně jeden uživatel by měl mít tuto roli.
+        // Tato role spravuje účty Admin (a obecně je „nejvyšší“ v rámci aplikace).
         public const string Owner = "Majitel";
 
         public const string Admin = "Admin";
@@ -18,10 +18,10 @@ public static class Authz
         public const string Reseller = "Reseller";
         public const string Distributor = "Distributor";
 
-        // All known roles (including governance role).
+        // Všechny známé role (včetně governance role).
         public static readonly string[] All = [Owner, Admin, EndUser, Reseller, Distributor];
 
-        // Roles that an Admin is allowed to assign/manage via the Admin UI.
+        // Role, které může Admin přiřazovat/spravovat přes Admin UI.
         public static readonly string[] AdminManageable = [Admin, EndUser, Reseller, Distributor];
     }
 
@@ -36,3 +36,16 @@ public static class Authz
         public const string SerialNumbers_Generate = "SerialNumbers.Generate";
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: centralizace všech autorizačních konstant (roles, policies, claims).
+- Použití v aplikaci:
+    - `Program`: registrace `AddAuthorization` policy mapování.
+    - Controllery: atributy `[Authorize]`, `[Authorize(Roles=...)]` a policy-based přístup.
+    - `AccountController`: claim `ForceCredentialsChange` pro vynucení „first-login“ změn.
+- Poznámky:
+    - Role `Owner` je governance (správa admin účtů) a má být unikátní.
+    - Pole `Roles.All` slouží i pro seedování rolí při startu aplikace.
+*/

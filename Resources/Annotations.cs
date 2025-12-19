@@ -3,12 +3,13 @@ using System.Resources;
 
 namespace DigitalniProdukty.Resources;
 
-// Static resource accessors for DataAnnotations attributes (Display/ErrorMessageResource...).
+// Statické accessory pro DataAnnotations atributy (Display/ErrorMessageResource...).
 public static class Annotations
 {
     private static readonly ResourceManager ResourceManager =
         new("DigitalniProdukty.Resources.Annotations", typeof(Annotations).Assembly);
 
+    // Vrátí lokalizovaný string pro aktuální UI kulturu; fallback je název klíče.
     private static string GetString(string name) =>
         ResourceManager.GetString(name, CultureInfo.CurrentUICulture) ?? name;
 
@@ -30,4 +31,17 @@ public static class Annotations
 
     public static string ResetPassword_MissingCode => GetString(nameof(ResetPassword_MissingCode));
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: pohodlný typově-bezpečný přístup k `.resx` řetězcům používaným v DataAnnotations.
+- Závislosti:
+    - `ResourceManager` a `CultureInfo.CurrentUICulture` pro výběr překladu.
+- Použití v aplikaci:
+    - Modely s atributy `[Display]`, `[Required]`, apod. odkazují na `DigitalniProdukty.Resources.Annotations`.
+    - Klíče odpovídají položkám v [Resources/Annotations.resx](Resources/Annotations.resx) a jazykových variantách.
+- Poznámka:
+    - Pokud překlad chybí, vrací se `name` (lepší než null v UI).
+*/
 

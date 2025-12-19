@@ -21,12 +21,14 @@ namespace DigitalniProdukty.Data
 
         public DbSet<UserProfileModel> UserProfiles => Set<UserProfileModel>();
 
+        // Konfiguruje EF mapování, indexy a relace (včetně ASP.NET Identity tabulek).
+        // Zde se vynucují i DB constraints pro licencování (unikáty, FK a defaulty).
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Identity (SQL Server/Azure SQL): avoid clustered PKs on long composite keys.
-            // Also keep provider/name columns reasonably bounded.
+            // Identity (SQL Server/Azure SQL): vyhne se clustered PK na dlouhých kompozitních klíčích.
+            // Současně omezí délky provider/name sloupců na rozumné maximum.
             builder.Entity<IdentityUserToken<string>>(e =>
             {
                 e.Property(x => x.LoginProvider).HasMaxLength(128);
@@ -105,17 +107,17 @@ namespace DigitalniProdukty.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-                    builder.Entity<UserProfileModel>(e =>
-                    {
-                    e.HasKey(x => x.UserId);
-                    e.Property(x => x.DisplayName).HasMaxLength(200).IsRequired();
-                    e.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Entity<UserProfileModel>(e =>
+            {
+                e.HasKey(x => x.UserId);
+                e.Property(x => x.DisplayName).HasMaxLength(200).IsRequired();
+                e.Property(x => x.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    e.HasOne(x => x.User)
-                        .WithOne()
-                        .HasForeignKey<UserProfileModel>(x => x.UserId)
-                        .OnDelete(DeleteBehavior.Cascade);
-                    });
+                e.HasOne(x => x.User)
+                    .WithOne()
+                    .HasForeignKey<UserProfileModel>(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             builder.Entity<DeviceModel>(e =>
             {
@@ -168,9 +170,17 @@ DbSety (tabulky)
 - `LicenseDevices`: přiřazení licence ↔ zařízení (umožní limitovat počet zařízení a "odpojovat" zařízení bez smazání historie).
 - `Installations`: auditní log událostí (aktivace/spuštění/deaktivace) pro konkrétní licenci a zařízení.
 
+- `KeyGroups`: skupiny (tenant/pool) pro scoping licencí a uživatelů.
+- `KeyGroupMembers`: mapování uživatel ↔ skupina (záměrně 1 skupina na uživatele).
+- `SerialNumberGroupAudits`: audit přesunů klíčů mezi skupinami.
+- `UserProfiles`: profilové údaje (např. DisplayName) navázané 1:1 na Identity uživatele.
+
 Konfigurace v `OnModelCreating`
+- Identity tabulky (SQL Server/Azure SQL)
+    - omezení délek sloupců a `IsClustered(false)` na kompozitních PK, aby se nepřekročil limit délky clustered index key.
 - `SerialNumberModel`
   - unikátní index na `Key` zabrání duplicitním klíčům.
+    - default `GroupId` směřuje do `KeyGroups.AdminGroupId`.
   - `CreatedAt` má default z databáze (CURRENT_TIMESTAMP).
 
 - `DeviceModel`
@@ -184,5 +194,11 @@ Konfigurace v `OnModelCreating`
   - indexy (`SerialNumberId`, `OccurredAt`) a (`DeviceId`, `OccurredAt`) zrychlují výpis historie v čase.
   - `Restrict` mazání u FK na `SerialNumbers`/`Devices` chrání audit: nelze omylem smazat licenci/zařízení, pokud existují záznamy instalací.
     (Audit se běžně nemaže; licence se raději "zablokuje" pomocí `IsRevoked`).
+
+- `KeyGroupModel` / `KeyGroupMemberModel`
+    - unikátní názvy skupin + unikátní členství zajišťují, že jeden uživatel patří do max. jedné skupiny.
+
+- `UserProfileModel`
+    - 1:1 vazba na Identity uživatele a povinný `DisplayName` (dle pravidel UI/rolí).
 */
 

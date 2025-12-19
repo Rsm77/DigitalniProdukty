@@ -5,8 +5,8 @@ namespace DigitalniProdukty.Models.Auth;
 
 public sealed class RegisterInputModel
 {
-    // For admins: allow selecting which type of account to create.
-    // For non-admins: the controller will always force EndUser.
+    // Pro adminy: umožní vybrat typ účtu, který se má vytvořit.
+    // Pro ne-adminy: controller vždy vynutí typ EndUser.
     [Display(Name = nameof(Annotations.Field_AccountType), ResourceType = typeof(Annotations))]
     public string? AccountType { get; set; }
 
@@ -32,4 +32,15 @@ public sealed class RegisterInputModel
     [Compare(nameof(Password), ErrorMessageResourceName = nameof(Annotations.Validation_PasswordsDoNotMatch), ErrorMessageResourceType = typeof(Annotations))]
     public string ConfirmPassword { get; set; } = string.Empty;
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: vstupní model pro registraci / vytváření uživatelů (MVC form POST).
+- Použité atributy:
+    - DataAnnotations (`[Required]`, `[EmailAddress]`, `[StringLength]`, `[Compare]`) + lokalizace přes `Resources/Annotations*.resx`.
+- Vazby na zbytek aplikace:
+    - Zpracovává `Controllers/AuthController` (registrace, případně admin create-user flow).
+    - `AccountType` a `TargetGroupId` souvisí s rolemi (`Security/Authz`) a členstvím ve skupinách (`KeyGroups`).
+*/
 

@@ -9,6 +9,7 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
     private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
     private const string AppName = "DigitalniProdukty";
 
+    // Normalizuje 2FA kód z UI (odstraní mezery a pomlčky), aby prošel ověřením v Identity.
     public string NormalizeCode(string? code)
     {
         return (code ?? string.Empty)
@@ -16,6 +17,8 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
             .Replace("-", string.Empty, StringComparison.Ordinal);
     }
 
+    // Postaví model pro stránku 2FA: klíč, formátovaný klíč, otpauth URI a případně QR SVG.
+    // QR se generuje jen když 2FA ještě není zapnuté (šetří CPU a zbytečné renderování).
     public async Task<TwoFactorViewModel> BuildAsync(IdentityUser user)
     {
         var is2faEnabled = await userManager.GetTwoFactorEnabledAsync(user);
@@ -33,7 +36,7 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
         var email = user.Email ?? user.UserName ?? "user";
         var authenticatorUri = GenerateAuthenticatorUri(email, key);
 
-        // Generate QR code SVG only if 2FA is not yet enabled
+        // QR SVG generujeme jen pokud 2FA ještě není zapnuté.
         var qrCodeSvg = is2faEnabled ? string.Empty : qrCodeService.GenerateSvg(authenticatorUri, pixelsPerModule: 3);
 
         return new TwoFactorViewModel
@@ -47,10 +50,8 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
         };
     }
 
-    /// <summary>
-    /// Generates an otpauth:// URI for authenticator apps (Google Authenticator, Authy, etc.)
-    /// This URI can be encoded into a QR code for easy setup.
-    /// </summary>
+    // Vytvoří otpauth:// URI pro autentikátory (Google Authenticator, Authy, ...).
+    // Tento řetězec se pak převádí na QR kód pro pohodlné spárování.
     public static string GenerateAuthenticatorUri(string email, string key)
     {
         if (string.IsNullOrWhiteSpace(key)) return string.Empty;
@@ -62,6 +63,7 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
             key);
     }
 
+    // Přeformátuje secret do skupin po 4 znacích (lepší čitelnost při ručním přepisu).
     private static string FormatKey(string key)
     {
         if (string.IsNullOrWhiteSpace(key)) return string.Empty;
@@ -83,4 +85,19 @@ public sealed class TwoFactorService(UserManager<IdentityUser> userManager, QrCo
         return result.ToString();
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: obsluha 2FA (TOTP) pro UI – sestavení modelu, normalizace kódů a tvorba otpauth URI.
+- Závislosti:
+    - UserManager<IdentityUser>: čte/zajišťuje authenticator key, zjišťuje stav 2FA a počty recovery kódů.
+    - QrCodeService: převádí otpauth URI do SVG QR kódu.
+    - TwoFactorViewModel: DTO pro view (v `Models/Account`).
+- Vazby na zbytek aplikace:
+    - Voláno z `Controllers/AccountController` (stránka pro správu 2FA).
+    - Voláno z `Controllers/AuthController` při ověřování loginu s 2FA (NormalizeCode pro vstup).
+- Bezpečnost:
+    - TOTP secret se nikdy negeneruje „ručně“ – spravuje ho Identity a ukládá do `AspNetUserTokens`.
+*/
 

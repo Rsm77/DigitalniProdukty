@@ -9,6 +9,8 @@ namespace DigitalniProdukty.Data.Migrations
     public partial class AddUserProfiles : Migration
     {
         /// <inheritdoc />
+        // Přidá tabulku `UserProfiles` pro profilové údaje (např. DisplayName) navázané 1:1 na uživatele.
+        // FK na `AspNetUsers` je kaskádní (smazání uživatele smaže i profil).
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -32,6 +34,7 @@ namespace DigitalniProdukty.Data.Migrations
         }
 
         /// <inheritdoc />
+        // Vrátí změny z `Up` zpět (drop `UserProfiles`).
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -39,3 +42,12 @@ namespace DigitalniProdukty.Data.Migrations
         }
     }
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: oddělená tabulka s profilem uživatele (UI-friendly data mimo Identity core tabulky).
+- Vazby:
+    - Model: `Models/Users/UserProfileModel`.
+    - UI: `AuthController` (registrace), `AdminController`/`OwnerController` (editace display name).
+*/

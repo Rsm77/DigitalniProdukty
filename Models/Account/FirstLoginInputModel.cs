@@ -5,6 +5,7 @@ namespace DigitalniProdukty.Models.Account;
 
 public sealed class FirstLoginInputModel
 {
+    // Email se na prvním přihlášení typicky doplňuje/potvrzuje (flow podle pravidel aplikace).
     [Required(ErrorMessageResourceName = nameof(Annotations.Validation_Required), ErrorMessageResourceType = typeof(Annotations))]
     [EmailAddress(ErrorMessageResourceName = nameof(Annotations.Validation_EmailAddress), ErrorMessageResourceType = typeof(Annotations))]
     [Display(Name = nameof(Annotations.Field_Email), ResourceType = typeof(Annotations))]
@@ -27,3 +28,14 @@ public sealed class FirstLoginInputModel
     [Compare(nameof(NewPassword), ErrorMessageResourceName = nameof(Annotations.Validation_PasswordsDoNotMatch), ErrorMessageResourceType = typeof(Annotations))]
     public string ConfirmPassword { get; set; } = string.Empty;
 }
+
+/*
+Podrobnosti (vazby a použité části)
+
+- Účel: vstupní model pro "první přihlášení" (vynucená změna hesla / doplnění emailu).
+- Použité atributy:
+    - DataAnnotations (`[Required]`, `[EmailAddress]`, `[StringLength]`, `[Compare]`) s lokalizací přes `Resources/Annotations*.resx`.
+- Vazby na zbytek aplikace:
+    - Zpracovává `Controllers/AccountController` (typicky akce FirstLogin).
+    - Password operace provádí `UserManager<IdentityUser>` (ChangePassword / ResetPassword dle flow).
+*/
