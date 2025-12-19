@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digitální produkty – princip a použití (graficky)</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --fg: #0f172a;
+      --muted: #475569;
+      --bg: #ffffff;
+      --panel: #f8fafc;
+      --border: #e2e8f0;
+      --code: #0b1020;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+    header .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 16px 64px;
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    .sub { color: var(--muted); font-size: 14px; }
+    h2 { margin-top: 28px; font-size: 18px; }
+    h3 { margin-top: 18px; font-size: 16px; }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
+    ul { margin-top: 8px; }
+
+    .note {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: 12px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    pre {
+      background: var(--code);
+      color: #e5e7eb;
+      padding: 10px 12px;
+      border-radius: 10px;
+      overflow: auto;
+    }
+
+    /* Mermaid container spacing */
+    .mermaid {
+      margin: 12px 0 18px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .toc a { color: inherit; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Digitální produkty – princip a použití (graficky)</h1>
+      <div class="sub">Samostatný HTML dokument s Mermaid diagramy (renderuje se v prohlížeči).</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="note">
+      Pokud se diagramy nevykreslí, je to typicky tím, že prohlížeč zablokoval načtení Mermaid skriptu (např. offline režim). V takovém případě otevři Markdown verzi v <code>docs/princip-a-pouziti-aplikace.md</code> nebo spusť HTML s přístupem k internetu.
+    </div>
+
+    <h2>Obsah</h2>
+    <ul class="toc">
+      <li><a href="#ctx">1) Kontext</a></li>
+      <li><a href="#roles">2) Role a oprávnění</a></li>
+      <li><a href="#screens">3) Obrazovky</a></li>
+      <li><a href="#htmx">4) HTMX principy</a></li>
+      <li><a href="#data">5) Datový model</a></li>
+      <li><a href="#scenarios">6) Scénáře</a></li>
+      <li><a href="#where">7) Kde hledat implementaci</a></li>
+      <li><a href="#legend">8) Legenda HTMX atributů</a></li>
+    </ul>
+
+    <hr />
+
+    <h2 id="ctx">1) Kontext: co aplikace dělá</h2>
+    <ul>
+      <li>Aplikace spravuje <strong>licenční klíče (serial numbers)</strong> a jejich <strong>přiřazení uživatelům</strong>.</li>
+      <li>Evidence zahrnuje <strong>instalace</strong> (události), <strong>zařízení</strong>, <strong>skupiny</strong> (key groups) a <strong>uživatelské role</strong>.</li>
+      <li>UI je ASP.NET MVC/Razor s <strong>HTMX</strong> pro částečné přenačítání a fragmenty.</li>
+    </ul>
+
+    <hr />
+
+    <h2 id="roles">2) Role a oprávnění (kdo co může)</h2>
+    <div class="mermaid">
+flowchart TB
+  U[Uživatel] --> R{Role}
+
+  R -->|Owner| OWNER[Owner]
+  R -->|Admin| ADMIN[Admin]
+  R -->|Distributor| DIST[Distributor]
+  R -->|Reseller| RES[Reseller]
+  R -->|EndUser| END[EndUser]
+
+  OWNER --> O1[Správa adminů]
+
+  ADMIN --> A1[Správa uživatelů (role/skupiny)]
+  ADMIN --> A2[Správa licencí napříč skupinami]
+
+  DIST --> D1[Vytváření účtů (omezeně)]
+  DIST --> D2[Práce s licencemi ve svém kontextu]
+
+  RES --> R1[Typicky práce s přidělenými licencemi]
+
+  END --> E1[Vidí své serialy]
+  END --> E2[Profil / Heslo / 2FA]
+    </div>
+
+    <hr />
+
+    <h2 id="screens">3) Hlavní obrazovky (navigace aplikace)</h2>
+    <div class="mermaid">
+flowchart LR
+  HOME[Home] --> ACC[Account]
+  HOME --> LIC[Licensing Admin]
+  HOME --> ADM[Admin]
+  HOME --> OWN[Owner]
+
+  ACC --> ACC_P[Profil]
+  ACC --> ACC_W[Heslo]
+  ACC --> ACC_2FA[2FA]
+  ACC --> ACC_S[Serialy]
+
+  LIC --> LIC_I[Index / Latest keys]
+  LIC --> LIC_G[Generate]
+  LIC --> LIC_INS[Installations]
+  LIC_I --> LIC_D[Details (dialog)]
+
+  ADM --> ADM_I[Users/Groups management]
+  OWN --> OWN_I[Admins list]
+  OWN_I --> OWN_E[Edit]
+  OWN_I --> OWN_RP[Reset password]
+  OWN_I --> OWN_DEL[Delete confirm (modal)]
+    </div>
+
+    <hr />
+
+    <h2 id="htmx">4) Princip fungování UI s HTMX</h2>
+
+    <h3>4.1 „Boost“ navigace (výměna #main)</h3>
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant L as Layout (hx-boost)
+  participant S as Server (MVC)
+
+  B->>L: Uživatel klikne na odkaz
+  L->>S: HTMX request (GET)
+  S-->>L: HTML odpověď (stránka/view)
+  L-->>B: HTMX swap do #main (bez full reload)
+  Note over L,B: URL se aktualizuje (hx-push-url)
+    </div>
+
+    <h3>4.2 Fragmenty (sidebar/login) po změně přihlášení</h3>
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant S as Server (FragmentsController)
+
+  Note over B: Přihlášení/odhlášení vyvolá událost
+  B->>B: dispatch "auth-changed" on <body>
+  B->>S: hx-get /_fragments/login
+  S-->>B: _LoginPartial HTML
+  B->>B: swap do #login-partial
+
+  B->>S: hx-get /_fragments/sidebar-nav
+  S-->>B: _SidebarNav HTML
+  B->>B: swap do #sidebar-nav
+    </div>
+
+    <h3>4.3 HTMX formuláře: „vrať mi znovu kartu“</h3>
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant S as Server (Controller + View)
+
+  B->>S: hx-post /Account/Profile (form data)
+  S-->>B: HTML (znovu celý #profile-card)
+  B->>B: swap outerHTML pro #profile-card
+    </div>
+
+    <h3>4.4 Detail v dialogu (LicensingAdmin)</h3>
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant S as Server (LicensingAdmin)
+
+  B->>B: click key -> open dialog
+  B->>S: GET /LicensingAdmin/Details?id=...
+  S-->>B: HTML partial _Details
+  B->>B: swap innerHTML do #license-details-body
+
+  B->>S: hx-post /LicensingAdmin/Assign (email, context=details)
+  S-->>B: HTML partial _Details (aktualizovaný)
+  B->>B: swap innerHTML do #license-details-body
+    </div>
+
+    <hr />
+
+    <h2 id="data">5) Datový model (zjednodušeně)</h2>
+    <div class="mermaid">
+erDiagram
+  IdentityUser {
+    string Id
+    string Email
+  }
+
+  SerialNumber {
+    int Id
+    string Key
+    int MaxDevices
+    datetime CreatedAt
+    bool IsRevoked
+    string OwnerUserId
+    guid GroupId
+  }
+
+  Device {
+    int Id
+    string HardwareIdentifier
+    datetime FirstSeenAt
+    datetime LastSeenAt
+  }
+
+  Installation {
+    int Id
+    datetime OccurredAt
+    string EventType
+    string IpAddress
+  }
+
+  KeyGroup {
+    guid Id
+    string Name
+  }
+
+  KeyGroupMember {
+    int Id
+    guid GroupId
+    string UserId
+    datetime AddedAt
+  }
+
+  IdentityUser ||--o{ SerialNumber : owns
+  SerialNumber ||--o{ Installation : has
+  Device ||--o{ Installation : has
+  KeyGroup ||--o{ SerialNumber : scopes
+  KeyGroup ||--o{ KeyGroupMember : members
+  IdentityUser ||--o{ KeyGroupMember : joins
+    </div>
+
+    <hr />
+
+    <h2 id="scenarios">6) Typické scénáře použití</h2>
+
+    <h3>6.1 End-user: prohlédnutí vlastních serialů</h3>
+    <div class="mermaid">
+flowchart TB
+  A[Uživatel přihlášen] --> B[Account / Serials]
+  B --> C[Server načte serialy uživatele]
+  C --> D[Razor vykreslí tabulku]
+  D --> E[Uživatel vidí Key/Status/Created]
+    </div>
+
+    <h3>6.2 Admin/Distributor: generování klíčů</h3>
+    <div class="mermaid">
+flowchart TB
+  G[LicensingAdmin / Generate] --> P[Vyplní parametry]
+  P --> S[POST Generate]
+  S --> K[Server vygeneruje klíče + uloží do DB]
+  K --> R[Vykreslí zpět stránku s tabulkou nových klíčů]
+  R -->|HTMX outerHTML| UI[UI se aktualizuje bez reloadu]
+    </div>
+
+    <h3>6.3 Owner: mazání admin účtu s potvrzením (modal)</h3>
+    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant B as Browser
+  participant S as Server (Owner)
+
+  B->>S: hx-get /owner/admins/delete-confirm (userId)
+  S-->>B: HTML fragment _DeleteConfirm
+  B->>B: swap do #owner-modal (overlay)
+
+  B->>S: POST /Owner/DeleteAdmin (anti-forgery)
+  S-->>B: Redirect /Owner/Index (+ TempData toast)
+  Note over B: layout/stránka pak ukáže toast
+    </div>
+
+    <hr />
+
+    <h2 id="where">7) Kde hledat konkrétní implementaci</h2>
+    <ul>
+      <li>Layout + globální HTMX: <code>Views/Shared/_Layout.cshtml</code></li>
+      <li>Fragmenty (sidebar/login): <code>Controllers/FragmentsController.cs</code></li>
+      <li>Licence: <code>Controllers/LicensingAdminController.cs</code> + <code>Views/LicensingAdmin/*</code></li>
+      <li>Owner správa adminů: <code>Controllers/OwnerController.cs</code> + <code>Views/Owner/*</code></li>
+      <li>Account: <code>Controllers/AccountController.cs</code> + <code>Views/Account/*</code></li>
+      <li>Auth flow: <code>Controllers/AuthController.cs</code> + <code>Views/Auth/*</code></li>
+    </ul>
+
+    <hr />
+
+    <h2 id="legend">8) Legenda HTMX atributů (rychlá)</h2>
+    <ul>
+      <li><code>hx-boost</code>: promění odkazy/formy na HTMX requesty (XHR)</li>
+      <li><code>hx-target</code>: kam se vloží odpověď</li>
+      <li><code>hx-swap</code>: jak se vloží odpověď (innerHTML/outerHTML)</li>
+      <li><code>hx-trigger</code>: kdy se request spustí (load/change/custom event)</li>
+      <li><code>hx-include</code>: které další inputy poslat</li>
+      <li><code>hx-vals</code>: doplnění hodnot do requestu</li>
+    </ul>
+  </main>
+
+  <footer>
+    Vygenerováno jako samostatný HTML dokument pro rychlé sdílení.
+  </footer>
+
+  <!-- Mermaid (render diagramů v prohlížeči) -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'strict'
+    });
+  </script>
+</body>
+</html>
