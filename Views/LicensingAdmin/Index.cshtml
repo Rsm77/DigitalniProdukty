@@ -57,15 +57,15 @@
     </div>
 
     <dialog id="license-details" class="app-dialog">
-        <div class="app-card">
-            <div class="app-card-header">
+        <div class="app-card max-h-[calc(100dvh-2rem)] flex flex-col">
+            <div class="app-card-header shrink-0">
                 <h2 class="app-card-title">@T["LicensingAdmin.Details.Title"]</h2>
                 <div class="flex items-center gap-2">
                     <button type="button" class="app-btn-secondary" onclick="window.appLicensing?.closeDetails?.();">@T["LicensingAdmin.Details.Close"]</button>
                 </div>
             </div>
 
-            <div class="app-card-body" id="license-details-body"></div>
+            <div class="app-card-body flex-1 overflow-auto" id="license-details-body"></div>
         </div>
     </dialog>
 </div>
