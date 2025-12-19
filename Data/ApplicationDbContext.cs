@@ -25,6 +25,32 @@ namespace DigitalniProdukty.Data
         {
             base.OnModelCreating(builder);
 
+            // Identity (SQL Server/Azure SQL): avoid clustered PKs on long composite keys.
+            // Also keep provider/name columns reasonably bounded.
+            builder.Entity<IdentityUserToken<string>>(e =>
+            {
+                e.Property(x => x.LoginProvider).HasMaxLength(128);
+                e.Property(x => x.Name).HasMaxLength(128);
+
+                e.HasKey(x => new { x.UserId, x.LoginProvider, x.Name })
+                    .IsClustered(false);
+            });
+
+            builder.Entity<IdentityUserLogin<string>>(e =>
+            {
+                e.Property(x => x.LoginProvider).HasMaxLength(128);
+                e.Property(x => x.ProviderKey).HasMaxLength(128);
+
+                e.HasKey(x => new { x.LoginProvider, x.ProviderKey })
+                    .IsClustered(false);
+            });
+
+            builder.Entity<IdentityUserRole<string>>(e =>
+            {
+                e.HasKey(x => new { x.UserId, x.RoleId })
+                    .IsClustered(false);
+            });
+
             builder.Entity<SerialNumberModel>(e =>
             {
                 e.HasIndex(x => x.Key).IsUnique();
