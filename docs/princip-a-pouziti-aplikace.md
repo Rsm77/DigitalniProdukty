@@ -28,10 +28,10 @@ flowchart TB
 
   OWNER --> O1[Správa adminů]
 
-  ADMIN --> A1[Správa uživatelů (role/skupiny)]
+  ADMIN --> A1[Správa uživatelů – role a skupiny]
   ADMIN --> A2[Správa licencí napříč skupinami]
 
-  DIST --> D1[Vytváření účtů (omezeně)]
+  DIST --> D1[Vytváření účtů – omezeně]
   DIST --> D2[Práce s licencemi ve svém kontextu]
 
   RES --> R1[Typicky práce s přidělenými licencemi]
@@ -59,13 +59,13 @@ flowchart LR
   LIC --> LIC_I[Index / Latest keys]
   LIC --> LIC_G[Generate]
   LIC --> LIC_INS[Installations]
-  LIC_I --> LIC_D[Details (dialog)]
+  LIC_I --> LIC_D[Details – dialog]
 
   ADM --> ADM_I[Users/Groups management]
   OWN --> OWN_I[Admins list]
   OWN_I --> OWN_E[Edit]
   OWN_I --> OWN_RP[Reset password]
-  OWN_I --> OWN_DEL[Delete confirm (modal)]
+  OWN_I --> OWN_DEL[Delete confirm – modal]
 ```
 
 ---
@@ -83,8 +83,8 @@ Aplikace používá kombinaci:
 sequenceDiagram
   autonumber
   participant B as Browser
-  participant L as Layout (hx-boost)
-  participant S as Server (MVC)
+  participant L as Layout – hx-boost
+  participant S as Server – MVC
 
   B->>L: Uživatel klikne na odkaz
   L->>S: HTMX request (GET)
@@ -99,10 +99,10 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant B as Browser
-  participant S as Server (FragmentsController)
+  participant S as Server – FragmentsController
 
   Note over B: Přihlášení/odhlášení vyvolá událost
-  B->>B: dispatch "auth-changed" on <body>
+  B->>B: dispatch "auth-changed" on BODY
   B->>S: hx-get /_fragments/login
   S-->>B: _LoginPartial HTML
   B->>B: swap do #login-partial
@@ -124,7 +124,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant B as Browser
-  participant S as Server (Controller + View)
+  participant S as Server – Controller + View
 
   B->>S: hx-post /Account/Profile (form data)
   S-->>B: HTML (znovu celý #profile-card)
@@ -141,7 +141,7 @@ sequenceDiagram
 sequenceDiagram
   autonumber
   participant B as Browser
-  participant S as Server (LicensingAdmin)
+  participant S as Server – LicensingAdmin
 
   B->>B: click key -> open dialog
   B->>S: GET /LicensingAdmin/Details?id=...
@@ -239,7 +239,7 @@ flowchart TB
 sequenceDiagram
   autonumber
   participant B as Browser
-  participant S as Server (Owner)
+  participant S as Server – Owner
 
   B->>S: hx-get /owner/admins/delete-confirm (userId)
   S-->>B: HTML fragment _DeleteConfirm
