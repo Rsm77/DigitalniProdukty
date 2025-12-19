@@ -66,6 +66,39 @@
   <data name="Home.Index.QuickLinks.Title" xml:space="preserve">
     <value>Rychlé odkazy</value>
   </data>
+  <data name="Home.Index.Features.Title" xml:space="preserve">
+    <value>Co aplikace umí</value>
+  </data>
+  <data name="Home.Index.Feature1" xml:space="preserve">
+    <value>Generování a správa licenčních klíčů (serialů)</value>
+  </data>
+  <data name="Home.Index.Feature2" xml:space="preserve">
+    <value>Oddělení dat podle skupin (multi-tenant scoping)</value>
+  </data>
+  <data name="Home.Index.Feature3" xml:space="preserve">
+    <value>Historie instalací a auditní stopa pro administrátorské zásahy</value>
+  </data>
+  <data name="Home.Index.NextSteps.Title" xml:space="preserve">
+    <value>Další kroky</value>
+  </data>
+  <data name="Home.Index.NextSteps.Login" xml:space="preserve">
+    <value>Přihlásit se</value>
+  </data>
+  <data name="Home.Index.NextSteps.Register" xml:space="preserve">
+    <value>Vytvořit účet</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Serials.Desc" xml:space="preserve">
+    <value>Zobrazí vaše přiřazené licenční klíče a jejich stav.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Manage.Desc" xml:space="preserve">
+    <value>Přehled licencí, detaily, přiřazení a správa stavu.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Generate.Desc" xml:space="preserve">
+    <value>Vygeneruje nové licenční klíče do skupiny nebo rovnou uživateli.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Installations.Desc" xml:space="preserve">
+    <value>Poslední instalační události a diagnostika aktivací.</value>
+  </data>
   <data name="Home.Index.Learn.Prefix" xml:space="preserve">
     <value>Zjistěte více o</value>
   </data>

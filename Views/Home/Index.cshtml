@@ -7,12 +7,72 @@
 }
 
 <div class="space-y-4">
-    <div class="space-y-1">
-        <h1 class="text-2xl font-semibold text-slate-900">@ViewData["Title"]</h1>
-        <p class="text-sm text-slate-500">@T["Home.Index.Welcome"]</p>
-    </div>
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div class="space-y-4 lg:col-span-2">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-slate-500">@T["Home.Index.Welcome"]</p>
+                <h1 class="text-3xl font-semibold tracking-tight text-slate-900">@T["App.Name"]</h1>
+                <p class="text-slate-700">@T["Home.Index.Description"]</p>
+            </div>
 
-    <p class="text-slate-700">@T["Home.Index.Description"]</p>
+            <div class="space-y-2">
+                <h2 class="text-sm font-semibold text-slate-900">@T["Home.Index.Features.Title"]</h2>
+
+                <ul class="space-y-2">
+                    <li class="flex gap-2 text-sm text-slate-700">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.2 7.3a1 1 0 0 1-1.42 0L3.29 9.2a1 1 0 1 1 1.42-1.4l3.09 3.133 6.49-6.576a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>@T["Home.Index.Feature1"]</span>
+                    </li>
+                    <li class="flex gap-2 text-sm text-slate-700">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.2 7.3a1 1 0 0 1-1.42 0L3.29 9.2a1 1 0 1 1 1.42-1.4l3.09 3.133 6.49-6.576a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>@T["Home.Index.Feature2"]</span>
+                    </li>
+                    <li class="flex gap-2 text-sm text-slate-700">
+                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-slate-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.2 7.3a1 1 0 0 1-1.42 0L3.29 9.2a1 1 0 1 1 1.42-1.4l3.09 3.133 6.49-6.576a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>@T["Home.Index.Feature3"]</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-center justify-center">
+                <svg class="h-24 w-24 text-slate-900" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 18h28a6 6 0 0 1 6 6v16a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6V24a6 6 0 0 1 6-6Z" />
+                    <circle cx="26" cy="32" r="5" />
+                    <path d="M31 32h17" />
+                    <path d="M42 32v6" />
+                    <path d="M48 32v4" />
+                </svg>
+            </div>
+
+            <div class="mt-3 space-y-2">
+                <h2 class="text-sm font-semibold text-slate-900">@T["Home.Index.NextSteps.Title"]</h2>
+
+                @if (!(User?.Identity?.IsAuthenticated ?? false))
+                {
+                    <div class="flex flex-col gap-2">
+                        <a class="app-btn-primary w-full inline-flex items-center justify-center" asp-controller="Auth" asp-action="Login" preload>
+                            @T["Home.Index.NextSteps.Login"]
+                        </a>
+                        <a class="app-btn-secondary w-full inline-flex items-center justify-center" asp-controller="Auth" asp-action="Register" preload>
+                            @T["Home.Index.NextSteps.Register"]
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-sm text-slate-600">@T["Home.Index.Callout"]</p>
+                }
+            </div>
+        </div>
+    </div>
 
     @if (!(User?.Identity?.IsAuthenticated ?? false))
     {
@@ -22,42 +82,58 @@
     }
     else
     {
-        <div class="app-callout app-callout-info">
-            @T["Home.Index.Callout"]
-        </div>
-
-        <div class="space-y-2">
+        <div class="space-y-3">
             <h2 class="text-sm font-semibold text-slate-900">@T["Home.Index.QuickLinks.Title"]</h2>
 
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <authorize>
                     @if (!User.IsInRole(Authz.Roles.Owner))
                     {
-                        <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="Account" asp-action="Serials" preload>
-                            <span>@T["Account.Nav.Serials"]</span>
-                            <span class="text-slate-400">→</span>
+                        <a class="app-btn-secondary w-full" asp-controller="Account" asp-action="Serials" preload>
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <div class="font-medium text-slate-900">@T["Account.Nav.Serials"]</div>
+                                    <div class="mt-0.5 text-xs text-slate-500">@T["Home.Index.QuickLinks.Serials.Desc"]</div>
+                                </div>
+                                <span class="mt-0.5 shrink-0 text-slate-400">→</span>
+                            </div>
                         </a>
                     }
                 </authorize>
 
                 <authorize policy="@Authz.Policies.SerialNumbers_Sell">
-                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="Index" preload>
-                        <span>@T["Nav.Licensing.Manage"]</span>
-                        <span class="text-slate-400">→</span>
+                    <a class="app-btn-secondary w-full" asp-controller="LicensingAdmin" asp-action="Index" preload>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="font-medium text-slate-900">@T["Nav.Licensing.Manage"]</div>
+                                <div class="mt-0.5 text-xs text-slate-500">@T["Home.Index.QuickLinks.Manage.Desc"]</div>
+                            </div>
+                            <span class="mt-0.5 shrink-0 text-slate-400">→</span>
+                        </div>
                     </a>
                 </authorize>
 
                 <authorize policy="@Authz.Policies.SerialNumbers_Generate">
-                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="GeneratePage" preload>
-                        <span>@T["Nav.Licensing.Generate"]</span>
-                        <span class="text-slate-400">→</span>
+                    <a class="app-btn-secondary w-full" asp-controller="LicensingAdmin" asp-action="GeneratePage" preload>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="font-medium text-slate-900">@T["Nav.Licensing.Generate"]</div>
+                                <div class="mt-0.5 text-xs text-slate-500">@T["Home.Index.QuickLinks.Generate.Desc"]</div>
+                            </div>
+                            <span class="mt-0.5 shrink-0 text-slate-400">→</span>
+                        </div>
                     </a>
                 </authorize>
 
                 <authorize policy="@Authz.Policies.LicensingAdmin">
-                    <a class="app-btn-secondary w-full inline-flex items-center justify-between" asp-controller="LicensingAdmin" asp-action="Installations" preload>
-                        <span>@T["LicensingAdmin.Index.Button.Installations"]</span>
-                        <span class="text-slate-400">→</span>
+                    <a class="app-btn-secondary w-full" asp-controller="LicensingAdmin" asp-action="Installations" preload>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="font-medium text-slate-900">@T["LicensingAdmin.Index.Button.Installations"]</div>
+                                <div class="mt-0.5 text-xs text-slate-500">@T["Home.Index.QuickLinks.Installations.Desc"]</div>
+                            </div>
+                            <span class="mt-0.5 shrink-0 text-slate-400">→</span>
+                        </div>
                     </a>
                 </authorize>
             </div>
@@ -83,4 +159,8 @@ Podrobnosti (k čemu slouží, volání, data, HTMX)
 - HTMX prvky a princip:
     - V tomto view se nepoužívají přímé `hx-*` atributy.
     - Odkazy mají `preload` (HTMX preload extension) a díky globálnímu `hx-boost` v layoutu se při kliknutí typicky mění jen `#main`.
+
+- Poznámka k ikoně:
+    - V záhlaví je vložené jednoduché inline SVG (originální) jako „logo“/značka stránky.
+    - Ikona je stylovaná přes Tailwind a používá `currentColor` (bez pevně natvrdo daných barev).
 *@

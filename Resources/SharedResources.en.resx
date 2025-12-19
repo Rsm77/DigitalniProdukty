@@ -66,6 +66,39 @@
   <data name="Home.Index.QuickLinks.Title" xml:space="preserve">
     <value>Quick links</value>
   </data>
+  <data name="Home.Index.Features.Title" xml:space="preserve">
+    <value>What it does</value>
+  </data>
+  <data name="Home.Index.Feature1" xml:space="preserve">
+    <value>Generate and manage license keys (serials)</value>
+  </data>
+  <data name="Home.Index.Feature2" xml:space="preserve">
+    <value>Tenant/group-based data scoping (multi-tenant)</value>
+  </data>
+  <data name="Home.Index.Feature3" xml:space="preserve">
+    <value>Installation history and audit trail for admin actions</value>
+  </data>
+  <data name="Home.Index.NextSteps.Title" xml:space="preserve">
+    <value>Next steps</value>
+  </data>
+  <data name="Home.Index.NextSteps.Login" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Home.Index.NextSteps.Register" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Serials.Desc" xml:space="preserve">
+    <value>Shows your assigned license keys and their status.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Manage.Desc" xml:space="preserve">
+    <value>License overview, details, assignments, and status management.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Generate.Desc" xml:space="preserve">
+    <value>Generates new license keys for a group or directly for a user.</value>
+  </data>
+  <data name="Home.Index.QuickLinks.Installations.Desc" xml:space="preserve">
+    <value>Recent installation events and activation diagnostics.</value>
+  </data>
   <data name="Home.Index.Learn.Prefix" xml:space="preserve">
     <value>Learn about</value>
   </data>
