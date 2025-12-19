@@ -47,3 +47,28 @@
     </div>
 }
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Partial s doplňkovými poli registrace, která se mění podle `AccountType`.
+    - Umožňuje „serverem řízené UI“: server rozhodne, která pole mají být vidět a jaké mají možnosti.
+
+- Kdy / jak / kým je volán:
+    - Poprvé se vloží do [Views/Auth/Register.cshtml](Views/Auth/Register.cshtml) přes `@await Html.PartialAsync("_RegisterAccountTypeMeta", Model)`.
+    - Následně se znovu načítá přes HTMX při `load` a při změně `<select asp-for="AccountType">`:
+        endpoint je `AuthController.RegisterAccountTypeMeta(...)`.
+
+- Datové napojení:
+    - `@model RegisterInputModel`:
+        - `AccountType` řídí, zda se zobrazí `DisplayName` a `TargetGroupId`.
+        - `DisplayName` se binduje přes `asp-for` (a má vlastní validaci).
+        - `TargetGroupId` se binduje přes `asp-for` a jeho možnosti se berou z `ViewData["KeyGroups"]`.
+    - `ViewData["KeyGroups"] as IReadOnlyList<KeyGroupModel>` poskytuje seznam skupin pro `<select>`.
+
+- HTMX prvky a princip:
+    - Tento partial sám `hx-*` atributy nemá, ale je cílem HTMX swappu:
+        - v Register view se cíluje přes `hx-target="#register-accounttype-meta"` a swapuje se `outerHTML`.
+    - Díky tomu se při změně typu účtu aktualizuje jen tento blok, ne celá stránka.
+*@

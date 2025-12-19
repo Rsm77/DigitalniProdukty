@@ -33,3 +33,22 @@
         </div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Stránka pro potvrzení emailu: zobrazí stav potvrzení (success/error/warning/info).
+    - Status text se nastavuje na serveru podle výsledku ověření tokenu.
+
+- Kdy / jak / kým je volán:
+    - Typicky se sem přichází přes odkaz z potvrzovacího emailu (GET na `AuthController.ConfirmEmail(userId, code)`).
+    - Controller nastaví `ViewData` se zprávou a variantou.
+
+- Datové napojení:
+    - `ViewData["ConfirmEmailStatus"]`: text zprávy.
+    - `ViewData["ConfirmEmailStatusKind"]`: typ (success/error/warning/info) → mapuje se na CSS `app-callout-*`.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*`; jde o stránku se stavem a odkazy dál.
+*@

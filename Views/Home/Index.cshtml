@@ -64,3 +64,23 @@
         </div>
     }
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Domovská stránka aplikace: uvítání, základní popis a „rychlé odkazy“ dle rolí/policies.
+    - Pokud uživatel není přihlášený, zobrazí jen nápovědu k přihlášení.
+
+- Kdy / jak / kým je volán:
+    - Typicky se renderuje z `HomeController.Index()` jako plná stránka.
+    - V kombinaci s HTMX (`hx-boost` v layoutu) může být načtená i jako „partial navigace“ do `#main` bez plného reloadu.
+
+- Datové napojení:
+    - Nemá `@model` – obsah se skládá primárně z lokalizovaných textů (`IStringLocalizer<SharedResources> T`).
+    - Rozhodování o obsahu je podle `User.Identity.IsAuthenticated` a autorizačních pravidel (role/policy) přes `<authorize>`.
+
+- HTMX prvky a princip:
+    - V tomto view se nepoužívají přímé `hx-*` atributy.
+    - Odkazy mají `preload` (HTMX preload extension) a díky globálnímu `hx-boost` v layoutu se při kliknutí typicky mění jen `#main`.
+*@

@@ -157,4 +157,37 @@
 </body>
 </html>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Hlavní layout aplikace: společné HTML „obalení“ všech stránek (hlavička, sidebar, kontejner pro obsah, skripty).
+    - Nastavuje globální chování HTMX pro navigaci a částečné přenačítání obsahu.
+
+- Kdy / jak / kým je volán:
+    - Layout se aplikuje na většinu view automaticky přes [Views/_ViewStart.cshtml](Views/_ViewStart.cshtml).
+    - Renderování spouští MVC pipeline při návratu `View(...)` z controlleru; vlastní obsah stránky se vloží do `@RenderBody()`.
+
+- Datové napojení:
+    - `@inject IAntiforgery Antiforgery`: generuje a ukládá antiforgery token. Token se ukládá do `<meta name="csrf-token">` pro použití mimo klasické `<form>`.
+    - `@inject IStringLocalizer<SharedResources> T`: lokalizované texty (název aplikace, popisky, apod.).
+    - V hlavičce je přepínač jazyka přes `CultureController.Set` s `returnUrl`.
+
+- HTMX prvky a princip:
+    - Na `<body>` je nastaveno:
+        - `hx-boost="true"`: běžné odkazy se chovají jako HTMX navigace (XHR), místo plného reloadu stránky.
+        - `hx-push-url="true"`: HTMX při výměně obsahu aktualizuje URL v historii prohlížeče.
+        - `hx-target="#main"`: výchozí cíl pro výměnu obsahu je element `#main` (tj. jen „tělo stránky“).
+        - `hx-ext="preload"`: aktivuje HTMX extension `preload` (prefetch při hover/mousedown dle atributu `preload`).
+    - `#main` má `hx-history-elt`: HTMX používá tento element jako „history element“ pro zpět/vpřed.
+    - Sidebar i login box používají fragmenty:
+        - `#sidebar-nav` a `#login-partial` mají `hx-get` na URL `/_fragments/...` a `hx-trigger="auth-changed from:body"`.
+        - Po události `auth-changed` se tyto části znovu dotáhnou a přerenderují (např. po login/logout).
+    - CSRF pro HTMX:
+        - Listener `htmx:configRequest` doplňuje hlavičku `RequestVerificationToken`.
+        - Token se bere primárně z nejbližšího `<form>` (`__RequestVerificationToken`), fallback je meta tag.
+    - Progress bar:
+        - Reaguje na `htmx:beforeRequest`, `htmx:afterRequest`, `htmx:afterSettle` a vizuálně indikuje probíhající HTMX navigaci.
+*@
+
 

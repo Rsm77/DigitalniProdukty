@@ -22,3 +22,23 @@
         <a class="@cls(isSerials)" asp-controller="Account" asp-action="Serials">@T["Account.Nav.Serials"]</a>
     }
 </nav>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Navigační lišta pro sekci „Můj účet“ (profil / heslo / 2FA / serials).
+    - Zvýrazňuje aktivní záložku podle aktuální URL cesty.
+
+- Kdy / jak / kým je volán:
+    - Vkládá se do hlaviček account view přes `<partial name="_AccountNav" />`.
+
+- Datové napojení:
+    - Nepoužívá `@model`; rozhoduje podle `Context.Request.Path`.
+    - Podmíněně skrývá odkaz na serialy pro roli Owner (`User.IsInRole(Authz.Roles.Owner)`).
+    - Texty jsou lokalizované přes `SharedResources`.
+
+- HTMX prvky a princip:
+    - Samotný nav nepoužívá `hx-*` atributy.
+    - Kliky na odkazy typicky proběhnou přes globální HTMX navigaci (`hx-boost` v layoutu) a obsah se vymění do `#main`.
+*@

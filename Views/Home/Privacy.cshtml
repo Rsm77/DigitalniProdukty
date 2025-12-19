@@ -8,3 +8,21 @@
     <h1 class="text-2xl font-semibold text-slate-900">@ViewData["Title"]</h1>
     <p class="text-slate-700">@T["Home.Privacy.Body"]</p>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Stránka s informacemi o „Privacy“ (text je plně lokalizovaný).
+
+- Kdy / jak / kým je volán:
+    - Typicky se renderuje z `HomeController.Privacy()` jako plná stránka.
+    - Při zapnutém `hx-boost` v layoutu se může načítat i bez plného reloadu (obsah se vymění do `#main`).
+
+- Datové napojení:
+    - Nemá `@model`.
+    - Texty jsou z `IStringLocalizer<SharedResources> T` (např. `Home.Privacy.*`).
+
+- HTMX prvky a princip:
+    - Tento view sám HTMX atributy nepoužívá; využívá globální HTMX navigaci z layoutu.
+*@

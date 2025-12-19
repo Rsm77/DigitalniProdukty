@@ -1,3 +1,20 @@
 ﻿@{
     Layout = "_Layout";
 }
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Nastaví výchozí layout pro všechny view v rámci složky `Views/` (a podsložek), pokud si konkrétní view layout nepřepíše.
+
+- Kdy / jak / kým je volán:
+    - Razor engine tento soubor automaticky aplikuje při renderování view.
+    - Díky tomu mají všechny stránky jednotný „obal“ definovaný v [Views/Shared/_Layout.cshtml](Views/Shared/_Layout.cshtml).
+
+- Datové napojení:
+    - Žádné přímé model-binding napojení; jen nastavuje `Layout`.
+
+- HTMX prvky a princip:
+    - HTMX logika je v layoutu; tento soubor pouze zajišťuje, že se layout použije konzistentně.
+*@

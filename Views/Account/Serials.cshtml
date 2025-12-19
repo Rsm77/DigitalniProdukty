@@ -58,3 +58,24 @@
         }
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Přehled sériových/licenčních klíčů přihlášeného uživatele (typicky end-user / reseller/distributor).
+    - Zobrazuje stav klíče (active/revoked) a základní parametry (max zařízení, datum vytvoření).
+
+- Kdy / jak / kým je volán:
+    - GET: `AccountController.Serials()` vrací seznam serialů jako model.
+    - Viditelnost položky v navigaci je omezená (Owner roli se link nezobrazuje).
+
+- Datové napojení:
+    - `@model IReadOnlyList<SerialNumberModel>`:
+        - tabulka iteruje `Model` a vykresluje `Key`, `MaxDevices`, `CreatedAt`, `IsRevoked`.
+    - Texty jsou lokalizované přes `SharedResources`.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*` atributy.
+    - Při zapnutém `hx-boost` v layoutu se stránka může načítat do `#main` bez plného reloadu.
+*@

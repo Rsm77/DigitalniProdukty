@@ -43,3 +43,24 @@ else
     </li>
 }
 </ul>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Malý „login status“ blok do layoutu: podle přihlášení ukáže buď jméno uživatele + tlačítko odhlášení, nebo tlačítko pro přihlášení.
+
+- Kdy / jak / kým je volán:
+    - Vkládá se do layoutu přes `<partial name="_LoginPartial" />` v [Views/Shared/_Layout.cshtml](Views/Shared/_Layout.cshtml).
+    - Layout navíc umí tento blok periodicky/událostně obnovit přes HTMX (endpoint `/_fragments/login`).
+
+- Datové napojení:
+    - `@inject SignInManager<IdentityUser>` + `@inject UserManager<IdentityUser>`: zjištění stavu přihlášení a (případně) práce s uživatelem.
+    - `SignInManager.IsSignedIn(User)` rozhoduje, zda se renderuje „signed-in“ nebo „signed-out“ varianta.
+    - Texty jsou lokalizované přes `IStringLocalizer<SharedResources> T`.
+
+- HTMX prvky a princip:
+    - Odkazy mají `hx-target="#main"` (v kombinaci s globálním `hx-boost` v layoutu), takže navigace typicky mění jen obsah `#main`.
+    - Logout je `<form>` s `hx-boost="false"`:
+        - odhlášení se provede klasickým POSTem (bez HTMX boostu), aby byl tok odhlášení a redirect co nejjednodušší a kompatibilní.
+*@

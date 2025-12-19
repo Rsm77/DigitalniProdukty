@@ -81,3 +81,29 @@
     </div>
 </div>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Přihlašovací stránka (email + heslo + „remember me“) pro ASP.NET Identity.
+    - V případě chyby zobrazuje validační chyby (ModelState) a zůstává na stejné kartě.
+
+- Kdy / jak / kým je volán:
+    - GET: `AuthController.Login(returnUrl)` vrací toto view.
+    - POST: `AuthController.Login(LoginInputModel, returnUrl)` zpracuje přihlášení.
+    - Při HTMX navigaci se stránka obvykle načte do `#main` (globální `hx-boost` v layoutu).
+
+- Datové napojení:
+    - `@model LoginInputModel`:
+        - `Email`, `Password`, `RememberMe` se bindují přes `asp-for`.
+    - `asp-validation-summary` a `asp-validation-for` vykreslují chyby z ModelState.
+    - `returnUrl` se bere z `ViewData["ReturnUrl"]` (nastavuje controller), aby bylo možné po login vrátit uživatele na původní stránku.
+
+- HTMX prvky a princip:
+    - Formulář má `hx-post` na stejnou akci (`Auth/Login`) a zároveň klasické `asp-action` jako fallback.
+    - `hx-target="#login-card"` + `hx-swap="outerHTML"`:
+        - server vrátí znovu celý „card“ blok (typicky stejné view s chybami),
+        - HTMX nahradí celý `<div id="login-card">...</div>`.
+    - Indikátor načítání využívá `.htmx-indicator` (HTMX automaticky toggluje viditelnost při requestu).
+*@
+

@@ -32,3 +32,23 @@
         </div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Potvrzovací stránka po registraci: informuje uživatele o odeslání potvrzovacího emailu.
+    - V dev režimu umí zobrazit přímý potvrzovací link (`DevLink`), pokud není nakonfigurované odesílání emailu.
+
+- Kdy / jak / kým je volán:
+    - Typicky redirect z `AuthController.Register(...)` po úspěšném vytvoření účtu.
+
+- Datové napojení:
+    - `ViewData["Email"]`: email, na který byl poslán potvrzovací odkaz.
+    - `ViewData["DevLink"]`: (volitelné) přímý odkaz pro vývojové prostředí.
+    - Texty jsou lokalizované přes `IStringLocalizer<IdentityUi>`.
+
+- HTMX prvky a princip:
+    - Tento view nepoužívá `hx-*` atributy; jde o statickou stránku.
+    - Navigace tlačítky může být HTMX-boostnutá globálně layoutem.
+*@

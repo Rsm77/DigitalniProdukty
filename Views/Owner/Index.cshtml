@@ -61,3 +61,30 @@
 </div>
 
 <div id="owner-modal"></div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Owner stránka pro správu admin účtů: přehled adminů, přechod na edit/reset hesla a bezpečné mazání.
+
+- Kdy / jak / kým je volán:
+    - Renderuje se z `OwnerController.Index()` pro uživatele s rolí Owner.
+    - Akce v tabulce volají:
+        - `OwnerController.CreateAdmin()` (odkaz v hlavičce)
+        - `OwnerController.EditAdmin(userId)`
+        - `OwnerController.ResetPassword(userId)`
+        - potvrzení smazání se načítá jako fragment (viz HTMX níže)
+
+- Datové napojení:
+    - `@model OwnerController.IndexVm`:
+        - `Admins`: seznam adminů (Email, Id, DisplayName) pro tabulku.
+    - `partial _Toast` zobrazuje stavové hlášky z `TempData`.
+
+- HTMX prvky a princip:
+    - Tlačítko „Delete“ nepřesměrovává na novou stránku; načte potvrzovací UI přes HTMX:
+        - `hx-get="/owner/admins/delete-confirm"`: volá endpoint pro fragment (typicky vrací partial view s potvrzením).
+        - `hx-vals='{"userId":"..."}'`: předá parametr `userId` v těle požadavku.
+        - `hx-target="#owner-modal"` + `hx-swap="innerHTML"`: vloží vrácený HTML fragment do placeholderu `<div id="owner-modal"></div>`.
+    - To umožňuje „modal/confirm“ UX bez plného reloadu a bez ztráty kontextu tabulky.
+*@

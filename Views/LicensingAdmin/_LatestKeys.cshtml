@@ -74,3 +74,29 @@
         </table>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Partial s tabulkou „posledních klíčů“ (latest serials).
+    - Je navržený tak, aby se mohl sám obnovovat po změnách (generování, assign/revoke, apod.).
+
+- Kdy / jak / kým je volán:
+    - Vkládá se do [Views/LicensingAdmin/Index.cshtml](Views/LicensingAdmin/Index.cshtml).
+    - Server jej vrací i samostatně z endpointu typu `LicensingAdminController.LatestKeys(groupId?)`.
+    - Klávesy v tabulce otevírají detail (JS `window.appLicensing?.openDetails?.(url)`).
+
+- Datové napojení:
+    - `@model IReadOnlyList<SerialNumberModel>`: řádky tabulky.
+    - `ViewData["SelectedGroupId"]` určuje:
+        - jaký endpoint se volá pro refresh (`latestUrl`),
+        - jaké `detailsUrl` se skládá pro detail.
+
+- HTMX prvky a princip:
+    - Kořenový `<div id="licensing-latest-keys">` má:
+        - `hx-get="@latestUrl"`: endpoint vracející stejný partial.
+        - `hx-trigger="licensing-updated from:body"`: refresh se spustí při custom eventu `licensing-updated` vyemitovaném na `<body>`.
+        - `hx-target="this"` + `hx-swap="outerHTML"`: celý partial se nahradí novou verzí.
+    - To umožňuje, aby jiné akce v aplikaci po dokončení jen vyvolaly event a tabulka se sama aktualizovala.
+*@

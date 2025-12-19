@@ -163,3 +163,35 @@
         }
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Stránka pro generování nových licenčních klíčů (serials):
+        - parametry generování (počet, segmentace klíče, max zařízení),
+        - (volitelně) přiřazení klíčů na konkrétní end-user email,
+        - po vygenerování zobrazí tabulku čerstvě vytvořených klíčů.
+
+- Kdy / jak / kým je volán:
+    - GET: `LicensingAdminController.GeneratePage(groupId?)` (nebo obdobná GET akce) vrací view a připraví ViewData.
+    - POST: `LicensingAdminController.Generate(...)` vytvoří nové klíče.
+    - (Admin role) může nejdřív vybrat `groupId` přes GET formulář (onchange submit).
+
+- Datové napojení:
+    - `@model IReadOnlyList<SerialNumberModel>`:
+        - po POST obsahuje „právě vygenerované“ klíče, které se vykreslí v tabulce.
+    - `ViewData["KeyGroups"]` + `ViewData["SelectedGroupId"]`:
+        - seznam skupin a aktuální volba (Admin).
+    - `ViewData["EndUserEmail"]`:
+        - předvyplnění emailu pro přiřazení (zachování hodnoty po POST/refresh).
+    - POST formulář používá `@Html.AntiForgeryToken()`.
+
+- HTMX prvky a princip:
+    - Generovací formulář má `hx-post` na `LicensingAdmin/Generate`.
+    - `hx-target="#licensing-generate"` + `hx-swap="outerHTML"`:
+        - server vrátí znovu celý card (včetně výsledkové tabulky a toastů),
+        - HTMX nahradí celý blok bez plného reloadu.
+    - Tlačítko s klíčem volá JS `window.appLicensing?.openDetails?.(detailsUrl)`:
+        typicky otevře dialog a načte `_Details` pro konkrétní `id`.
+*@

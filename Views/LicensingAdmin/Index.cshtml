@@ -69,3 +69,29 @@
         </div>
     </dialog>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Hlavní „Licensing admin“ stránka pro práci s licenčními klíči (serial numbers):
+        - (pro Admin roli) možnost filtrovat kontext podle `groupId` (skupina),
+        - zobrazení posledních klíčů (partial `_LatestKeys`),
+        - připravený `<dialog>` pro detail klíče.
+
+- Kdy / jak / kým je volán:
+    - GET: `LicensingAdminController.Index(groupId?)` vrací toto view.
+    - Stránka je dostupná jen uživatelům s oprávněními pro správu licencí (policy/role řeší controller).
+
+- Datové napojení:
+    - `@model IReadOnlyList<SerialNumberModel>`: seznam „posledních klíčů“ pro tabulku v `_LatestKeys`.
+    - `ViewData["KeyGroups"]`: seznam skupin (`IReadOnlyList<KeyGroupModel>`) pro admin filtr.
+    - `ViewData["SelectedGroupId"]`: aktuálně zvolená skupina (`Guid?`) pro filtrování.
+    - `_Toast` zobrazuje stavové hlášky z `TempData`.
+
+- HTMX prvky a princip:
+    - Toto view samo nepoužívá `hx-*` přímo, ale:
+        - vkládá partial `_LatestKeys`, který se umí sám obnovovat přes HTMX event `licensing-updated`.
+        - připravuje modal/dialog `#license-details` a kontejner `#license-details-body`, do kterého se typicky přes HTMX dotahují detaily (`_Details`).
+    - Otevírání detailu je řešené klientským JS hookem `window.appLicensing?.openDetails?.(url)` (viz tlačítka v `_LatestKeys`).
+*@

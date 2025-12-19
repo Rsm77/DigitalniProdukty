@@ -133,3 +133,27 @@
         </a>
     </authorize>
 </nav>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Boční navigace aplikace: odkazuje na hlavní sekce (Home, Privacy, účty, admin/licensing apod.).
+    - Aktivní položku zvýrazňuje podle aktuální route (controller + action).
+
+- Kdy / jak / kým je volán:
+    - Vkládá se do layoutu jako fallback obsah přes `<partial name="_SidebarNav" />` v [Views/Shared/_Layout.cshtml](Views/Shared/_Layout.cshtml).
+    - Layout umí navigaci obnovit i dynamicky přes HTMX fragment endpoint `/_fragments/sidebar-nav` (např. po změně autorizace).
+
+- Datové napojení:
+    - Čte `ViewContext.RouteData` pro určení `currentController/currentAction` a podle toho skládá CSS třídu (aktivní vs. neaktivní).
+    - Používá lokalizaci přes `IStringLocalizer<SharedResources> T`.
+    - Používá autorizační konstanty z `DigitalniProdukty.Security.Authz` (role/policy).
+    - Používá custom tag helper `<authorize>` (z `@addTagHelper *, DigitalniProdukty`), který podmíněně renderuje obsah podle přihlášení/rolí/policy.
+
+- HTMX prvky a princip:
+    - `<nav ... hx-target="#main" hx-swap="innerHTML">`:
+        - odkazy uvnitř navigace (v kombinaci s `hx-boost` na `<body>`) typicky mění jen obsah `#main`.
+        - `hx-swap="innerHTML"` určuje způsob výměny obsahu v cíli.
+    - Atributy `preload` a `preload="mousedown"` využívají HTMX extension `preload` (prefetch obsahu dřív, než uživatel klikne).
+*@

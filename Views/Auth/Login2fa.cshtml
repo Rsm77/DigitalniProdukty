@@ -61,3 +61,26 @@
     </div>
 </div>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Druhý krok přihlášení (2FA): zadání jednorázového kódu a volba „remember this machine“.
+    - Používá se poté, co login vyžaduje 2FA.
+
+- Kdy / jak / kým je volán:
+    - GET: `AuthController.Login2fa(returnUrl, rememberMe)` (nebo redirect z login flow) vrací toto view.
+    - POST: `AuthController.Login2fa(Login2faInputModel, returnUrl, rememberMe)` ověří kód.
+
+- Datové napojení:
+    - `@model Login2faInputModel`:
+        - `Code`, `RememberMachine` se bindují přes `asp-for`.
+    - `returnUrl` a `rememberMe` se předávají přes route parametry (nastavuje controller přes `ViewData`).
+
+- HTMX prvky a princip:
+    - Formulář má `hx-post` na `Auth/Login2fa`.
+    - `hx-target="#login2fa-card"` + `hx-swap="outerHTML"`:
+        - při chybě (špatný kód) server vrátí znovu kartu s validací a HTMX ji celou nahradí.
+    - Tlačítko „BackToLogin“ je klasický odkaz (HTMX navigace se děje globálně přes `hx-boost`).
+*@
+

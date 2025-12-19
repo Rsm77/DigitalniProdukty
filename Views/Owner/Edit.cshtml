@@ -40,3 +40,25 @@
         <div class="text-xs text-slate-500">@T["Owner.Edit.Help"]</div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Owner UI pro úpravu existujícího admin účtu (typicky jen `DisplayName`).
+    - Email se zobrazuje jako informativní údaj (bere se z `ViewData`).
+
+- Kdy / jak / kým je volán:
+    - GET: `OwnerController.EditAdmin(userId)` vrací view a nastaví `ViewData["AdminEmail"]`.
+    - POST: `OwnerController.EditAdmin(EditAdminInput)` uloží změny.
+
+- Datové napojení:
+    - `@model OwnerController.EditAdminInput`:
+        - `UserId` je hidden.
+        - `DisplayName` se binduje přes `asp-for`.
+    - `ViewData["AdminEmail"]` pouze pro zobrazení v hlavičce.
+    - `@Html.AntiForgeryToken()` pro CSRF.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*`; klasický POST.
+*@

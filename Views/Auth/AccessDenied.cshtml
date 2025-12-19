@@ -18,3 +18,21 @@
         </div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Stránka „Access Denied“ pro nepovolený přístup (403).
+
+- Kdy / jak / kým je volán:
+    - Zobrazuje se při selhání autorizace (např. `[Authorize]`/policy) – buď přímým návratem controlleru,
+        nebo přesměrováním/obsluhou přes Identity/authorization middleware (podle konfigurace).
+
+- Datové napojení:
+    - Bez `@model`; pouze lokalizované texty (`IdentityUi`).
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*`.
+    - V HTMX scénáři se 401/403 často řeší speciálně (např. přes `HX-Redirect`); to je navázané na serverovou logiku (viz `Program.cs`/HTMX extensions).
+*@

@@ -123,3 +123,32 @@
     </div>
 </div>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Registrace nového účtu (email + heslo) s variabilními poli podle typu účtu.
+    - Typ účtu (AccountType) a doplňková metadata se řídí rolí registrujícího uživatele (Admin/Distributor/ostatní).
+
+- Kdy / jak / kým je volán:
+    - GET: `AuthController.Register(returnUrl)` vrací toto view.
+    - POST: `AuthController.Register(RegisterInputModel, returnUrl)` zpracuje vytvoření účtu.
+    - Stránka je dostupná typicky uživatelům s příslušným oprávněním (policy/role) – kontroluje controller.
+
+- Datové napojení:
+    - `@model RegisterInputModel`:
+        - `AccountType`, `Email`, `Password`, `ConfirmPassword` a případně `DisplayName`/`TargetGroupId`.
+    - `asp-for` + `asp-validation-for` řeší binding a validační chyby.
+    - `_RegisterAccountTypeMeta` partial používá stejný model + navíc `ViewData["KeyGroups"]` (posílá controller) pro nabídku skupin.
+    - Pokud uživatel nemá oprávnění volit typ účtu, `AccountType` se nastaví hidden inputem (default EndUser).
+
+- HTMX prvky a princip:
+    - Formulář registrace:
+        - `hx-post` + `hx-target="#register-card"` + `hx-swap="outerHTML"` umožňuje vrátit a nahradit celou kartu s chybami bez reloadu.
+    - Dynamika polí podle typu účtu:
+        - `<select asp-for="AccountType">` má `hx-get` na `Auth/RegisterAccountTypeMeta`.
+        - `hx-trigger="load, change"` spustí dotahování partialu při načtení i při změně výběru.
+        - `hx-include="[name='AccountType'],[name='TargetGroupId'],[name='DisplayName']"` pošle aktuální hodnoty, aby server mohl rozhodnout, co vykreslit.
+        - `hx-target="#register-accounttype-meta"` + `hx-swap="outerHTML"` nahradí jen blok s doplňkovými poli.
+*@
+

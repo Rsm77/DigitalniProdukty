@@ -3,3 +3,21 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, DigitalniProdukty
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+	- Sdílené importy pro Razor view: `@using` a registrace TagHelperů.
+	- Umožňuje používat `asp-controller`, `asp-action`, `asp-for`, validace, apod. bez opakování v každém view.
+
+- Kdy / jak / kým je volán:
+	- Razor engine jej automaticky aplikuje na view ve složce `Views/` (a podsložkách).
+
+- Datové napojení:
+	- `@using DigitalniProdukty.Models` zjednodušuje práci s `@model` typy.
+
+- HTMX prvky a princip:
+	- Přímo HTMX neřeší, ale umožňuje používat custom TagHelpery z projektu (např. `<authorize>` v navigaci),
+		které jsou v HTMX navigačním flow často používané.
+*@
+

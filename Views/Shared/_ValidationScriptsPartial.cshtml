@@ -1,1 +1,19 @@
 ﻿
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+	- Tradiční MVC partial pro načítání validačních skriptů (jQuery validate / unobtrusive).
+	- V tomto projektu je momentálně prázdný (skripty se buď nepoužívají, nebo se řeší jinak).
+
+- Kdy / jak / kým je volán:
+	- Běžně se vkládá do `@section Scripts` ve formulářových stránkách.
+
+- Datové napojení:
+	- Žádné; jde jen o případné includy skriptů.
+
+- HTMX prvky a princip:
+	- Přímo HTMX nepoužívá.
+	- Pozor: u HTMX partial update je potřeba řešit, kdy a jak se inicializují klientské validace (pokud by se sem později doplnily).
+*@
+

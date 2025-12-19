@@ -60,3 +60,31 @@
     </div>
 </div>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Stránka „Profil“ pro přihlášeného uživatele: zobrazení emailu (read-only) a editace dalších údajů (např. telefon).
+    - Po uložení typicky nastaví toast hlášku a zůstane na stejné kartě.
+
+- Kdy / jak / kým je volán:
+    - GET: `AccountController.Profile()` vrací view s `ProfileInputModel`.
+    - POST: `AccountController.Profile(ProfileInputModel)` zpracuje změny profilu.
+    - View je určené pro přihlášené uživatele (autorizační atributy řeší controller).
+
+- Datové napojení:
+    - `@model ProfileInputModel`:
+        - `Email` je renderovaný jako `readonly`.
+        - `PhoneNumber` se binduje přes `asp-for`.
+    - `asp-validation-summary`/`asp-validation-for` vykreslují chyby z ModelState.
+    - `_AccountNav` naviguje mezi sekcemi účtu.
+    - `_Toast` zobrazuje stavové hlášky z `TempData`.
+
+- HTMX prvky a princip:
+    - Formulář používá `hx-post` na `Account/Profile`.
+    - `hx-target="#profile-card"` + `hx-swap="outerHTML"`:
+        - server vrací znovu celý card (buď s validací, nebo s toastem/stavem),
+        - HTMX nahradí celý blok `#profile-card` bez plného reloadu stránky.
+    - `.htmx-indicator` slouží jako spinner během requestu.
+*@
+

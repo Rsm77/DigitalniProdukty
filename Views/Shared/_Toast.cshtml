@@ -21,3 +21,24 @@
         <div class="app-toast @variantClass">@message</div>
     </div>
 }
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Zobrazuje krátkou „toast“ hlášku (success/error/warning) pro potvrzení akcí a chyb.
+
+- Kdy / jak / kým je volán:
+    - Typicky se vkládá do layoutu nebo do konkrétních stránek jako partial (dle potřeby).
+    - Zprávy nastavují controllery přes `TempData` (např. po POST akci a redirectu).
+
+- Datové napojení:
+    - Čte `TempData["ToastMessage"]` / `TempData["AccountStatus"]` jako text zprávy.
+    - Čte `TempData["ToastKind"]` / `TempData["AccountStatusKind"]` pro variantu vzhledu.
+    - Vzhled se mapuje na CSS třídy (`app-toast-success/error/warning`).
+
+- HTMX prvky a princip:
+    - Tento partial sám HTMX nepoužívá.
+    - V HTMX scénáři je důležité, že `TempData` se standardně „spotřebuje“ při renderu odpovědi;
+        pokud se toast renderuje v rámci fragmentů/partial update, je potřeba s tím v toku požadavků počítat.
+*@

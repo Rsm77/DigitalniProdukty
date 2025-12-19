@@ -48,3 +48,24 @@
         </div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Audit/přehled instalačních událostí (instalace/odinstalace/aktivace… podle `EventType`) napříč klíči.
+    - Slouží pro podporu a dohledání „kdy a z jakého zařízení/IP“ se něco stalo.
+
+- Kdy / jak / kým je volán:
+    - GET: `LicensingAdminController.Installations()` vrací toto view.
+    - Přístup je typicky omezen policy `LicensingAdmin`.
+
+- Datové napojení:
+    - `@model IReadOnlyList<InstallationModel>`:
+        - `OccurredAt`, `EventType`, `SerialNumber.Key`, `Device.HardwareIdentifier`, `IpAddress`.
+    - Data se berou z DB přes EF (controller připraví model i navázané navigation properties).
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*` atributy.
+    - Stránka se může načítat „boostnutě“ do `#main` díky globálnímu nastavení v layoutu.
+*@

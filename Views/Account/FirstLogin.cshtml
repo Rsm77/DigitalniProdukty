@@ -84,3 +84,31 @@
         </form>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - „První přihlášení“ / onboarding stránka, kde uživatel:
+        - potvrdí/změní email,
+        - ověří aktuální heslo,
+        - nastaví nové heslo.
+    - Typicky se používá při dočasně vytvořených účtech nebo po adminem iniciovaném resetu.
+
+- Kdy / jak / kým je volán:
+    - GET: `AccountController.FirstLogin()` vrací view s `FirstLoginInputModel`.
+    - POST: `AccountController.FirstLogin(FirstLoginInputModel)` provede změny a následné přesměrování.
+    - `ViewData["CurrentEmail"]` (nastaví controller) se používá pro informační text.
+
+- Datové napojení:
+    - `@model FirstLoginInputModel`:
+        - `Email`, `CurrentPassword`, `NewPassword`, `ConfirmPassword`.
+    - `@Html.AntiForgeryToken()` zajišťuje CSRF ochranu.
+    - `asp-validation-*` vykreslují validační chyby.
+
+- HTMX prvky a princip:
+    - Formulář používá `hx-post` na `Account/FirstLogin`.
+    - `hx-target="#first-login-card"` + `hx-swap="outerHTML"`:
+        - při chybě/validaci se vymění celý card s chybami;
+        - při úspěchu může server vrátit redirect (a HTMX ho může zpracovat dle serverových pravidel).
+*@

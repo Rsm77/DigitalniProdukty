@@ -191,3 +191,36 @@
         </authorize>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Partial pro detail konkrétního licenčního klíče (serial number):
+        - stav (revoked/active), max zařízení, vytvoření, přiřazení na uživatele,
+        - akce Assign/Reassign/Unassign, Revoke/Unrevoke a (pro Admin) Transfer mezi skupinami.
+    - Renderuje se typicky do dialogu (viz `#license-details-body` v hlavních stránkách).
+
+- Kdy / jak / kým je volán:
+    - Volá se z detail endpointu typu `LicensingAdminController.Details(id, groupId?)`, který vrací tento partial.
+    - Akční formuláře volají POST endpointy `Assign/Reassign/Unassign/Revoke/Unrevoke/Transfer`.
+    - Kdo může vidět které akce:
+        - Assign/Reassign/Unassign jsou dostupné podle toho, zda je klíč přiřazen.
+        - Revoke/Unrevoke je schované za policy `LicensingAdmin`.
+        - Transfer je dostupný jen pro roli Admin.
+
+- Datové napojení:
+    - `@model SerialNumberModel`: detail klíče včetně `OwnerUser` a `GroupId`.
+    - `ViewData["SelectedGroupId"]`: zachování kontextu filtru (posílá se zpět jako hidden `groupId`).
+    - `ViewData["KeyGroups"]`: seznam skupin pro select v Transfer.
+    - `_Toast` může zobrazovat výsledky akcí (TempData) i uvnitř detailu.
+    - V každém POST formuláři je `@Html.AntiForgeryToken()`.
+    - Hidden `context="details"` říká serveru, že odpověď má být detail partial (ne např. full redirect).
+
+- HTMX prvky a princip:
+    - Všechny akce jsou dělané přes HTMX, aby se aktualizoval jen detail v dialogu:
+        - `hx-target="#license-details-body"` + `hx-swap="innerHTML"`.
+    - To znamená:
+        - server po POST vrátí znovu `_Details` (aktuální stav po akci),
+        - HTMX přepíše obsah detailu bez zavření dialogu.
+*@

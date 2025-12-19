@@ -23,3 +23,23 @@
     <strong>@T["Error.DevMode.Warning"]</strong>
     @T["Error.DevMode.WarningDetails"]
 </p>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Obecná chybová stránka pro nezachycené chyby / chybové stavy.
+    - V dev režimu vypisuje doplňkové informace (např. RequestId) pro jednodušší diagnostiku.
+
+- Kdy / jak / kým je volán:
+    - Typicky se renderuje z `HomeController.Error()` nebo z error-handling middleware (záleží na konfiguraci v `Program.cs`).
+    - Zobrazuje se při výjimce nebo při přesměrování na error route.
+
+- Datové napojení:
+    - `@model ErrorViewModel`: nese např. `RequestId` a `ShowRequestId`.
+    - Texty jsou lokalizované přes `IStringLocalizer<SharedResources> T`.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*` atributy.
+    - Pokud dojde k chybě v průběhu HTMX navigace, výsledná odpověď se může stejně vložit do `#main` (dle chování layoutu a serveru).
+*@

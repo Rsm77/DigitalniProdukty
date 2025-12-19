@@ -45,3 +45,25 @@
         <div class="text-xs text-slate-500">@T["Owner.Create.Help"]</div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Owner UI pro vytvoření nového admin účtu (email, display name, počáteční heslo).
+
+- Kdy / jak / kým je volán:
+    - GET: `OwnerController.CreateAdmin()` vrací toto view.
+    - POST: `OwnerController.CreateAdmin(CreateAdminInput)` vytvoří admin účet.
+    - Přístup je omezen rolí Owner (řeší controller/authorize).
+
+- Datové napojení:
+    - `@model OwnerController.CreateAdminInput`:
+        - `Email`, `DisplayName`, `Password` se bindují přes `asp-for`.
+    - `asp-validation-for` a `asp-validation-summary` vykreslují chyby z ModelState.
+    - `@Html.AntiForgeryToken()` chrání POST.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*`; jde o klasický POST + redirect flow.
+    - Navigace zpět (Back) může být HTMX-boostnutá globálně layoutem.
+*@

@@ -150,3 +150,37 @@
     </div>
 </div>
 
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Správa dvoufaktorového ověření (2FA):
+        - pokud 2FA není aktivní: zobrazení QR kódu / shared key a formulář pro ověření kódu a zapnutí,
+        - pokud je aktivní: akce pro vypnutí, reset authenticator key a generování recovery kódů.
+    - Umí zobrazit nově vygenerované recovery kódy (jednorázově po akci).
+
+- Kdy / jak / kým je volán:
+    - GET: `AccountController.TwoFactor()` vrací `TwoFactorViewModel`.
+    - POST akce volané z této stránky:
+        - `AccountController.EnableTwoFactor(TwoFactorEnableInputModel)`
+        - `AccountController.DisableTwoFactor()`
+        - `AccountController.ResetAuthenticatorKey()`
+        - `AccountController.GenerateRecoveryCodes()`
+
+- Datové napojení:
+    - `@model TwoFactorViewModel`:
+        - `Is2faEnabled`, `RecoveryCodesLeft` pro stav.
+        - `QrCodeSvg` (SVG string) a `SharedKeyFormatted` pro setup.
+        - `Enable.Code` je vnořený input model pro zapnutí 2FA.
+        - `NewRecoveryCodes` se vykreslí do `<pre>` po generování.
+    - `_Toast` používá `TempData` pro hlášky.
+
+- HTMX prvky a princip:
+    - Zapnutí 2FA:
+        - formulář má `hx-post` na `Account/EnableTwoFactor` a swapuje celý `#twofactor-card` (`outerHTML`).
+    - Vypnutí / Reset key:
+        - formuláře mají `hx-post` a `hx-target="closest .app-card-body"` + `hx-swap="innerHTML"`:
+            server může vrátit jen tělo karty (stav + tlačítka + případné kódy), bez přerenderu hlavičky.
+    - Generování recovery kódů je zde bez `hx-*` (klasický POST) – po návratu se kódy ukážou přes model.
+*@
+

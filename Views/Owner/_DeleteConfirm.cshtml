@@ -30,3 +30,27 @@
         </div>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - HTMX „modal“ fragment pro potvrzení smazání admin účtu.
+    - Renderuje se jako overlay (`fixed inset-0 ...`) a vkládá se do placeholderu `#owner-modal`.
+
+- Kdy / jak / kým je volán:
+    - Načítá se z `Owner/Index` po kliknutí na Delete:
+        - tlačítko v tabulce dělá `hx-get="/owner/admins/delete-confirm"` + `hx-vals` s `userId`.
+    - Samotné smazání se provede POSTem na `OwnerController.DeleteAdmin(userId)`.
+
+- Datové napojení:
+    - `@model OwnerController.DeleteConfirmVm`:
+        - `UserId` a `Email` pro text a hidden input.
+    - `@Html.AntiForgeryToken()` chrání POST mazání.
+
+- HTMX prvky a princip:
+    - Tlačítko Cancel:
+        - `hx-get="/owner/modal/clear"` + `hx-target="#owner-modal"` + `hx-swap="innerHTML"`.
+        - Endpoint typicky vrátí prázdný obsah (nebo jednoduchý fragment), čímž se modal zavře.
+    - Načtení tohoto fragmentu i jeho „zavření“ probíhá bez plného reloadu stránky.
+*@

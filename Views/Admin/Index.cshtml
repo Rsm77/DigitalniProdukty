@@ -133,3 +133,28 @@
         </section>
     </div>
 </div>
+
+@*
+Podrobnosti (k čemu slouží, volání, data, HTMX)
+
+- Účel:
+    - Admin stránka pro správu uživatelů: přehled uživatelů, editace `DisplayName`, přiřazení role a (dle role) skupiny.
+    - Chrání „protected“ účty (Admin/Owner) před změnami z UI.
+
+- Kdy / jak / kým je volán:
+    - Renderuje se z `AdminController.Index()` pro uživatele s rolí/povolením admin.
+    - Jednotlivé změny se odesílají přes POST na `AdminController.UpdateUser()`.
+
+- Datové napojení:
+    - `@model AdminController.IndexVm`:
+        - `Users`: seznam uživatelů pro tabulku.
+        - `Roles`: dostupné role pro `<select>`.
+        - `Groups`: dostupné skupiny pro `<select>`.
+    - Formuláře používají klasické MVC binding přes `name="..."` (např. `DisplayName`, `Role`, `GroupId`, `UserId`).
+    - `@Html.AntiForgeryToken()` zajišťuje CSRF ochranu pro POST.
+    - Zobrazuje `<partial name="_Toast" />` pro hlášky z `TempData`.
+
+- HTMX prvky a princip:
+    - View nepoužívá `hx-*` atributy; odeslání je klasický POST.
+    - Díky globálnímu `hx-boost` může být samotná navigace na tuto stránku „boostnutá“ (bez reloadu), ale formuláře zůstávají standardní.
+*@
