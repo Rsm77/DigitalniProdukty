@@ -9,6 +9,10 @@ Použité technologie (stručně):
 - **HTMX**: částečné aktualizace stránky bez full reloadu.
 - **Tailwind CSS**: utility-first CSS pro stylování.
 
+## Dokumentace
+
+- Grafický průvodce (Mermaid diagramy): [docs/princip-a-pouziti-aplikace.md](docs/princip-a-pouziti-aplikace.md)
+
 ## Účel projektu
 
 Cílem projektu je poskytnout jednoduché, bezpečné a multi-tenantní (oddělené pro více obchodních partnerů) prostředí pro práci s licencemi digitálních produktů:
